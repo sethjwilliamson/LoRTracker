@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    body {
+      overflow: hidden;
+      margin:0;
+    }
+  </style>
+  <head>
+    <meta charset="UTF-8">
+    <link href="https://db.onlinewebfonts.com/c/12420e8c141ca7c3dff41de2d59df13e?family=Beaufort+for+LOL+Bold" rel="stylesheet" type="text/css"/>
+    <!--/// Switch to local ?-->
+
+    <!--
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    ///Put this back I think
+    -->
+
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  </head>
+  <body>
+    <!--<div style="width:720*.25; height:100*.25; -webkit-app-region:drag; color:aquamarine">Click Me!</button>-->
+    <!-- You can also require other files to run in this process -->
+    <canvas id="myCanvas" width="173" height="72" style="-webkit-app-region:drag; display:block; margin-left: auto; margin-right: auto; padding: 0; z-index: 0; position: relative;"></canvas>
+    <canvas id="region%" width="173" height="20" style="-webkit-app-region:drag; display:block; margin-left: auto; margin-right: auto; padding: 0; margin-top:-28px; margin-bottom: 0;position: relative; z-index: 1;"></canvas>
+    <canvas id="brown" width="173" height="20" style="-webkit-app-region:drag; display:block; margin-left: auto; margin-right: auto; padding: 0; position: relative; z-index: -2; margin-bottom: 3px;"></canvas>
+    <div id="cardContents" style="display: grid; margin:0"></div>
+    <canvas id="botStats" width="173" height="90" style="display:block; margin-left: auto; margin-right: auto; padding: 0; ; margin-top:-22px; z-index: -1; position: relative;"></canvas>
+
+    </div>
+  </body>
+  <script src="./renderer.js"></script>
+  <script>
+  var c = document.getElementById("myCanvas");
+  var ctx = c.getContext("2d");
+  ctx.scale(.75,.75); // Note that scale does not reset
+  ctx.globalAlpha = 1;
+  var img = new Image;
+  img.src = './double3-cropped.png';
+
+  img.onload = function () {
+    ctx.drawImage(img, 0 ,0);
+  };
+
+  c2 = document.getElementById("botStats");
+  ctx2 = c2.getContext("2d");
+  
+  ctx2.scale(.75,.75);
+
+  var img2 = new Image;
+  img2.src = './bottom4-extended.png';
+
+  img2.onload = function() {
+    ctx2.drawImage(img2, 0 ,0);
+
+    ctx.fillStyle = '#404040';
+    roundRect(ctx, 620, 0, 100, 100, 15, true,false);
+    ctx.fillRect(620, 0, 50, 100);
+    
+    ctx.font = "75px Beaufort for LOL Bold";
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+    ctx.fillText("3", 670, 76);
+  }
+
+  c3 = document.getElementById("brown");
+  ctx3 = c3.getContext("2d");
+
+  ctx3.scale(.75,.75);
+
+  var img3 = new Image;
+  img3.src = './brown.png';
+  img3.onload = function() {
+    ctx3.drawImage(img3, 0, 0);
+  }
+
+  </script>
+</html>
