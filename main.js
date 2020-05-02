@@ -1,4 +1,3 @@
-// Modules to control application life and create native browser window
 const {app, BrowserWindow, remote} = require('electron');
 const path = require('path');
 const {ipcMain, screen} = require('electron');
@@ -12,7 +11,6 @@ function createWindow () {
     minWidth:172,
     icon: "./icon.png",
     maximizable:false,
-    //backgroundColor:'#7F3300',
     transparent:true,
     frame:false,
     webPreferences: {
@@ -21,17 +19,12 @@ function createWindow () {
     }
   })
 
-
-  // and load the index.html of the app.
   mainWindow.loadFile('index.html');
-
-
   
   testWindow = new BrowserWindow({
     width:340,
     height:512,
     maximizable:false,
-    //backgroundColor:'#7F3300',
     transparent:true,
     skipTaskbar:true,
     frame:false,
@@ -66,12 +59,9 @@ function createWindow () {
     testWindow.hide();
   });
 
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.setVisibleOnAllWorkspaces(true);
     mainWindow.setAlwaysOnTop(true, 'screen-saver');
-    //mainWindow.setIgnoreMouseEvents(true);
 
     mainWindow.on('resize', () => {
       var size = mainWindow.getSize();
@@ -102,15 +92,6 @@ app.on('activate', function () {
   if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
-//var XMLHttpRequest = require('xhr2');
-//const https = require('https');
-
-///ipcMain.on( "setCardArr", ( event, cardArr ) => {
-///  global.cardArr = cardArr;
-///} );
-
 const axios = require('axios');
 
 
@@ -122,7 +103,6 @@ async function httpGet(theUrl)
          method: 'get'
          }
      );
-     // Don't forget to return something   
      return res.data
  }
  catch (err) {
@@ -134,9 +114,8 @@ var url = "http://127.0.0.1:21337/positional-rectangles";
 var prevDraw;
 var cardsLeft;
 var height;
-var handSize = 0;
+var handSize;
 global.decklist = [];
-///global.cardArr;
 
 
 function waitingForGame(r) {
@@ -159,10 +138,11 @@ function matchFound(r) {
 
   mainWindow.show();
   
-  //mainWindow.webContents.on('did-finish-load', () => {
   size = mainWindow.getSize();
   mainWindow.webContents.send('start', size[0], size[1]);
-  //});
+
+  handSize = 4;
+  mainWindow.webContents.send('handUpdate', handSize);
 
   console.log("Waiting for Mulligan");
   httpGet(url).then(res => waitingForMulligan(res));
@@ -183,8 +163,7 @@ function waitingForMulligan(r) { //Mulligan
   if (card == null) {
     setTimeout(function() {httpGet(url).then(res => waitingForMulligan(res));}, 1000);
   }
-  else {
-    //print("First Draw" + item['CardCode'])
+  else { // First Draw
 
     prevDraw = card;
     
@@ -193,32 +172,26 @@ function waitingForMulligan(r) { //Mulligan
       if ((element.CardCode !== ("face")) && (element.LocalPlayer) && (element.CardID !== firstCard)) {
         console.log(element.CardCode);
         cardsLeft--;
-
         
-      if (element.type === "Unit") 
-        mainWindow.webContents.send('update', element.CardCode, true);
-      else
-        mainWindow.webContents.send('update', element.CardCode, false);
-        //mainWindow.webContents.send('update', element.CardCode);
-        //decklist[element.CardCode]--;
+        if (element.type === "Unit") 
+          mainWindow.webContents.send('update', element.CardCode, true);
+        else
+          mainWindow.webContents.send('update', element.CardCode, false);
       }
     };
 
     console.log("Tracking Game");
 
     httpGet(url).then(res => trackingGame(res));
-
-    //trackingGame();
   }
 }
 
 function trackingGame(r) {
   var tempHandSize = 0;
 
-  if (r.GameState !== ("InProgress")) 
+  if (r.GameState !== ("InProgress")) {
     httpGet("http://127.0.0.1:21337/game-result").then(res => matchOver(res));
-    //matchOver();
-
+  }
   else {
     for (let element of r.Rectangles) {
       if ((element.TopLeftY < height * 0.17)) {
@@ -239,7 +212,6 @@ function trackingGame(r) {
         mainWindow.webContents.send('update', card.CardCode, false);
     }
 
-    //setTimeout(trackingGame, 1000);
     setTimeout(function() {httpGet(url).then(res => trackingGame(res));}, 1000);
   }
 
@@ -250,8 +222,7 @@ function trackingGame(r) {
 }
 
 function matchOver(r) {
-  r = r.LocalPlayerWon;
-  if (r)
+  if (r.LocalPlayerWon)
     console.log("Victory");
   else
     console.log("Defeat");
