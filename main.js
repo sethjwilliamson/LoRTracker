@@ -132,9 +132,7 @@ function waitingForGame(r) {
 }
 
 function matchFound(r) {
-  console.log(decklist);
   global.decklist = r.CardsInDeck;
-  console.log(decklist);
 
   mainWindow.show();
   

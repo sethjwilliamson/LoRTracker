@@ -22,7 +22,7 @@
   <body>
     <!--<div style="width:720*.25; height:100*.25; -webkit-app-region:drag; color:aquamarine">Click Me!</button>-->
     <!-- You can also require other files to run in this process -->
-    <canvas id="myCanvas" width="173" height="72" style="-webkit-app-region:drag; display:block; margin-left: auto; margin-right: auto; padding: 0; z-index: 0; position: relative;"></canvas>
+    <canvas id="main" width="173" height="72" style="-webkit-app-region:drag; display:block; margin-left: auto; margin-right: auto; padding: 0; z-index: 0; position: relative;"></canvas>
     <canvas id="region%" width="173" height="20" style="-webkit-app-region:drag; display:block; margin-left: auto; margin-right: auto; padding: 0; margin-top:-28px; margin-bottom: 0;position: relative; z-index: 1;"></canvas>
     <canvas id="brown" width="173" height="20" style="-webkit-app-region:drag; display:block; margin-left: auto; margin-right: auto; padding: 0; position: relative; z-index: -2; margin-bottom: 3px;"></canvas>
     <div id="cardContents" style="display: grid; margin:0"></div>
@@ -32,47 +32,39 @@
   </body>
   <script src="./renderer.js"></script>
   <script>
-  var c = document.getElementById("myCanvas");
-  var ctx = c.getContext("2d");
-  ctx.scale(.75,.75); // Note that scale does not reset
-  ctx.globalAlpha = 1;
-  var img = new Image;
-  img.src = './double3-cropped.png';
+    
+  var cMain = document.getElementById("main");
+  var ctxMain = cMain.getContext("2d");
+  ctxMain.scale(.75,.75); // Note that scale does not reset
+  ctxMain.globalAlpha = 1;
+  var imgStart = new Image;
+  imgStart.src = './double3-cropped.png';
 
-  img.onload = function () {
-    ctx.drawImage(img, 0 ,0);
+  imgStart.onload = function () {
+    ctxMain.drawImage(imgStart, 0 ,0);
   };
 
-  c2 = document.getElementById("botStats");
-  ctx2 = c2.getContext("2d");
+  cBot = document.getElementById("botStats");
+  ctxBot = cBot.getContext("2d");
   
-  ctx2.scale(.75,.75);
+  ctxBot.scale(.75,.75);
 
-  var img2 = new Image;
-  img2.src = './bottom4-extended.png';
+  var imgBot = new Image;
+  imgBot.src = './bottom4-extended.png';
 
-  img2.onload = function() {
-    ctx2.drawImage(img2, 0 ,0);
-
-    ctx.fillStyle = '#404040';
-    roundRect(ctx, 620, 0, 100, 100, 15, true,false);
-    ctx.fillRect(620, 0, 50, 100);
-    
-    ctx.font = "75px Beaufort for LOL Bold";
-    ctx.fillStyle = "white";
-    ctx.textAlign = "center";
-    ctx.fillText("3", 670, 76);
+  imgBot.onload = function() {
+    ctxBot.drawImage(imgBot, 0 ,0);
   }
 
-  c3 = document.getElementById("brown");
-  ctx3 = c3.getContext("2d");
+  cBack = document.getElementById("brown");
+  ctxBack = cBack.getContext("2d");
 
-  ctx3.scale(.75,.75);
+  ctxBack.scale(.75,.75);
 
-  var img3 = new Image;
-  img3.src = './brown.png';
-  img3.onload = function() {
-    ctx3.drawImage(img3, 0, 0);
+  var imgBrown = new Image;
+  imgBrown.src = './brown.png';
+  imgBrown.onload = function() {
+    ctxBack.drawImage(imgBrown, 0, 0);
   }
 
   </script>
