@@ -11,7 +11,6 @@ ipcRenderer.on('update', (event, cardCode, isUnit) => {
 });
 
 ipcRenderer.on('handUpdate', (event, handSize) => {
-    console.log(handSize);
     this.handSize = handSize;
     updateTracker();
 });
@@ -105,13 +104,11 @@ var margin = 3;
 var deckRegions;
 var cardRegions;
 var handSize;
-var grd = ctxCard.createLinearGradient(0,0,500,0);
-var grd2 = ctxCard.createLinearGradient(0,0,450,0);
-var grd3 = ctxCard.createRadialGradient(50, 50, 5, 50, 50, 60);
 
 function start() {
     console.log("Start");
-    obj = remote.getGlobal('decklist');
+    let obj = remote.getGlobal('decklist');
+    console.log(obj);
 
     let keys = Object.keys(obj);
     cardsLeft = 0;
@@ -156,10 +153,10 @@ function start() {
         });
     }
     
-    let cMain = document.getElementById("main");///////
-    let ctxMain = cMain.getContext("2d");///////
+    let cMain = document.getElementById("main");
+    let ctxMain = cMain.getContext("2d");
     //ctxMainMain.scale(c.width / 230, c.height / 111);
-    ctxMain.clearRect(0, 0, cMain.width, cMain.height);
+    //ctxMain.clearRect(0, 0, cMain.width, cMain.height);
 
     switch (deckRegions.length) {
         case 1:
@@ -179,13 +176,14 @@ function start() {
             imgRegion1.src = regionIcons[deckRegions[0]];
 
             imgRegion2.src = regionIcons[deckRegions[1]];
+           // setTimeout(function() {httpGet(url).then(res => waitingForGame(res));}, 5000);
 
-            imgRegion2.onload = function() {
+            setTimeout(function() {
                 ctxMain.drawImage(imgMain, 0 , 0);
                 ctxMain.drawImage(imgRegion1, 48, 20, 50, 50);
                 ctxMain.drawImage(imgRegion2, 132, 20, 50, 50);
                 updateTracker();
-            }
+            }, 100);
             break;
         case 3:
             imgMain.src = './double3-cropped.png';
@@ -211,6 +209,7 @@ function start() {
             break;
         default:
             console.log("Broken ?");
+            setTimeout(start(), 100);
     }
 }
 
@@ -222,7 +221,7 @@ async function updateCard(cardCode) {
 async function editCard(cardCode, isUnit) {
     card = cardArr.find(o => o.cardCode == cardCode);
     card.quantity--;
-    console.log(card);
+    
     cardRegions.find(o => o.region == card.region).quantity--;
 
     if (isUnit)
@@ -234,8 +233,6 @@ async function editCard(cardCode, isUnit) {
 }
     
 function updateTracker() {
-    console.log("Update")
-
     let cRegion = document.getElementById("region%");
     let ctxRegion = cRegion.getContext("2d");
 
@@ -250,10 +247,6 @@ function updateTracker() {
                 ctxRegion.fillText(Math.round(cardRegions.find(o => o.region == deckRegions[0]).quantity / cardsLeft * 100) + "%", 86, 15);
                 break;
             case 2:
-                console.log(cardRegions.find(o => o.region == deckRegions[0]).quantity);
-                console.log(cardRegions.find(o => o.region == deckRegions[1]).quantity);
-                console.log(cardsLeft);
-
                 ctxRegion.fillText(Math.round(cardRegions.find(o => o.region == deckRegions[0]).quantity / cardsLeft * 100) + "%", 55, 15)
                 ctxRegion.fillText(Math.round(cardRegions.find(o => o.region == deckRegions[1]).quantity / cardsLeft * 100) + "%", 118, 15);
                 break;
@@ -276,7 +269,7 @@ function updateTracker() {
     /// Transparency
 
     cardArr.sort((a,b) => (a.mana > b.mana) ? 1 : ((b.mana > a.mana) ? -1 : 0)); 
-    console.log(cardArr);
+    
     for (let element of cardArr) {
         cCard = document.createElement("canvas"); 
         cCard.width = width;
@@ -287,6 +280,11 @@ function updateTracker() {
         ctxCard = cCard.getContext("2d"); 
         div.appendChild(cCard);
         ctxCard.scale(cCard.width / 720, cCard.height / 100);
+
+        
+        let grd = ctxCard.createLinearGradient(0,0,500,0);
+        let grd2 = ctxCard.createLinearGradient(0,0,450,0);
+        let grd3 = ctxCard.createRadialGradient(50, 50, 5, 50, 50, 60);
         
         ctxCard.drawImage(element.image,50,0);
         
@@ -438,7 +436,6 @@ function updateTracker() {
 }
 
 function previewCard (cardCode, element) {
-    console.log(cardCode)
     ipcRenderer.send('preview', "./cards/" + cardCode + ".png", "x", element.getBoundingClientRect()['y']); // Send Quantity
 }
 
