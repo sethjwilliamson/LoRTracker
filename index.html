@@ -9,6 +9,13 @@
   <head>
     <meta charset="UTF-8">
     <link href="https://db.onlinewebfonts.com/c/12420e8c141ca7c3dff41de2d59df13e?family=Beaufort+for+LOL+Bold" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    
+    <!-- Bootstrap Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script>let $ = require('jquery');</script>
+    <script>require('popper.js');</script>
+    <script>require('bootstrap');</script>
     <!--/// Switch to local ?-->
 
     <!--
@@ -32,7 +39,7 @@
   </body>
   <script src="./renderer.js"></script>
   <script>
-    
+
   var cMain = document.getElementById("main");
   var ctxMain = cMain.getContext("2d");
   ctxMain.scale(.75,.75); // Note that scale does not reset
