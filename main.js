@@ -51,6 +51,16 @@ function createWindow () {
   })
 
   graveyardWindow.loadFile('graveyard.html');
+
+  graveyardWindow.webContents.on('did-finish-load', () => {
+    graveyardWindow.setVisibleOnAllWorkspaces(true);
+    graveyardWindow.setAlwaysOnTop(true, 'screen-saver');
+
+    graveyardWindow.on('resize', () => {
+      var size = mainWindow.getSize();
+      graveyardWindow.webContents.send('resize', size[0], size[1]);
+    });
+  });
   
   fullCardWindow.webContents.on('did-finish-load', () => {
     fullCardWindow.setVisibleOnAllWorkspaces(true);
@@ -59,14 +69,28 @@ function createWindow () {
     fullCardWindow.hide();
   })
 
-  ipcMain.on('preview', (event, src, x, y) => {
-    mainPos = mainWindow.getPosition();
-    if (mainPos[0] > screen.getPrimaryDisplay().workAreaSize.width / 2) { // config
-      fullCardWindow.setPosition(mainPos[0] - 340, mainPos[1] - 210 + y); 
+  
+
+  ipcMain.on('preview', (event, src, x, y, isMainTracker) => {
+    let windowPosition;
+    let windowSize;
+
+    if (isMainTracker) {
+      windowPosition = mainWindow.getPosition();
+      windowSize = mainWindow.getSize();
     }
     else {
-      fullCardWindow.setPosition(mainPos[0] + mainWindow.getSize()[0], mainPos[1] - 210 + y); 
+      windowPosition = graveyardWindow.getPosition();
+      windowSize = graveyardWindow.getSize();
     }
+
+    if (windowPosition[0] > screen.getPrimaryDisplay().workAreaSize.width / 2) { // config
+      fullCardWindow.setPosition(windowPosition[0] - 340, windowPosition[1] - 210 + y); 
+    }
+    else {
+      fullCardWindow.setPosition(windowPosition[0] + windowSize[0], windowPosition[1] - 210 + y); 
+    }
+
     fullCardWindow.webContents.send('preview', src, x, y);
     fullCardWindow.show();
   });
@@ -126,12 +150,18 @@ async function httpGet(theUrl)
  }
 }
 
+// Necessary for graveyard (maybe)
+
 var url = "http://127.0.0.1:21337/positional-rectangles";
+var setJson = require('./set1-en_us.json');
 var prevDraw;
 var cardsLeft;
 var height;
 var handSize;
+var currentRectangles = [];
 global.decklist = [];
+global.graveyardArr = [];
+global.opponentDeckArr = [];
 
 
 function waitingForGame(r) {
@@ -141,14 +171,16 @@ function waitingForGame(r) {
     setTimeout(function() {httpGet(url).then(res => waitingForGame(res));}, 500);
     console.log("r NOT EXIST1");
   }
-  if ((r.GameState) === ('InProgress')) {
-    prevDraw = null;
-    cardsLeft = 40;
-    height = r.Screen.ScreenHeight;
-    httpGet("http://127.0.0.1:21337/static-decklist").then(res => matchFound(res));
+  else {
+    if ((r.GameState) === ('InProgress')) {
+      prevDraw = null;
+      cardsLeft = 40;
+      height = r.Screen.ScreenHeight;
+      httpGet("http://127.0.0.1:21337/static-decklist").then(res => matchFound(res));
+    }
+    else
+      setTimeout(function() {httpGet(url).then(res => waitingForGame(res));}, 5000);
   }
-  else
-    setTimeout(function() {httpGet(url).then(res => waitingForGame(res));}, 5000);
 }
 
 function matchFound(r) {
@@ -158,6 +190,9 @@ function matchFound(r) {
   }
 
   global.decklist = r.CardsInDeck;
+  global.graveyardArr = [];
+  global.opponentDeckArr = [];
+  currentRectangles = [];
 
   mainWindow.show();
   
@@ -219,12 +254,17 @@ function trackingGame(r) {
   }
 
   var tempHandSize = 0;
+  let tempCurrentRectangles = [];
 
   if (r.GameState !== ("InProgress")) {
     httpGet("http://127.0.0.1:21337/game-result").then(res => matchOver(res));
   }
   else {
     for (let element of r.Rectangles) {
+      if (element.CardCode !== "face") {
+        tempCurrentRectangles.push({"CardID": element.CardID, "CardCode": element.CardCode, "LocalPlayer": element.LocalPlayer});
+      }
+
       if ((element.TopLeftY < height * 0.17)) {
         tempHandSize++;
       }
@@ -233,6 +273,41 @@ function trackingGame(r) {
         break;
       }
     };
+    
+    if (currentRectangles !== tempCurrentRectangles && tempHandSize !== 0) {
+      for (let element of currentRectangles) {
+        if ( !tempCurrentRectangles.find(o => o.CardID === element.CardID)) {//!tempCurrentRectangles.includes(element)) {
+          let card = setJson.find(o => o.cardCode === element.CardCode);
+
+          if (card.type === "Unit" || card.type === "Spell") {
+            if (graveyardArr.find(o => o.cardCode === element.CardCode && o.localPlayer === element.LocalPlayer)) {
+              let existingCard = graveyardArr.find(o => o.cardCode === element.CardCode);
+              if (!existingCard.IDs.includes(element.CardID)) {
+                existingCard.quantity++;
+                existingCard.IDs.push(element.CardID)
+              }
+            }
+            else {
+              graveyardArr.push({
+                "cardCode": card.cardCode,
+                "mana": card.cost,
+                "quantity": 1,
+                "imageUrl": null,
+                "name": card.name,
+                "region": card.regionRef,
+                "localPlayer": element.LocalPlayer,
+                "type": card.type,
+                "IDs": [element.CardID]
+              });
+            }
+          }
+          graveyardWindow.webContents.send('update', "test");
+        }
+      }
+
+      currentRectangles = tempCurrentRectangles;
+    }
+
 
     if (card != null && card.CardID !== prevDraw) {
       prevDraw = card.CardID;
@@ -243,12 +318,12 @@ function trackingGame(r) {
         mainWindow.webContents.send('update', card.CardCode, false);
     }
 
-    setTimeout(function() {httpGet(url).then(res => trackingGame(res));}, 1000);
-  }
+    if (handSize !== tempHandSize && tempHandSize !== 0) {
+      handSize = tempHandSize;
+      mainWindow.webContents.send('handUpdate', handSize);
+    }
 
-  if (handSize !== tempHandSize && tempHandSize !== 0) {
-    handSize = tempHandSize;
-    mainWindow.webContents.send('handUpdate', handSize);
+    setTimeout(function() {httpGet(url).then(res => trackingGame(res));}, 1000);
   }
 }
 

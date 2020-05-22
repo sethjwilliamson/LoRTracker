@@ -1,40 +1,122 @@
 <html>
-    <style>
-        .btn-group button {
-            background-color: #4CAF50; /* Green background */
-            border: 1px solid green; /* Green border */
-            color: white; /* White text */
-            padding: 10px 24px; /* Some padding */
-            cursor: pointer; /* Pointer/hand icon */
-            float: left; /* Float the buttons side by side */
-        }
 
-        .btn-group button:not(:last-child) {
-            border-right: none; /* Prevent double borders */
-        }
+    <head>
+        <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+        
+        <!-- Bootstrap Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script>let $ = require('jquery');</script>
+        <script>require('popper.js');</script>
+        <script>require('bootstrap');</script>
+        <style>
+          .btn {
+            color:#C6B7A0;
+            padding: 6px;
+          }
+          .btn-lor-left {
+            background-image: url("button-left-unselected.png");
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            width: 33.3%;
+            padding: 6px;
+            color:#C6B7A0;
+          }
+          .btn-lor-middle {
+            background-image: url("button-middle-unselected.png");
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            width: 33.3%;
+            padding: 6px;
+            color:#C6B7A0;
+          }
+          .btn-lor-right {
+            background-image: url("button-right-unselected.png");
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            width: 33.3%;
+            padding: 6px;
+            color:#C6B7A0;
+          }
+          .btn-lor-left:hover {
+            background-image: url("button-left-hover.png");
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            width: 33.3%;
+            padding: 6px;
+            color:#C6B7A0;
+          }
+          .btn-lor-middle:hover {
+            background-image: url("button-middle-hover.png");
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            width: 33.3%;
+            padding: 6px;
+            color:#C6B7A0;
+          }
+          .btn-lor-right:hover {
+            background-image: url("button-right-hover.png");
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            width: 33.3%;
+            padding: 6px;
+            color:#C6B7A0;
+          }
+          .btn-lor-left-active {
+            background-image: url("button-left-selected.png") !important;
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            width: 33.3%;
+            padding: 6px;
+            color:#C6B7A0;
+          }
+          .btn-lor-middle-active {
+            background-image: url("button-middle-selected.png") !important;
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            width: 33.3%;
+            padding: 6px;
+            color:#C6B7A0;
+          }
+          .btn-lor-right-active {
+            background-image: url("button-right-selected.png") !important;
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            width: 33.3%;
+            padding: 6px;
+            color:#C6B7A0;
+            
+          }
 
-        /* Clear floats (clearfix hack) */
-        .btn-group:after {
-            content: "";
-            clear: both;
-            display: table;
-        }
-
-        /* Add a background color on hover */
-        .btn-group button:hover {
-            background-color: #47A34A;
-        }
-    </style>
+          ::-webkit-scrollbar {
+            display: none;
+          }
+      
+        </style>
+    </head>
     <body>
-        <div class="btn-group" style="width:100%; text-align: center;">
-            <button style="width:33.3%; text-align: center; padding: 3px" type="radio">Mine</button>
-            <button style="width:33.3%; text-align: center; padding: 3px" type="radio">Both</button>
-            <button style="width:33.3%; text-align: center; padding: 3px" type="radio">Enemy</button>
-        </div>
-        <div class="btn-group" style="width:100%; text-align: center;">
-            <button style="width:33.3%; text-align: center; padding: 3px">Units</button>
-            <button style="width:33.3%; text-align: center; padding: 3px">Both</button>
-            <button style="width:33.3%; text-align: center; padding: 3px">Spells</button>
-        </div>
-	</body>
+      <div class="btn-group" data-toggle="buttons" style="width: 100%" id="player">
+        <label class="btn btn-lor-left" style="color: #C6B7A0;">
+          <input style="display: none;" type="radio" name="optionsPlayer" id="option-player-m" onclick="buttonPressed(this)"> My
+        </label>
+        <label class="btn btn-lor-middle btn-lor-middle-active" style="color: #C6B7A0;">
+          <input style="display: none;" type="radio" name="optionsPlayer" id="option-player-b" onclick="buttonPressed(this)" checked> Both
+        </label>
+        <label class="btn btn-lor-right" style="color: #C6B7A0;">
+          <input style="display: none;" type="radio" name="optionsPlayer" id="option-player-e" onclick="buttonPressed(this)"> Enemy
+        </label>
+      </div>   
+      <div class="btn-group" data-toggle="buttons" style="width: 100%" id="type">
+        <label class="btn btn-lor-left" style="color: #C6B7A0;">
+          <input style="display: none;" type="radio" name="optionsType" id="option-type-u" onclick="buttonPressed(this)"> Units
+        </label>
+        <label class="btn btn-lor-middle btn-lor-middle-active" style="color: #C6B7A0;">
+          <input style="display: none;" type="radio" name="optionsType" id="option-type-b" onclick="buttonPressed(this)" checked> Both
+        </label>
+        <label class="btn btn-lor-right" style="color: #C6B7A0;">
+          <input style="display: none;" type="radio" name="optionsType" id="option-type-s" onclick="buttonPressed(this)"> Spells
+        </label>
+      </div>   
+      <div id="cardContents" style="display: grid; margin:0; width: 100%; overflow-y: auto;"></div>
+  </body>
+  <script src="./graveyardRenderer.js"></script>
 </html>

@@ -7,7 +7,7 @@ ipcRenderer.on('start', (event, width, height) => {
 });
 
 ipcRenderer.on('update', (event, cardCode, isUnit) => {
-    updateCard(cardCode);
+    updateCard(cardCode, isUnit);
 });
 
 ipcRenderer.on('handUpdate', (event, handSize) => {
@@ -213,8 +213,8 @@ function start() {
     }
 }
 
-async function updateCard(cardCode) {
-    await editCard(cardCode);
+async function updateCard(cardCode, isUnit) {
+    await editCard(cardCode, isUnit);
     updateTracker();
 }
 
@@ -436,7 +436,8 @@ function updateTracker() {
 }
 
 function previewCard (cardCode, element) {
-    ipcRenderer.send('preview', "./cards/" + cardCode + ".png", "x", element.getBoundingClientRect()['y']); // Send Quantity
+    ipcRenderer.send('preview', "./cards/" + cardCode + ".png", "x", parseInt(element.getBoundingClientRect()['y']), true); 
+    /// Send Quantity
 }
 
 function unpreviewCard () {
