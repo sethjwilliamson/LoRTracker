@@ -97,10 +97,9 @@ module.exports = {
         grd3.addColorStop(0, "#1A2F64");
         grd3.addColorStop(.5, "#1A2F64");
         
-        ctxCard.beginPath();
-        ctxCard.arc(50, 50, 50, 0, 2 * Math.PI);
-        ctxCard.fillStyle = grd3;
-        ctxCard.fill();
+        ctxCard.fillStyle = '#0E4F72';
+        roundRect(ctxCard, 0, 0, 100, 100, 15, true,false);
+        ctxCard.fillRect(50, 0, 50, 100);
         
         ctxCard.fillStyle = '#404040';
         roundRect(ctxCard, 620, 0, 100, 100, 15, true,false);
