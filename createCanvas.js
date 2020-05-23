@@ -52,11 +52,16 @@ module.exports = {
     
       div.innerHTML = '';
 
-      for (let element of cardArr) {
+      for (let [index, element] of cardArr.entries()) {
         console.log(element.name);
         cCard = document.createElement("canvas"); 
         cCard.style.width = "100%";
         cCard.height = 40;
+
+        if (index == 0) {
+            cCard.style.marginTop = margin + "px";
+        }
+
         cCard.style.marginBottom = margin + "px";
         cCard.addEventListener('mouseenter', function() {previewCard(element.cardCode, this)});
         cCard.addEventListener('mouseleave', function() {unpreviewCard()})

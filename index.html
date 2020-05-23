@@ -31,7 +31,7 @@
     <!-- You can also require other files to run in this process -->
     <canvas id="main" width="173" height="72" style="-webkit-app-region:drag; display:block; margin-left: auto; margin-right: auto; padding: 0; z-index: 0; position: relative;"></canvas>
     <canvas id="region%" width="173" height="20" style="-webkit-app-region:drag; display:block; margin-left: auto; margin-right: auto; padding: 0; margin-top:-28px; margin-bottom: 0;position: relative; z-index: 1;"></canvas>
-    <canvas id="brown" width="173" height="20" style="-webkit-app-region:drag; display:block; margin-left: auto; margin-right: auto; padding: 0; position: relative; z-index: -2; margin-bottom: 3px;"></canvas>
+    <canvas id="brown" width="173" height="20" style="display:block; margin-left: auto; margin-right: auto; padding: 0; position: relative; z-index: -2"></canvas>
     <div id="cardContents" style="display: grid; margin:0"></div>
     <canvas id="botStats" width="173" height="90" style="display:block; margin-left: auto; margin-right: auto; padding: 0; ; margin-top:-22px; z-index: -1; position: relative;"></canvas>
 
@@ -42,7 +42,7 @@
 
   var cMain = document.getElementById("main");
   var ctxMain = cMain.getContext("2d");
-  ctxMain.scale(.75,.75); // Note that scale does not reset
+  ctxMain.scale(cMain.width/230,cMain.height/96); 
   ctxMain.globalAlpha = 1;
   var imgStart = new Image;
   imgStart.src = './double3-cropped.png';
@@ -54,7 +54,7 @@
   cBot = document.getElementById("botStats");
   ctxBot = cBot.getContext("2d");
   
-  ctxBot.scale(.75,.75);
+  ctxBot.scale(cBot.width/230,cBot.height/120);
 
   var imgBot = new Image;
   imgBot.src = './bottom4-extended.png';
@@ -66,7 +66,7 @@
   cBack = document.getElementById("brown");
   ctxBack = cBack.getContext("2d");
 
-  ctxBack.scale(.75,.75);
+  ctxBack.scale(cBack.width/230,cBack.height/40);
 
   var imgBrown = new Image;
   imgBrown.src = './brown.png';

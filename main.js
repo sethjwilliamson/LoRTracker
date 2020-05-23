@@ -6,9 +6,9 @@ var mainWindow;
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 172,
+    width: 173,
     height: 800,
-    minWidth:172,
+    minWidth:173,
     icon: "./icon.png",
     maximizable:false,
     transparent:true,
