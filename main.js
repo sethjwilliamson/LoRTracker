@@ -34,7 +34,15 @@ function createWindow () {
       nodeIntegration:true
     }
   })
+
   fullCardWindow.loadFile("./previewCard.html");
+  
+  fullCardWindow.webContents.on('did-finish-load', () => {
+    fullCardWindow.setVisibleOnAllWorkspaces(true);
+    fullCardWindow.setAlwaysOnTop(true, 'screen-saver');
+    fullCardWindow.setIgnoreMouseEvents(true);
+    fullCardWindow.hide();
+  })
 
   graveyardWindow = new BrowserWindow({
     width: 172,
@@ -61,27 +69,53 @@ function createWindow () {
       graveyardWindow.webContents.send('resize', size[0], size[1]);
     });
   });
-  
-  fullCardWindow.webContents.on('did-finish-load', () => {
-    fullCardWindow.setVisibleOnAllWorkspaces(true);
-    fullCardWindow.setAlwaysOnTop(true, 'screen-saver');
-    fullCardWindow.setIgnoreMouseEvents(true);
-    fullCardWindow.hide();
+
+  oppDeckWindow = new BrowserWindow({
+    width: 172,
+    height: 800,
+    minWidth:172,
+    icon: "./icon.png",
+    maximizable:false,
+    transparent:true,
+    frame:false,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration:true
+    }
   })
 
+  oppDeckWindow.loadFile('oppDeck.html');
+
+  oppDeckWindow.webContents.on('did-finish-load', () => {
+    oppDeckWindow.setVisibleOnAllWorkspaces(true);
+    oppDeckWindow.setAlwaysOnTop(true, 'screen-saver');
+
+    oppDeckWindow.on('resize', () => {
+      var size = oppDeckWindow.getSize();
+      oppDeckWindow.webContents.send('resize', size[0], size[1]);
+    });
+  });
   
 
-  ipcMain.on('preview', (event, src, x, y, isMainTracker) => {
+  
+
+  ipcMain.on('preview', (event, src, x, y, window) => {
     let windowPosition;
     let windowSize;
 
-    if (isMainTracker) {
-      windowPosition = mainWindow.getPosition();
-      windowSize = mainWindow.getSize();
-    }
-    else {
-      windowPosition = graveyardWindow.getPosition();
-      windowSize = graveyardWindow.getSize();
+    switch (window) {
+      case "tracker":
+        windowPosition = mainWindow.getPosition();
+        windowSize = mainWindow.getSize();
+        break;
+      case "graveyard": 
+        windowPosition = graveyardWindow.getPosition();
+        windowSize = graveyardWindow.getSize();
+        break;
+      case "oppDeck":
+        windowPosition = oppDeckWindow.getPosition();
+        windowSize = oppDeckWindow.getSize();
+        break;
     }
 
     if (windowPosition[0] > screen.getPrimaryDisplay().workAreaSize.width / 2) { // config
@@ -161,7 +195,7 @@ var handSize;
 var currentRectangles = [];
 global.decklist = [];
 global.graveyardArr = [];
-global.opponentDeckArr = [];
+global.oppDeckArr = [];
 
 
 function waitingForGame(r) {
@@ -191,7 +225,7 @@ function matchFound(r) {
 
   global.decklist = r.CardsInDeck;
   global.graveyardArr = [];
-  global.opponentDeckArr = [];
+  global.oppDeckArr = [];
   currentRectangles = [];
 
   mainWindow.show();
@@ -275,6 +309,36 @@ function trackingGame(r) {
     };
     
     if (currentRectangles !== tempCurrentRectangles && tempHandSize !== 0) {
+      for (let element of tempCurrentRectangles) {
+        if ( !currentRectangles.find(o => o.CardID === element.CardID) && !element.LocalPlayer) {
+          let card = setJson.find(o => o.cardCode === element.CardCode);
+
+          if (card.type === "Unit" || card.type === "Spell") {
+            if (oppDeckArr.find(o => o.cardCode === element.CardCode && o.localPlayer === element.LocalPlayer)) {
+              let existingCard = oppDeckArr.find(o => o.cardCode === element.CardCode);
+              if (!existingCard.IDs.includes(element.CardID)) {
+                existingCard.quantity++;
+                existingCard.IDs.push(element.CardID)
+              }
+            }
+            else {
+              oppDeckArr.push({
+                "cardCode": card.cardCode,
+                "mana": card.cost,
+                "quantity": 1,
+                "imageUrl": null,
+                "name": card.name,
+                "region": card.regionRef,
+                "localPlayer": element.LocalPlayer,
+                "type": card.type,
+                "IDs": [element.CardID]
+              });
+            }
+          }
+          oppDeckWindow.webContents.send('update', "test");
+        }
+      }
+
       for (let element of currentRectangles) {
         if ( !tempCurrentRectangles.find(o => o.CardID === element.CardID)) {//!tempCurrentRectangles.includes(element)) {
           let card = setJson.find(o => o.cardCode === element.CardCode);
