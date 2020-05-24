@@ -1,13 +1,17 @@
 const {app, BrowserWindow, remote} = require('electron');
 const path = require('path');
 const {ipcMain, screen} = require('electron');
-var mainWindow;
+const Store = require('electron-store');
+const config = new Store();
+var mainWindow, fullCardWindow, graveyardWindow, oppDeckWindow;
 
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 173,
-    height: 800,
+    width: config.get("tracker-width"),
+    height: config.get("tracker-height"),
+    x: config.get("tracker-x"),
+    y: config.get("tracker-y"),
     minWidth:173,
     icon: "./icon.png",
     maximizable:false,
@@ -20,6 +24,26 @@ function createWindow () {
   })
 
   mainWindow.loadFile('index.html');
+  
+  mainWindow.webContents.on('did-finish-load', () => {
+    mainWindow.setVisibleOnAllWorkspaces(true);
+    mainWindow.setAlwaysOnTop(true, 'screen-saver');
+
+    mainWindow.on('resize', () => {
+      let size = mainWindow.getSize();
+      config.set("tracker-width", size[0]);
+      config.set("tracker-height", size[1]);
+      mainWindow.webContents.send('resize', size[0], size[1]);
+    });
+
+    mainWindow.on('move', () => {
+      let position = mainWindow.getPosition();
+      config.set("tracker-x", position[0]);
+      config.set("tracker-y", position[1]);
+    });
+
+    httpGet(url).then(res => waitingForGame(res));
+  });
   
   fullCardWindow = new BrowserWindow({
     width:340,
@@ -45,8 +69,10 @@ function createWindow () {
   })
 
   graveyardWindow = new BrowserWindow({
-    width: 173,
-    height: 800,
+    width: config.get("graveyard-width"),
+    height: config.get("graveyard-height"),
+    x: config.get("graveyard-x"),
+    y: config.get("graveyard-y"),
     minWidth:173,
     icon: "./icon.png",
     maximizable:false,
@@ -65,14 +91,24 @@ function createWindow () {
     graveyardWindow.setAlwaysOnTop(true, 'screen-saver');
 
     graveyardWindow.on('resize', () => {
-      var size = mainWindow.getSize();
+      let size = graveyardWindow.getSize();
+      config.set("graveyard-width", size[0]);
+      config.set("graveyard-height", size[1]);
       graveyardWindow.webContents.send('resize', size[0], size[1]);
+    });
+
+    graveyardWindow.on('move', () => {
+      let position = graveyardWindow.getPosition();
+      config.set("graveyard-x", position[0]);
+      config.set("graveyard-y", position[1]);
     });
   });
 
   oppDeckWindow = new BrowserWindow({
-    width: 173,
-    height: 800,
+    width: config.get("opponent-deck-width"),
+    height: config.get("opponent-deck-height"),
+    x: config.get("opponent-deck-x"),
+    y: config.get("opponent-deck-y"),
     minWidth:173,
     icon: "./icon.png",
     maximizable:false,
@@ -91,12 +127,18 @@ function createWindow () {
     oppDeckWindow.setAlwaysOnTop(true, 'screen-saver');
 
     oppDeckWindow.on('resize', () => {
-      var size = oppDeckWindow.getSize();
+      let size = oppDeckWindow.getSize();
+      config.set("opponent-deck-width", size[0]);
+      config.set("opponent-deck-height", size[1]);
       oppDeckWindow.webContents.send('resize', size[0], size[1]);
     });
-  });
-  
 
+    oppDeckWindow.on('move', () => {
+      let position = oppDeckWindow.getPosition();
+      config.set("opponent-deck-x", position[0]);
+      config.set("opponent-deck-y", position[1]);
+    });
+  });
   
 
   ipcMain.on('preview', (event, src, x, y, window) => {
@@ -133,17 +175,6 @@ function createWindow () {
     fullCardWindow.hide();
   });
 
-  mainWindow.webContents.on('did-finish-load', () => {
-    mainWindow.setVisibleOnAllWorkspaces(true);
-    mainWindow.setAlwaysOnTop(true, 'screen-saver');
-
-    mainWindow.on('resize', () => {
-      var size = mainWindow.getSize();
-      mainWindow.webContents.send('resize', size[0], size[1]);
-    });
-
-    httpGet(url).then(res => waitingForGame(res));
-  });
 }
 
 
@@ -183,8 +214,6 @@ async function httpGet(theUrl)
      console.error(err);
  }
 }
-
-// Necessary for graveyard (maybe)
 
 var url = "http://127.0.0.1:21337/positional-rectangles";
 var setJson = require('./set1-en_us.json');

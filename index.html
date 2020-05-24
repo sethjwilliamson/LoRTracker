@@ -4,6 +4,7 @@
     body {
       overflow: hidden;
       margin:0;
+      background: none !important;
     }
   </style>
   <head>
@@ -29,9 +30,11 @@
   <body>
     <!--<div style="width:720*.25; height:100*.25; -webkit-app-region:drag; color:aquamarine">Click Me!</button>-->
     <!-- You can also require other files to run in this process -->
-    <canvas id="main" width="173" height="72" style="-webkit-app-region:drag; display:block; margin-left: auto; margin-right: auto; padding: 0; z-index: 0; position: relative;"></canvas>
-    <canvas id="region%" width="173" height="20" style="-webkit-app-region:drag; display:block; margin-left: auto; margin-right: auto; padding: 0; margin-top:-28px; margin-bottom: 0;position: relative; z-index: 1;"></canvas>
-    <canvas id="brown" width="173" height="20" style="display:block; margin-left: auto; margin-right: auto; padding: 0; position: relative; z-index: -2"></canvas>
+    <div id="top-container">
+      <canvas id="main" width="173" height="72" style="-webkit-app-region:drag; display:block; margin-left: auto; margin-right: auto; padding: 0; z-index: 0; position: relative;"></canvas>
+      <canvas id="region%" width="173" height="20" style="-webkit-app-region:drag; display:block; margin-left: auto; margin-right: auto; padding: 0; margin-top:-28px; margin-bottom: 0;position: relative; z-index: 1;"></canvas>
+      <canvas id="brown" width="173" height="20" style="display:block; margin-left: auto; margin-right: auto; padding: 0; position: relative; z-index: -2"></canvas>
+    </div>
     <div id="cardContents" style="display: grid; margin:0"></div>
     <canvas id="botStats" width="173" height="90" style="display:block; margin-left: auto; margin-right: auto; padding: 0; ; margin-top:-22px; z-index: -1; position: relative;"></canvas>
 
@@ -39,40 +42,43 @@
   </body>
   <script src="./renderer.js"></script>
   <script>
+    document.getElementById("top-container").style.opacity = config.get("tracker-opacity");
+    document.getElementById("cardContents").style.opacity = config.get("card-opacity");
+    document.getElementById("botStats").style.opacity = config.get("tracker-opacity");
 
-  var cMain = document.getElementById("main");
-  var ctxMain = cMain.getContext("2d");
-  ctxMain.scale(cMain.width/230,cMain.height/96); 
-  ctxMain.globalAlpha = 1;
-  var imgStart = new Image;
-  imgStart.src = './double3-cropped.png';
+    var cMain = document.getElementById("main");
+    var ctxMain = cMain.getContext("2d");
+    ctxMain.scale(cMain.width/230,cMain.height/96); 
+    ctxMain.globalAlpha = 1;
+    var imgStart = new Image;
+    imgStart.src = './double3-cropped.png';
 
-  imgStart.onload = function () {
-    ctxMain.drawImage(imgStart, 0 ,0);
-  };
+    imgStart.onload = function () {
+      ctxMain.drawImage(imgStart, 0 ,0);
+    };
 
-  cBot = document.getElementById("botStats");
-  ctxBot = cBot.getContext("2d");
-  
-  ctxBot.scale(cBot.width/230,cBot.height/120);
+    cBot = document.getElementById("botStats");
+    ctxBot = cBot.getContext("2d");
+    
+    ctxBot.scale(cBot.width/230,cBot.height/120);
 
-  var imgBot = new Image;
-  imgBot.src = './bottom4-extended.png';
+    var imgBot = new Image;
+    imgBot.src = './bottom4-extended.png';
 
-  imgBot.onload = function() {
-    ctxBot.drawImage(imgBot, 0 ,0);
-  }
+    imgBot.onload = function() {
+      ctxBot.drawImage(imgBot, 0 ,0);
+    }
 
-  cBack = document.getElementById("brown");
-  ctxBack = cBack.getContext("2d");
+    cBack = document.getElementById("brown");
+    ctxBack = cBack.getContext("2d");
 
-  ctxBack.scale(cBack.width/230,cBack.height/40);
+    ctxBack.scale(cBack.width/230,cBack.height/40);
 
-  var imgBrown = new Image;
-  imgBrown.src = './brown.png';
-  imgBrown.onload = function() {
-    ctxBack.drawImage(imgBrown, 0, 0);
-  }
+    var imgBrown = new Image;
+    imgBrown.src = './brown.png';
+    imgBrown.onload = function() {
+      ctxBack.drawImage(imgBrown, 0, 0);
+    }
 
   </script>
 </html>

@@ -1,12 +1,12 @@
 {
-  "name": "electron-quick-start",
+  "name": "lor-tracker",
   "version": "1.0.0",
   "description": "A minimal Electron application",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/sethjwilliamson/LoRTracker",
   "keywords": [
     "Electron",
     "quick",
@@ -22,6 +22,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
+    "electron-store": "^5.1.1",
     "jquery": "^3.5.0",
     "popper": "^1.0.1",
     "popper.js": "^1.16.1",

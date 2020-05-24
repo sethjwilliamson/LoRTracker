@@ -1,5 +1,7 @@
 const {ipcRenderer, remote} = require('electron');
 const createCanvas = require('./createCanvas.js');
+const Store = require('electron-store');
+const config = new Store();
 
 ipcRenderer.on('update', (event, test) => {
     console.log("ipc");

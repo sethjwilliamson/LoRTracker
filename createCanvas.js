@@ -1,3 +1,6 @@
+const Store = require('electron-store');
+const config = new Store();
+
 var regionColors = {
     "Demacia": "#B9AC98",
     "Noxus": "#962D27",
