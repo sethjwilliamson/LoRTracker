@@ -45,9 +45,9 @@ function createWindow () {
   })
 
   graveyardWindow = new BrowserWindow({
-    width: 172,
+    width: 173,
     height: 800,
-    minWidth:172,
+    minWidth:173,
     icon: "./icon.png",
     maximizable:false,
     transparent:true,
@@ -71,9 +71,9 @@ function createWindow () {
   });
 
   oppDeckWindow = new BrowserWindow({
-    width: 172,
+    width: 173,
     height: 800,
-    minWidth:172,
+    minWidth:173,
     icon: "./icon.png",
     maximizable:false,
     transparent:true,

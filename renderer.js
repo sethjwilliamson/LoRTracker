@@ -241,6 +241,8 @@ function updateTracker() {
     ctxRegion.textAlign = "center";
     ctxRegion.fillStyle = "white";
     
+    ctxRegion.font = "12px Beaufort for LOL Bold";
+    
     if (cardArr.length > 0) {
         switch (deckRegions.length) {
             case 1:
