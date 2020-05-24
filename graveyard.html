@@ -93,30 +93,53 @@
       
         </style>
     </head>
-    <body>
-      <div class="btn-group" data-toggle="buttons" style="width: 100%" id="player">
-        <label class="btn btn-lor-left" style="color: #C6B7A0;">
-          <input style="display: none;" type="radio" name="optionsPlayer" id="option-player-m" onclick="buttonPressed(this)"> My
-        </label>
-        <label class="btn btn-lor-middle btn-lor-middle-active" style="color: #C6B7A0;">
-          <input style="display: none;" type="radio" name="optionsPlayer" id="option-player-b" onclick="buttonPressed(this)" checked> Both
-        </label>
-        <label class="btn btn-lor-right" style="color: #C6B7A0;">
-          <input style="display: none;" type="radio" name="optionsPlayer" id="option-player-e" onclick="buttonPressed(this)"> Enemy
-        </label>
-      </div>   
-      <div class="btn-group" data-toggle="buttons" style="width: 100%" id="type">
-        <label class="btn btn-lor-left" style="color: #C6B7A0;">
-          <input style="display: none;" type="radio" name="optionsType" id="option-type-u" onclick="buttonPressed(this)"> Units
-        </label>
-        <label class="btn btn-lor-middle btn-lor-middle-active" style="color: #C6B7A0;">
-          <input style="display: none;" type="radio" name="optionsType" id="option-type-b" onclick="buttonPressed(this)" checked> Both
-        </label>
-        <label class="btn btn-lor-right" style="color: #C6B7A0;">
-          <input style="display: none;" type="radio" name="optionsType" id="option-type-s" onclick="buttonPressed(this)"> Spells
-        </label>
-      </div>   
-      <div id="cardContents" style="display: grid; margin:0; width: 100%; overflow-y: auto;"></div>
+    <body style="overflow: hidden;">
+      <div style="overflow: hidden; position: absolute;">
+        <canvas id="top" width="173" height="40" style="-webkit-app-region:drag; display:block; margin-left: auto; margin-right: auto; padding: 0; z-index: 0"></canvas>
+      
+        <div class="btn-group" data-toggle="buttons" style="width: 100%; background-image: url('./full-brown.png'); margin-bottom: 0;" id="player">
+          <label class="btn btn-lor-left" style="color: #C6B7A0; margin-bottom: 0;">
+            <input style="display: none;" type="radio" name="optionsPlayer" id="option-player-m" onclick="buttonPressed(this)"> My
+          </label>
+          <label class="btn btn-lor-middle btn-lor-middle-active" style="color: #C6B7A0; margin-bottom: 0;">
+            <input style="display: none;" type="radio" name="optionsPlayer" id="option-player-b" onclick="buttonPressed(this)" checked> Both
+          </label>
+          <label class="btn btn-lor-right" style="color: #C6B7A0; margin-bottom: 0;">
+            <input style="display: none;" type="radio" name="optionsPlayer" id="option-player-e" onclick="buttonPressed(this)"> Enemy
+          </label>
+        </div>   
+        <div class="btn-group" data-toggle="buttons" style="width: 100%; background-image: url('./full-brown.png'); margin-bottom: 0" id="type">
+          <label class="btn btn-lor-left" style="color: #C6B7A0;">
+            <input style="display: none;" type="radio" name="optionsType" id="option-type-u" onclick="buttonPressed(this)"> Units
+          </label>
+          <label class="btn btn-lor-middle btn-lor-middle-active" style="color: #C6B7A0;">
+            <input style="display: none;" type="radio" name="optionsType" id="option-type-b" onclick="buttonPressed(this)" checked> Both
+          </label>
+          <label class="btn btn-lor-right" style="color: #C6B7A0;">
+            <input style="display: none;" type="radio" name="optionsType" id="option-type-s" onclick="buttonPressed(this)"> Spells
+          </label>
+        </div>   
+      </div>
+      <div id="cardContents" style="margin:0; width: 100%; height: calc(100% - 124px); overflow: auto; position: absolute; top:124px"></div>
   </body>
   <script src="./graveyardRenderer.js"></script>
+  <script>
+    var cTop = document.getElementById("top");
+    var ctxTop = cTop.getContext("2d");
+    ctxTop.scale(cTop.width/226,cTop.height/40); 
+    ctxTop.globalAlpha = 1;
+    var imgStart = new Image;
+    imgStart.src = './top-window.png';
+
+    imgStart.onload = function () {
+      ctxTop.drawImage(imgStart, 0 ,0);
+    
+      ctxTop.textAlign = "center";
+      ctxTop.fillStyle = "white";
+      
+      ctxTop.font = "16px Beaufort for LOL Bold";
+      
+      ctxTop.fillText("GRAVEYARD", imgStart.width / 2, imgStart.height / 2 + 5);
+    };
+  </script>
 </html>

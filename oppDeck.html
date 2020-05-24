@@ -16,7 +16,27 @@
         </style>
     </head>
     <body>
-      <div id="cardContents" style="display: grid; margin:0; width: 100%; overflow-y: auto;"></div>
+      <canvas id="top" width="173" height="40" style="-webkit-app-region:drag; display:block; margin-left: auto; margin-right: auto; padding: 0; z-index: 0; position: absolute;"></canvas>
+      <div id="cardContents" style="margin:0; width: 100%; height: calc(100% - 40px); overflow-y: auto; position: absolute; top: 40px"></div>
   </body>
   <script src="./oppDeckRenderer.js"></script>
+  <script>
+    var cTop = document.getElementById("top");
+    var ctxTop = cTop.getContext("2d");
+    ctxTop.scale(cTop.width/226,cTop.height/40); 
+    ctxTop.globalAlpha = 1;
+    var imgStart = new Image;
+    imgStart.src = './top-window.png';
+
+    imgStart.onload = function () {
+      ctxTop.drawImage(imgStart, 0 ,0);
+    
+      ctxTop.textAlign = "center";
+      ctxTop.fillStyle = "white";
+      
+      ctxTop.font = "16px Beaufort for LOL Bold";
+      
+      ctxTop.fillText("OPPONENT", imgStart.width / 2, imgStart.height / 2 + 5);
+    };
+  </script>
 </html>
