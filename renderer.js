@@ -110,13 +110,11 @@ var handSize;
 function start() {
     console.log("Start");
     let obj = remote.getGlobal('decklist');
-    console.log(obj);
 
     let keys = Object.keys(obj);
     cardsLeft = 0;
     spellsLeft = 0;
     unitsLeft = 0;
-    console.log(keys);
     cardArr = [];
     deckRegions = [];
     cardRegions = [];
@@ -131,6 +129,7 @@ function start() {
                 unitsLeft++;
             else 
                 spellsLeft++;
+
 
             if (!deckRegions.includes(card.regionRef)) {
                 deckRegions.push(card.regionRef);

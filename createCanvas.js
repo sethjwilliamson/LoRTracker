@@ -56,7 +56,6 @@ module.exports = {
       div.innerHTML = '';
 
       for (let [index, element] of cardArr.entries()) {
-        console.log(element.name);
         cCard = document.createElement("canvas"); 
         cCard.style.width = "100%";
         cCard.height = 40;

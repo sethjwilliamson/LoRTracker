@@ -175,8 +175,6 @@ function createWindow () {
       windowY = windowPosition[1] - 256 + y;
     }
 
-    console.log(windowPosition[1] + 512 + y);
-
     if (windowPosition[0] > screen.getPrimaryDisplay().workAreaSize.width / 2) { // config
       fullCardWindow.setPosition(windowPosition[0] - 340, windowY); 
     }
@@ -314,7 +312,9 @@ function waitingForMulligan(r) { //Mulligan
       if ((element.CardCode !== ("face")) && (element.LocalPlayer) && (element.CardID !== firstCard)) {
         cardsLeft--;
         
-        if (element.type === "Unit") 
+        let setCard = setJson.find(o => o.cardCode === element.CardCode);
+        
+        if (setCard.type === "Unit") 
           trackerWindow.webContents.send('update', element.CardCode, true);
         else
           trackerWindow.webContents.send('update', element.CardCode, false);
@@ -340,6 +340,7 @@ function trackingGame(r) {
     httpGet("http://127.0.0.1:21337/game-result").then(res => matchOver(res));
   }
   else {
+    //let card;
     for (let element of r.Rectangles) {
       if (element.CardCode !== "face") {
         tempCurrentRectangles.push({"CardID": element.CardID, "CardCode": element.CardCode, "LocalPlayer": element.LocalPlayer});
@@ -420,9 +421,11 @@ function trackingGame(r) {
 
 
     if (card != null && card.CardID !== prevDraw) {
+      let setCard = setJson.find(o => o.cardCode === card.CardCode);
       prevDraw = card.CardID;
       cardsLeft--;
-      if (card.type === "Unit") 
+      //console.log(card);
+      if (setCard.type === "Unit") 
         trackerWindow.webContents.send('update', card.CardCode, true);
       else
         trackerWindow.webContents.send('update', card.CardCode, false);

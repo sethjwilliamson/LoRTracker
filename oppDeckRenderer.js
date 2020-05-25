@@ -26,8 +26,6 @@ var margin = 3;
 function updateOppDeck() {
     cardArr = remote.getGlobal('oppDeckArr');
 
-    console.log(cardArr);
-
     for (let element of cardArr) {
         if (!element.image) {
             imgCard = new Image;
