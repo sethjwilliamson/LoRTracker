@@ -9,19 +9,10 @@
         <script>let $ = require('jquery');</script>
         <script>require('popper.js');</script>
         <script>require('bootstrap');</script>
-        <style>
-          ::-webkit-scrollbar {
-            display: none;
-          }
-
-          body {
-              background: none !important;
-          }
-      
-        </style>
     </head>
     <body>
       <canvas id="top" width="173" height="40" style="-webkit-app-region:drag; display:block; margin-left: auto; margin-right: auto; padding: 0; z-index: 0; position: absolute;"></canvas>
+      <input type="image" src="minimize.png" height="20" width="20" style="-webkit-app-region: no-drag; z-index: 100; position: absolute; top:8px; right: 8px;" onclick="minimize()">
       <div id="cardContents" style="margin:0; width: 100%; height: calc(100% - 40px); overflow-y: auto; position: absolute; top: 40px"></div>
       <p class="font-loader" style="font-family: BeaufortforLOL-Bold;">. </p>
       <p class="font-loader" style="font-family: BeaufortforLOL-Regular;">. </p>
@@ -33,6 +24,18 @@
     $(".font-loader").each(function() {
         this.remove();
     })
+
+    function minimize() {
+      console.log("test")
+      if (document.getElementById("cardContents").style.display == "none") {
+        document.getElementById("cardContents").style.display = "grid";
+      }
+      else {
+        document.getElementById("cardContents").style.display = "none";
+      }
+      updateTracker();
+    }
+
     document.getElementById("top").style.opacity = config.get("card-opacity");
     document.getElementById("cardContents").style.opacity = config.get("card-opacity");
 

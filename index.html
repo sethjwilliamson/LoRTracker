@@ -37,7 +37,7 @@
     <div id="top-container">
       <canvas id="main" width="173" height="72" style="-webkit-app-region:drag; display:block; margin-left: auto; margin-right: auto; padding: 0; z-index: 0; position: relative;"></canvas>
       <canvas id="region%" width="173" height="20" style="-webkit-app-region:drag; display:block; margin-left: auto; margin-right: auto; padding: 0; margin-top:-28px; margin-bottom: 0;position: relative; z-index: 1;"></canvas>
-      <canvas id="brown" width="173" height="20" style="display:block; margin-left: auto; margin-right: auto; padding: 0; position: relative; z-index: -2"></canvas>
+      <canvas id="brown" width="173" height="20" style="display:block; margin-left: auto; margin-right: auto; padding: 0; position: relative; z-index: -2" onclick="minimize()"></canvas>
     </div>
     <div id="cardContents" style="display: grid; margin:0"></div>
     <canvas id="botStats" width="173" height="90" style="display:block; margin-left: auto; margin-right: auto; padding: 0; ; margin-top:-22px; z-index: -1; position: relative;"></canvas>
@@ -49,7 +49,17 @@
     $(".font-loader").each(function() {
         this.remove();
     })
-    
+
+    function minimize() {
+      if (document.getElementById("cardContents").style.display == "none") {
+        document.getElementById("cardContents").style.display = "grid";
+      }
+      else {
+        document.getElementById("cardContents").style.display = "none";
+      }
+      updateTracker();
+    }
+
     document.getElementById("top-container").style.opacity = config.get("tracker-opacity");
     document.getElementById("cardContents").style.opacity = config.get("card-opacity");
     document.getElementById("botStats").style.opacity = config.get("tracker-opacity");

@@ -17,3 +17,91 @@
     font-family: "Univers-Cond";
     src: url("./fonts/UniversLTCYR-59UltCond.otf") format("opentype");
 }
+
+.btn {
+    color:#C6B7A0;
+    padding: 6px;
+  }
+  .btn-lor-left {
+    background-image: url("button-left-unselected.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 33.3%;
+    padding: 6px;
+    color:#C6B7A0;
+  }
+  .btn-lor-middle {
+    background-image: url("button-middle-unselected.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 33.3%;
+    padding: 6px;
+    color:#C6B7A0;
+  }
+  .btn-lor-right {
+    background-image: url("button-right-unselected.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 33.3%;
+    padding: 6px;
+    color:#C6B7A0;
+  }
+  .btn-lor-left:hover {
+    background-image: url("button-left-hover.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 33.3%;
+    padding: 6px;
+    color:#C6B7A0;
+  }
+  .btn-lor-middle:hover {
+    background-image: url("button-middle-hover.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 33.3%;
+    padding: 6px;
+    color:#C6B7A0;
+  }
+  .btn-lor-right:hover {
+    background-image: url("button-right-hover.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 33.3%;
+    padding: 6px;
+    color:#C6B7A0;
+  }
+  .btn-lor-left-active {
+    background-image: url("button-left-selected.png") !important;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 33.3%;
+    padding: 6px;
+    color:#C6B7A0;
+  }
+  .btn-lor-middle-active {
+    background-image: url("button-middle-selected.png") !important;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 33.3%;
+    padding: 6px;
+    color:#C6B7A0;
+  }
+  .btn-lor-right-active {
+    background-image: url("button-right-selected.png") !important;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 33.3%;
+    padding: 6px;
+    color:#C6B7A0;
+    
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  
+  body {
+      background: none !important;
+      margin: 0;
+  }

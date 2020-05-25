@@ -9,95 +9,6 @@
         <script>let $ = require('jquery');</script>
         <script>require('popper.js');</script>
         <script>require('bootstrap');</script>
-        <style>
-          .btn {
-            color:#C6B7A0;
-            padding: 6px;
-          }
-          .btn-lor-left {
-            background-image: url("button-left-unselected.png");
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-            width: 33.3%;
-            padding: 6px;
-            color:#C6B7A0;
-          }
-          .btn-lor-middle {
-            background-image: url("button-middle-unselected.png");
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-            width: 33.3%;
-            padding: 6px;
-            color:#C6B7A0;
-          }
-          .btn-lor-right {
-            background-image: url("button-right-unselected.png");
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-            width: 33.3%;
-            padding: 6px;
-            color:#C6B7A0;
-          }
-          .btn-lor-left:hover {
-            background-image: url("button-left-hover.png");
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-            width: 33.3%;
-            padding: 6px;
-            color:#C6B7A0;
-          }
-          .btn-lor-middle:hover {
-            background-image: url("button-middle-hover.png");
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-            width: 33.3%;
-            padding: 6px;
-            color:#C6B7A0;
-          }
-          .btn-lor-right:hover {
-            background-image: url("button-right-hover.png");
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-            width: 33.3%;
-            padding: 6px;
-            color:#C6B7A0;
-          }
-          .btn-lor-left-active {
-            background-image: url("button-left-selected.png") !important;
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-            width: 33.3%;
-            padding: 6px;
-            color:#C6B7A0;
-          }
-          .btn-lor-middle-active {
-            background-image: url("button-middle-selected.png") !important;
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-            width: 33.3%;
-            padding: 6px;
-            color:#C6B7A0;
-          }
-          .btn-lor-right-active {
-            background-image: url("button-right-selected.png") !important;
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-            width: 33.3%;
-            padding: 6px;
-            color:#C6B7A0;
-            
-          }
-
-          ::-webkit-scrollbar {
-            display: none;
-          }
-
-          
-          body {
-              background: none !important;
-          }
-      
-        </style>
     </head>
     <body style="overflow: hidden;">
       <p class="font-loader" style="font-family: BeaufortforLOL-Bold;">. </p>
@@ -107,29 +18,32 @@
 
       <div id="top-container" style="overflow: hidden; position: absolute;">
         <canvas id="top" width="173" height="40" style="-webkit-app-region:drag; display:block; margin-left: auto; margin-right: auto; padding: 0; z-index: 0"></canvas>
-      
-        <div class="btn-group" data-toggle="buttons" style="width: 100%; background-image: url('./full-brown.png'); margin-bottom: 0;" id="player">
-          <label class="btn btn-lor-left" style="color: #C6B7A0; margin-bottom: 0;font-family: Univers-Cond">
-            <input style="display: none;" type="radio" name="optionsPlayer" id="option-player-m" onclick="buttonPressed(this)"> My
-          </label>
-          <label class="btn btn-lor-middle btn-lor-middle-active" style="color: #C6B7A0; margin-bottom: 0;font-family: Univers-Cond">
-            <input style="display: none;" type="radio" name="optionsPlayer" id="option-player-b" onclick="buttonPressed(this)" checked> Both
-          </label>
-          <label class="btn btn-lor-right" style="color: #C6B7A0; margin-bottom: 0;font-family: Univers-Cond">
-            <input style="display: none;" type="radio" name="optionsPlayer" id="option-player-e" onclick="buttonPressed(this)"> Enemy
-          </label>
-        </div>   
-        <div class="btn-group" data-toggle="buttons" style="width: 100%; background-image: url('./full-brown.png'); margin-bottom: 0" id="type">
-          <label class="btn btn-lor-left" style="color: #C6B7A0;font-family: Univers-Cond">
-            <input style="display: none;" type="radio" name="optionsType" id="option-type-u" onclick="buttonPressed(this)"> Units
-          </label>
-          <label class="btn btn-lor-middle btn-lor-middle-active" style="color: #C6B7A0;font-family: Univers-Cond">
-            <input style="display: none;" type="radio" name="optionsType" id="option-type-b" onclick="buttonPressed(this)" checked> Both
-          </label>
-          <label class="btn btn-lor-right" style="color: #C6B7A0;font-family: Univers-Cond">
-            <input style="display: none;" type="radio" name="optionsType" id="option-type-s" onclick="buttonPressed(this)"> Spells
-          </label>
-        </div>   
+        <input type="image" src="minimize.png" height="20" width="20" style="-webkit-app-region: no-drag; z-index: 100; position: absolute; top:8px; right: 8px;" onclick="minimize()">
+        
+        <div id="options">
+          <div class="btn-group" data-toggle="buttons" style="width: 100%; background-image: url('./full-brown.png'); margin-bottom: 0;" id="player">
+            <label class="btn btn-lor-left" style="color: #C6B7A0; margin-bottom: 0;font-family: Univers-Cond">
+              <input style="display: none;" type="radio" name="optionsPlayer" id="option-player-m" onclick="buttonPressed(this)"> My
+            </label>
+            <label class="btn btn-lor-middle btn-lor-middle-active" style="color: #C6B7A0; margin-bottom: 0;font-family: Univers-Cond">
+              <input style="display: none;" type="radio" name="optionsPlayer" id="option-player-b" onclick="buttonPressed(this)" checked> Both
+            </label>
+            <label class="btn btn-lor-right" style="color: #C6B7A0; margin-bottom: 0;font-family: Univers-Cond">
+              <input style="display: none;" type="radio" name="optionsPlayer" id="option-player-e" onclick="buttonPressed(this)"> Enemy
+            </label>
+          </div>   
+          <div class="btn-group" data-toggle="buttons" style="width: 100%; background-image: url('./full-brown.png'); margin-bottom: 0" id="type">
+            <label class="btn btn-lor-left" style="color: #C6B7A0;font-family: Univers-Cond">
+              <input style="display: none;" type="radio" name="optionsType" id="option-type-u" onclick="buttonPressed(this)"> Units
+            </label>
+            <label class="btn btn-lor-middle btn-lor-middle-active" style="color: #C6B7A0;font-family: Univers-Cond">
+              <input style="display: none;" type="radio" name="optionsType" id="option-type-b" onclick="buttonPressed(this)" checked> Both
+            </label>
+            <label class="btn btn-lor-right" style="color: #C6B7A0;font-family: Univers-Cond">
+              <input style="display: none;" type="radio" name="optionsType" id="option-type-s" onclick="buttonPressed(this)"> Spells
+            </label>
+          </div>   
+        </div>
       </div>
       <div id="cardContents" style="margin:0; width: 100%; height: calc(100% - 124px); overflow: auto; position: absolute; top:124px"></div>
   </body>
@@ -138,6 +52,20 @@
     $(".font-loader").each(function() {
         this.remove();
     })
+
+    function minimize() {
+      if (document.getElementById("cardContents").style.display == "none") {
+        document.getElementById("cardContents").style.display = "grid";
+        document.getElementById("options").style.display = "grid";
+      }
+      else {
+        document.getElementById("cardContents").style.display = "none";
+        document.getElementById("options").style.display = "none";
+
+      }
+      updateTracker();
+    }
+
     document.getElementById("top-container").style.opacity = config.get("graveyard-opacity");
     document.getElementById("cardContents").style.opacity = config.get("card-opacity");
 
