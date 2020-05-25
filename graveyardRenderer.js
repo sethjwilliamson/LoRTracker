@@ -79,9 +79,12 @@ function updateGraveyard() {
     }
 
     for (let element of cardArr) {
-        imgCard = new Image;
-        imgCard.src = "./cropped/" + element.cardCode + "-full.jpg";
-        element.image = imgCard;
+        if (!element.image) {
+            imgCard = new Image;
+            imgCard.src = "./cropped/" + element.cardCode + "-full.jpg";
+            element.image = imgCard;
+            imgCard.onload = updateTracker;
+        }
     }
 
     console.log(cardArr);
