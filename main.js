@@ -3,11 +3,11 @@ const path = require('path');
 const {ipcMain, screen} = require('electron');
 const Store = require('electron-store');
 const config = new Store();
-var mainWindow, fullCardWindow, graveyardWindow, oppDeckWindow;
+var trackerWindow, fullCardWindow, graveyardWindow, oppDeckWindow;
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({
+  trackerWindow = new BrowserWindow({
     width: config.get("tracker-width"),
     height: config.get("tracker-height"),
     x: config.get("tracker-x"),
@@ -23,21 +23,22 @@ function createWindow () {
     }
   })
 
-  mainWindow.loadFile('index.html');
+  trackerWindow.loadFile('index.html');
   
-  mainWindow.webContents.on('did-finish-load', () => {
-    mainWindow.setVisibleOnAllWorkspaces(true);
-    mainWindow.setAlwaysOnTop(true, 'screen-saver');
+  trackerWindow.webContents.on('did-finish-load', () => {
+    trackerWindow.setVisibleOnAllWorkspaces(true);
+    trackerWindow.setAlwaysOnTop(true, 'screen-saver');
+    trackerWindow.setSkipTaskbar(true);
 
-    mainWindow.on('resize', () => {
-      let size = mainWindow.getSize();
+    trackerWindow.on('resize', () => {
+      let size = trackerWindow.getSize();
       config.set("tracker-width", size[0]);
       config.set("tracker-height", size[1]);
-      mainWindow.webContents.send('resize', size[0], size[1]);
+      trackerWindow.webContents.send('resize', size[0], size[1]);
     });
 
-    mainWindow.on('move', () => {
-      let position = mainWindow.getPosition();
+    trackerWindow.on('move', () => {
+      let position = trackerWindow.getPosition();
       config.set("tracker-x", position[0]);
       config.set("tracker-y", position[1]);
     });
@@ -63,6 +64,7 @@ function createWindow () {
   
   fullCardWindow.webContents.on('did-finish-load', () => {
     fullCardWindow.setVisibleOnAllWorkspaces(true);
+    fullCardWindow.setSkipTaskbar(true);
     fullCardWindow.setAlwaysOnTop(true, 'screen-saver');
     fullCardWindow.setIgnoreMouseEvents(true);
     fullCardWindow.hide();
@@ -89,6 +91,7 @@ function createWindow () {
   graveyardWindow.webContents.on('did-finish-load', () => {
     graveyardWindow.setVisibleOnAllWorkspaces(true);
     graveyardWindow.setAlwaysOnTop(true, 'screen-saver');
+    graveyardWindow.setSkipTaskbar(true);
 
     graveyardWindow.on('resize', () => {
       let size = graveyardWindow.getSize();
@@ -125,6 +128,7 @@ function createWindow () {
   oppDeckWindow.webContents.on('did-finish-load', () => {
     oppDeckWindow.setVisibleOnAllWorkspaces(true);
     oppDeckWindow.setAlwaysOnTop(true, 'screen-saver');
+    oppDeckWindow.setSkipTaskbar(true);
 
     oppDeckWindow.on('resize', () => {
       let size = oppDeckWindow.getSize();
@@ -144,11 +148,12 @@ function createWindow () {
   ipcMain.on('preview', (event, src, x, y, window) => {
     let windowPosition;
     let windowSize;
+    let windowY;
 
     switch (window) {
       case "tracker":
-        windowPosition = mainWindow.getPosition();
-        windowSize = mainWindow.getSize();
+        windowPosition = trackerWindow.getPosition();
+        windowSize = trackerWindow.getSize();
         break;
       case "graveyard": 
         windowPosition = graveyardWindow.getPosition();
@@ -160,11 +165,23 @@ function createWindow () {
         break;
     }
 
+    if (windowPosition[1] - 256 + y < 0) {
+      windowY = 0;
+    } 
+    else if (windowPosition[1] + 256 + y > screen.getPrimaryDisplay().workAreaSize.height) {
+      windowY = screen.getPrimaryDisplay().workAreaSize.height - 512;
+    } 
+    else {
+      windowY = windowPosition[1] - 256 + y;
+    }
+
+    console.log(windowPosition[1] + 512 + y);
+
     if (windowPosition[0] > screen.getPrimaryDisplay().workAreaSize.width / 2) { // config
-      fullCardWindow.setPosition(windowPosition[0] - 340, windowPosition[1] - 210 + y); 
+      fullCardWindow.setPosition(windowPosition[0] - 340, windowY); 
     }
     else {
-      fullCardWindow.setPosition(windowPosition[0] + windowSize[0], windowPosition[1] - 210 + y); 
+      fullCardWindow.setPosition(windowPosition[0] + windowSize[0], windowY); 
     }
 
     fullCardWindow.webContents.send('preview', src, x, y);
@@ -257,13 +274,13 @@ function matchFound(r) {
   global.oppDeckArr = [];
   currentRectangles = [];
 
-  mainWindow.show();
+  trackerWindow.show();
   
-  size = mainWindow.getSize();
-  mainWindow.webContents.send('start', size[0], size[1]);
+  size = trackerWindow.getSize();
+  trackerWindow.webContents.send('start', size[0], size[1]);
 
   handSize = 4;
-  mainWindow.webContents.send('handUpdate', handSize);
+  trackerWindow.webContents.send('handUpdate', handSize);
 
   console.log("Waiting for Mulligan");
   httpGet(url).then(res => waitingForMulligan(res));
@@ -298,9 +315,9 @@ function waitingForMulligan(r) { //Mulligan
         cardsLeft--;
         
         if (element.type === "Unit") 
-          mainWindow.webContents.send('update', element.CardCode, true);
+          trackerWindow.webContents.send('update', element.CardCode, true);
         else
-          mainWindow.webContents.send('update', element.CardCode, false);
+          trackerWindow.webContents.send('update', element.CardCode, false);
       }
     };
 
@@ -406,14 +423,14 @@ function trackingGame(r) {
       prevDraw = card.CardID;
       cardsLeft--;
       if (card.type === "Unit") 
-        mainWindow.webContents.send('update', card.CardCode, true);
+        trackerWindow.webContents.send('update', card.CardCode, true);
       else
-        mainWindow.webContents.send('update', card.CardCode, false);
+        trackerWindow.webContents.send('update', card.CardCode, false);
     }
 
     if (handSize !== tempHandSize && tempHandSize !== 0) {
       handSize = tempHandSize;
-      mainWindow.webContents.send('handUpdate', handSize);
+      trackerWindow.webContents.send('handUpdate', handSize);
     }
 
     setTimeout(function() {httpGet(url).then(res => trackingGame(res));}, 1000);
@@ -430,7 +447,7 @@ function matchOver(r) {
   else
     console.log("Defeat");
 
-  mainWindow.hide();
+  trackerWindow.hide();
   
   httpGet(url).then(res => waitingForGame(res));
 }
