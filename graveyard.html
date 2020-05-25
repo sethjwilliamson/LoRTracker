@@ -2,6 +2,7 @@
 
     <head>
         <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="myStyle.css">
         
         <!-- Bootstrap Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -99,28 +100,33 @@
         </style>
     </head>
     <body style="overflow: hidden;">
+      <p class="font-loader" style="font-family: BeaufortforLOL-Bold;">. </p>
+      <p class="font-loader" style="font-family: BeaufortforLOL-Regular;">. </p>
+      <p class="font-loader" style="font-family: Univers;">. </p>
+      <p class="font-loader" style="font-family: Univers-Cond;">. </p>
+
       <div id="top-container" style="overflow: hidden; position: absolute;">
         <canvas id="top" width="173" height="40" style="-webkit-app-region:drag; display:block; margin-left: auto; margin-right: auto; padding: 0; z-index: 0"></canvas>
       
         <div class="btn-group" data-toggle="buttons" style="width: 100%; background-image: url('./full-brown.png'); margin-bottom: 0;" id="player">
-          <label class="btn btn-lor-left" style="color: #C6B7A0; margin-bottom: 0;">
+          <label class="btn btn-lor-left" style="color: #C6B7A0; margin-bottom: 0;font-family: Univers-Cond">
             <input style="display: none;" type="radio" name="optionsPlayer" id="option-player-m" onclick="buttonPressed(this)"> My
           </label>
-          <label class="btn btn-lor-middle btn-lor-middle-active" style="color: #C6B7A0; margin-bottom: 0;">
+          <label class="btn btn-lor-middle btn-lor-middle-active" style="color: #C6B7A0; margin-bottom: 0;font-family: Univers-Cond">
             <input style="display: none;" type="radio" name="optionsPlayer" id="option-player-b" onclick="buttonPressed(this)" checked> Both
           </label>
-          <label class="btn btn-lor-right" style="color: #C6B7A0; margin-bottom: 0;">
+          <label class="btn btn-lor-right" style="color: #C6B7A0; margin-bottom: 0;font-family: Univers-Cond">
             <input style="display: none;" type="radio" name="optionsPlayer" id="option-player-e" onclick="buttonPressed(this)"> Enemy
           </label>
         </div>   
         <div class="btn-group" data-toggle="buttons" style="width: 100%; background-image: url('./full-brown.png'); margin-bottom: 0" id="type">
-          <label class="btn btn-lor-left" style="color: #C6B7A0;">
+          <label class="btn btn-lor-left" style="color: #C6B7A0;font-family: Univers-Cond">
             <input style="display: none;" type="radio" name="optionsType" id="option-type-u" onclick="buttonPressed(this)"> Units
           </label>
-          <label class="btn btn-lor-middle btn-lor-middle-active" style="color: #C6B7A0;">
+          <label class="btn btn-lor-middle btn-lor-middle-active" style="color: #C6B7A0;font-family: Univers-Cond">
             <input style="display: none;" type="radio" name="optionsType" id="option-type-b" onclick="buttonPressed(this)" checked> Both
           </label>
-          <label class="btn btn-lor-right" style="color: #C6B7A0;">
+          <label class="btn btn-lor-right" style="color: #C6B7A0;font-family: Univers-Cond">
             <input style="display: none;" type="radio" name="optionsType" id="option-type-s" onclick="buttonPressed(this)"> Spells
           </label>
         </div>   
@@ -129,6 +135,9 @@
   </body>
   <script src="./graveyardRenderer.js"></script>
   <script>
+    $(".font-loader").each(function() {
+        this.remove();
+    })
     document.getElementById("top-container").style.opacity = config.get("graveyard-opacity");
     document.getElementById("cardContents").style.opacity = config.get("card-opacity");
 
@@ -145,7 +154,7 @@
       ctxTop.textAlign = "center";
       ctxTop.fillStyle = "white";
       
-      ctxTop.font = "16px Beaufort for LOL Bold";
+      ctxTop.font = "16px BeaufortforLOL-Bold";
       
       ctxTop.fillText("GRAVEYARD", imgStart.width / 2, imgStart.height / 2 + 5);
     };

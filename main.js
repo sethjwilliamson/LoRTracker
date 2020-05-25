@@ -190,6 +190,10 @@ function createWindow () {
     fullCardWindow.hide();
   });
 
+  ipcMain.on('size', (event, height) => {
+    trackerWindow.setSize(trackerWindow.getSize()[0], parseInt(height));
+  });
+
 }
 
 
@@ -273,6 +277,8 @@ function matchFound(r) {
   currentRectangles = [];
 
   trackerWindow.show();
+  graveyardWindow.show();
+  oppDeckWindow.show();
   
   size = trackerWindow.getSize();
   trackerWindow.webContents.send('start', size[0], size[1]);
@@ -451,6 +457,8 @@ function matchOver(r) {
     console.log("Defeat");
 
   trackerWindow.hide();
+  graveyardWindow.hide();
+  oppDeckWindow.hide();
   
   httpGet(url).then(res => waitingForGame(res));
 }

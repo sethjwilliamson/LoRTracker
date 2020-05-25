@@ -9,15 +9,14 @@
   </style>
   <head>
     <meta charset="UTF-8">
-    <link href="https://db.onlinewebfonts.com/c/12420e8c141ca7c3dff41de2d59df13e?family=Beaufort+for+LOL+Bold" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="myStyle.css">
     
     <!-- Bootstrap Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script>let $ = require('jquery');</script>
     <script>require('popper.js');</script>
     <script>require('bootstrap');</script>
-    <!--/// Switch to local ?-->
 
     <!--
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
@@ -28,6 +27,11 @@
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
   </head>
   <body>
+    <p class="font-loader" style="font-family: BeaufortforLOL-Bold;">. </p>
+    <p class="font-loader" style="font-family: BeaufortforLOL-Regular;">. </p>
+    <p class="font-loader" style="font-family: Univers;">. </p>
+    <p class="font-loader" style="font-family: Univers-Cond;">. </p>
+
     <!--<div style="width:720*.25; height:100*.25; -webkit-app-region:drag; color:aquamarine">Click Me!</button>-->
     <!-- You can also require other files to run in this process -->
     <div id="top-container">
@@ -42,6 +46,10 @@
   </body>
   <script src="./renderer.js"></script>
   <script>
+    $(".font-loader").each(function() {
+        this.remove();
+    })
+    
     document.getElementById("top-container").style.opacity = config.get("tracker-opacity");
     document.getElementById("cardContents").style.opacity = config.get("card-opacity");
     document.getElementById("botStats").style.opacity = config.get("tracker-opacity");

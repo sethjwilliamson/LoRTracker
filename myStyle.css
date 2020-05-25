@@ -1,4 +1,19 @@
 @font-face {
-    font-family: "BeaufortforLOLBold";
-    src: url("https://db.onlinewebfonts.com/c/12420e8c141ca7c3dff41de2d59df13e?family=Beaufort+for+LOL+Bold");
+    font-family: "BeaufortforLOL-Bold";
+    src: url("./fonts/BeaufortforLOL-Bold.otf") format("opentype");
+}
+
+@font-face {
+    font-family: "BeaufortforLOL-Regular";
+    src: url("./fonts/BeaufortforLOL-Regular.otf") format("opentype");
+}
+
+@font-face {
+    font-family: "Univers";
+    src: url("./fonts/UniversLTCYR-55Roman.otf") format("opentype");
+}
+
+@font-face {
+    font-family: "Univers-Cond";
+    src: url("./fonts/UniversLTCYR-59UltCond.otf") format("opentype");
 }

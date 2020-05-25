@@ -242,7 +242,7 @@ function updateTracker() {
     ctxRegion.textAlign = "center";
     ctxRegion.fillStyle = "white";
     
-    ctxRegion.font = "12px Beaufort for LOL Bold";
+    ctxRegion.font = "12px BeaufortforLOL-Bold";
     
     if (cardArr.length > 0) {
         switch (deckRegions.length) {
@@ -346,7 +346,7 @@ function updateTracker() {
     ctxBot.fillStyle = '#D6D6B1';
     ctxBot.fillRect(186, 32, 1, 22);
     
-    ctxBot.font = "24px Beaufort for LOL Bold";
+    ctxBot.font = "24px BeaufortforLOL-Bold";
     ctxBot.fillStyle = "white";
     ctxBot.textAlign = "center";
 
@@ -356,7 +356,7 @@ function updateTracker() {
     
     ctxBot.fillText("3", 98.5, 78, 15);
 
-    ctxBot.font = "14px Beaufort for LOL Bold";
+    ctxBot.font = "14px BeaufortforLOL-Bold";
 
     ctxBot.fillText((1 / cardsLeft * 100).toFixed(1) + "%", 132, 21, 30);
     ctxBot.fillText((2 / cardsLeft * 100).toFixed(1) + "%", 132, 48, 30);
@@ -371,11 +371,13 @@ function updateTracker() {
     ctxBot.drawImage(imgDeck, 157, 6, 25, 22);
     ctxBot.drawImage(imgHand, 159, 34, 23, 18);
     
-    ctxBot.font = "16px Beaufort for LOL Bold";
+    ctxBot.font = "16px BeaufortforLOL-Bold";
 
     ctxBot.fillText(cardsLeft, 203, 21, 30);
     ctxBot.fillText(handSize, 203, 48, 30); 
 
+    
+    ipcRenderer.send('size', $("body").height()); 
 }
 
 function previewCard (cardCode, element) {

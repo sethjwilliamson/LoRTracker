@@ -107,15 +107,20 @@ module.exports = {
         roundRect(ctxCard, 620, 0, 100, 100, 15, true,false);
         ctxCard.fillRect(620, 0, 50, 100);
         
-        ctxCard.font = "75px Beaufort for LOL Bold";
+        ctxCard.font = "75px BeaufortforLOL-Bold";
         ctxCard.fillStyle = "white";
         ctxCard.textAlign = "center";
         ctxCard.fillText(element.mana, 50, 76);
         ctxCard.fillText(element.quantity, 670, 76);
         
         ctxCard.textAlign = "left";
-        ctxCard.font = "38px Beaufort for LOL Bold";
+        ctxCard.font = "38px BeaufortforLOL-Bold";
         ctxCard.fillText(element.name, 110, 63);
+
+        if (element.quantity == 0) {
+            ctxCard.fillStyle ="rgba(50, 50, 50, 0.7)";
+            roundRect(ctxCard, 0, 0, 720, 100, 15, true,false);
+        }
       }
     }
   };
