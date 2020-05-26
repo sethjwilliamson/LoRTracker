@@ -1,21 +1,21 @@
 @font-face {
     font-family: "BeaufortforLOL-Bold";
-    src: url("./fonts/BeaufortforLOL-Bold.otf") format("opentype");
+    src: url("fonts/BeaufortforLOL-Bold.otf") format("opentype");
 }
 
 @font-face {
     font-family: "BeaufortforLOL-Regular";
-    src: url("./fonts/BeaufortforLOL-Regular.otf") format("opentype");
+    src: url("fonts/BeaufortforLOL-Regular.otf") format("opentype");
 }
 
 @font-face {
     font-family: "Univers";
-    src: url("./fonts/UniversLTCYR-55Roman.otf") format("opentype");
+    src: url("fonts/UniversLTCYR-55Roman.otf") format("opentype");
 }
 
 @font-face {
     font-family: "Univers-Cond";
-    src: url("./fonts/UniversLTCYR-59UltCond.otf") format("opentype");
+    src: url("fonts/UniversLTCYR-59UltCond.otf") format("opentype");
 }
 
 .btn {
@@ -25,55 +25,55 @@
     font-family: "Univers-Cond";
   }
   .btn-lor-left {
-    background-image: url("button-left-unselected.png");
+    background-image: url("buttons/button-left-unselected.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 33.3%;
   }
   .btn-lor-middle {
-    background-image: url("button-middle-unselected.png");
+    background-image: url("buttons/button-middle-unselected.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 33.3%;
   }
   .btn-lor-right {
-    background-image: url("button-right-unselected.png");
+    background-image: url("buttons/button-right-unselected.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 33.3%;
   }
   .btn-lor-left:hover {
-    background-image: url("button-left-hover.png");
+    background-image: url("buttons/button-left-hover.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 33.3%;
   }
   .btn-lor-middle:hover {
-    background-image: url("button-middle-hover.png");
+    background-image: url("buttons/button-middle-hover.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 33.3%;
   }
   .btn-lor-right:hover {
-    background-image: url("button-right-hover.png");
+    background-image: url("buttons/button-right-hover.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 33.3%;
   }
   .btn-lor-left-active {
-    background-image: url("button-left-selected.png") !important;
+    background-image: url("buttons/button-left-selected.png") !important;
     background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 33.3%;
   }
   .btn-lor-middle-active {
-    background-image: url("button-middle-selected.png") !important;
+    background-image: url("buttons/button-middle-selected.png") !important;
     background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 33.3%;
   }
   .btn-lor-right-active {
-    background-image: url("button-right-selected.png") !important;
+    background-image: url("buttons/button-right-selected.png") !important;
     background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 33.3%;
@@ -81,7 +81,7 @@
 
   .btn-group {
     width: 100%; 
-    background-image: url('./full-brown.png'); 
+    background-image: url('./images/full-brown.png'); 
     margin-bottom: 0;
   }
 

@@ -4,7 +4,6 @@ const Store = require('electron-store');
 const config = new Store();
 
 ipcRenderer.on('update', (event, test) => {
-    console.log("ipc");
     updateOppDeck();
 });
 
@@ -20,7 +19,6 @@ $(".font-loader").each(function() {
 })
 
 function minimize() {
-  console.log("test")
   if (document.getElementById("cardContents").style.display == "none") {
     document.getElementById("cardContents").style.display = "grid";
   }
@@ -38,7 +36,7 @@ var ctxTop = cTop.getContext("2d");
 ctxTop.scale(cTop.width/226,cTop.height/40); 
 
 var imgStart = new Image;
-imgStart.src = './top-window.png';
+imgStart.src = './images/top-window.png';
 
 imgStart.onload = function () {
   ctxTop.drawImage(imgStart, 0 ,0);
@@ -70,8 +68,6 @@ function updateOppDeck() {
             imgCard.onload = updateTracker;
         }
     }
-
-    console.log(cardArr);
 
     updateTracker();
 }

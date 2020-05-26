@@ -82,7 +82,7 @@ var ctxMain = cMain.getContext("2d");
 ctxMain.scale(cMain.width/230,cMain.height/96); 
 ctxMain.globalAlpha = 1;
 var imgStart = new Image;
-imgStart.src = './double3-cropped.png';
+imgStart.src = './images/double3-cropped.png';
 
 imgStart.onload = function () {
   ctxMain.drawImage(imgStart, 0 ,0);
@@ -94,7 +94,7 @@ ctxBot = cBot.getContext("2d");
 ctxBot.scale(cBot.width/230,cBot.height/120);
 
 var imgBot = new Image;
-imgBot.src = './bottom4-extended.png';
+imgBot.src = './images/bottom4-extended.png';
 
 imgBot.onload = function() {
   ctxBot.drawImage(imgBot, 0 ,0);
@@ -106,13 +106,13 @@ ctxBack = cBack.getContext("2d");
 ctxBack.scale(cBack.width/230,cBack.height/40);
 
 var imgBrown = new Image;
-imgBrown.src = './brown.png';
+imgBrown.src = './images/brown.png';
 imgBrown.onload = function() {
   ctxBack.drawImage(imgBrown, 0, 0);
 }
 
 
-var arr = require('./set1-en_us.json');
+var arr = require('./cards/set1-en_us.json');
 var cardArr = [];
 var regionColors = {
     "Demacia": "#B9AC98",
@@ -125,13 +125,13 @@ var regionColors = {
 
 };
 var regionIcons = {
-    "Demacia": "./icon-demacia.png",
-    "Noxus": "./icon-noxus.png",
-    "Freljord": "./icon-freljord.png",
-    "PiltoverZaun": "./icon-piltover.png",
-    "Ionia": "./icon-ionia.png",
-    "ShadowIsles": "./icon-shadowisles.png",
-    "Bilgewater": "./icon-bilgewater.png"
+    "Demacia": "icons/icon-demacia.png",
+    "Noxus": "icons/icon-noxus.png",
+    "Freljord": "icons/icon-freljord.png",
+    "PiltoverZaun": "icons/icon-piltover.png",
+    "Ionia": "icons/icon-ionia.png",
+    "ShadowIsles": "icons/icon-shadowisles.png",
+    "Bilgewater": "icons/icon-bilgewater.png"
 };
 var imgMain = new Image;
 var imgBot = new Image;
@@ -144,11 +144,11 @@ var imgDeck = new Image;
 var imgHand = new Image;
 var imgCard;
 
-imgBot.src = './bottom4-extended.png';
-imgSpell.src = './icon-spell2.png';
-imgUnit.src = './icon-unit2.png';
-imgDeck.src = './icon-deck.png';
-imgHand.src = './icon-hand.png';
+imgBot.src = './images/bottom4-extended.png';
+imgSpell.src = 'icons/icon-spell2.png';
+imgUnit.src = 'icons/icon-unit2.png';
+imgDeck.src = 'icons/icon-deck.png';
+imgHand.src = 'icons/icon-hand.png';
 
 var cardsLeft;
 var spellsLeft;
@@ -223,7 +223,7 @@ function start() {
             }
             break;
         case 2:
-            imgMain.src = './double3-cropped.png';
+            imgMain.src = './images/double3-cropped.png';
 
             imgRegion1.src = regionIcons[deckRegions[0]];
 
@@ -237,7 +237,7 @@ function start() {
             }, 100);
             break;
         case 3:
-            imgMain.src = './double3-cropped.png';
+            imgMain.src = './images/double3-cropped.png';
 
             imgRegion1.src = regionIcons[deckRegions[0]];
 

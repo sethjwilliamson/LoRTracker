@@ -12,12 +12,11 @@ function createWindow () {
     x: config.get("tracker-x"),
     y: config.get("tracker-y"),
     minWidth:173,
-    icon: "./icon.png",
+    icon: "./images/icon.png",
     maximizable:false,
     transparent:true,
     frame:false,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
       nodeIntegration:true
     }
   })
@@ -62,12 +61,11 @@ function createWindow () {
     frame:false,
     focusable:false,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
       nodeIntegration:true
     }
   })
 
-  fullCardWindow.loadFile("./previewCard.html");
+  fullCardWindow.loadFile("previewCard.html");
   
   fullCardWindow.webContents.on('did-finish-load', () => {
     fullCardWindow.setVisibleOnAllWorkspaces(true);
@@ -83,12 +81,11 @@ function createWindow () {
     x: config.get("graveyard-x"),
     y: config.get("graveyard-y"),
     minWidth:173,
-    icon: "./icon.png",
+    icon: "./images/icon.png",
     maximizable:false,
     transparent:true,
     frame:false,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
       nodeIntegration:true
     }
   })
@@ -128,12 +125,11 @@ function createWindow () {
     x: config.get("opponent-deck-x"),
     y: config.get("opponent-deck-y"),
     minWidth:173,
-    icon: "./icon.png",
+    icon: "./images/icon.png",
     maximizable:false,
     transparent:true,
     frame:false,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
       nodeIntegration:true
     }
   })
@@ -249,7 +245,7 @@ async function httpGet(theUrl)
 }
 
 var url = "http://127.0.0.1:21337/positional-rectangles";
-var setJson = require('./set1-en_us.json');
+var setJson = require('./cards/set1-en_us.json');
 var prevDraw;
 var cardsLeft;
 var height;
@@ -265,7 +261,6 @@ function waitingForGame(r) {
 
   if (!r) {
     setTimeout(function() {httpGet(url).then(res => waitingForGame(res));}, 500);
-    console.log("r NOT EXIST1");
   }
   else {
     if ((r.GameState) === ('InProgress')) {
@@ -281,7 +276,6 @@ function waitingForGame(r) {
 
 function matchFound(r) {
   if (!r) {
-    console.log("r NOT EXIST2");
     setTimeout(function() {httpGet(url).then(res => waitingForGame(res));}, 500);
   }
 
@@ -313,7 +307,6 @@ function matchFound(r) {
 
 function waitingForMulligan(r) { //Mulligan  
   if (!r) {
-    console.log("r NOT EXIST3");
     setTimeout(function() {httpGet(url).then(res => waitingForGame(res));}, 500);
   }
   var card = null;
@@ -356,7 +349,6 @@ function waitingForMulligan(r) { //Mulligan
 
 function trackingGame(r) {
   if (!r) {
-    console.log("r NOT EXIST 4")
     setTimeout(function() {httpGet(url).then(res => waitingForGame(res));}, 500);
   }
 
@@ -451,7 +443,6 @@ function trackingGame(r) {
       let setCard = setJson.find(o => o.cardCode === card.CardCode);
       prevDraw = card.CardID;
       cardsLeft--;
-      //console.log(card);
       if (setCard.type === "Unit") 
         trackerWindow.webContents.send('update', card.CardCode, true);
       else
