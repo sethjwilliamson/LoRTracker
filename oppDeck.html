@@ -11,13 +11,14 @@
         <script>require('bootstrap');</script>
     </head>
     <body>
-      <canvas id="top" width="173" height="40" style="-webkit-app-region:drag; display:block; margin-left: auto; margin-right: auto; padding: 0; z-index: 0; position: absolute;"></canvas>
-      <input type="image" src="minimize.png" height="20" width="20" style="-webkit-app-region: no-drag; z-index: 100; position: absolute; top:8px; right: 8px;" onclick="minimize()">
-      <div id="cardContents" style="margin:0; width: 100%; height: calc(100% - 40px); overflow-y: auto; position: absolute; top: 40px"></div>
-      <p class="font-loader" style="font-family: BeaufortforLOL-Bold;">. </p>
-      <p class="font-loader" style="font-family: BeaufortforLOL-Regular;">. </p>
-      <p class="font-loader" style="font-family: Univers;">. </p>
-      <p class="font-loader" style="font-family: Univers-Cond;">. </p>
+        <p class="font-loader" style="font-family: BeaufortforLOL-Bold;">. </p>
+        <p class="font-loader" style="font-family: BeaufortforLOL-Regular;">. </p>
+        <p class="font-loader" style="font-family: Univers;">. </p>
+        <p class="font-loader" style="font-family: Univers-Cond;">. </p>
+
+        <canvas class="top" id="top"></canvas>
+        <input class="btn-minimize" type="image" src="minimize.png" onclick="minimize()">
+        <div id="cardContents" style="height: calc(100% - 40px); overflow-y: auto; position: absolute; top: 40px"></div>
   </body>
   <script src="./oppDeckRenderer.js"></script>
   <script>

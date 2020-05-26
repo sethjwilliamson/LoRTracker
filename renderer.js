@@ -234,10 +234,12 @@ async function editCard(cardCode, isUnit) {
 }
     
 function updateTracker() {
-    let cRegion = document.getElementById("region%");
+    let cRegion = document.getElementById("regionP");
     let ctxRegion = cRegion.getContext("2d");
 
     ctxRegion.clearRect(0, 0, cRegion.width, cRegion.height);
+    console.log(cRegion.width);
+    console.log(cRegion.height)
     
     ctxRegion.textAlign = "center";
     ctxRegion.fillStyle = "white";
@@ -377,7 +379,7 @@ function updateTracker() {
     ctxBot.fillText(handSize, 203, 48, 30); 
 
     
-    ipcRenderer.send('size', $("body").height()); 
+    ipcRenderer.send('size', $("body").height(), "tracker"); 
 }
 
 function previewCard (cardCode, element) {

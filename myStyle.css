@@ -21,87 +21,162 @@
 .btn {
     color:#C6B7A0;
     padding: 6px;
+    margin-bottom: 0;
+    font-family: "Univers-Cond";
   }
   .btn-lor-left {
     background-image: url("button-left-unselected.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 33.3%;
-    padding: 6px;
-    color:#C6B7A0;
   }
   .btn-lor-middle {
     background-image: url("button-middle-unselected.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 33.3%;
-    padding: 6px;
-    color:#C6B7A0;
   }
   .btn-lor-right {
     background-image: url("button-right-unselected.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 33.3%;
-    padding: 6px;
-    color:#C6B7A0;
   }
   .btn-lor-left:hover {
     background-image: url("button-left-hover.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 33.3%;
-    padding: 6px;
-    color:#C6B7A0;
   }
   .btn-lor-middle:hover {
     background-image: url("button-middle-hover.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 33.3%;
-    padding: 6px;
-    color:#C6B7A0;
   }
   .btn-lor-right:hover {
     background-image: url("button-right-hover.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 33.3%;
-    padding: 6px;
-    color:#C6B7A0;
   }
   .btn-lor-left-active {
     background-image: url("button-left-selected.png") !important;
     background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 33.3%;
-    padding: 6px;
-    color:#C6B7A0;
   }
   .btn-lor-middle-active {
     background-image: url("button-middle-selected.png") !important;
     background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 33.3%;
-    padding: 6px;
-    color:#C6B7A0;
   }
   .btn-lor-right-active {
     background-image: url("button-right-selected.png") !important;
     background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 33.3%;
-    padding: 6px;
-    color:#C6B7A0;
-    
+  }
+
+  .btn-group {
+    width: 100%; 
+    background-image: url('./full-brown.png'); 
+    margin-bottom: 0;
+  }
+
+  .btn-minimize {
+    height: 20px;
+    width: 20px;
+    -webkit-app-region: no-drag; 
+    z-index: 100; 
+    position: absolute; 
+    top:8px; 
+    right: 8px;
+  }
+
+  .top {
+    -webkit-app-region:drag; 
+    display:block; 
+    margin-left: auto; 
+    margin-right: auto; 
+    padding: 0; 
+    z-index: 0;
+    width: 100%;
+    height: 40px;
+  }
+
+  .top-container {
+    overflow: hidden; 
+    position: absolute;
+  }
+
+  .full-card {
+    width: 340; 
+    height: 512;
   }
 
   ::-webkit-scrollbar {
     display: none;
   }
 
-  
   body {
+      overflow: hidden;
       background: none !important;
       margin: 0;
+  }
+
+  #cardContents {
+    display: block;
+    margin:0;
+    width:100%;
+  }
+
+  #main {
+      width: 173px;
+      height: 72px;
+      -webkit-app-region:drag; 
+      display:block; 
+      margin-left: auto; 
+      margin-right: auto; 
+      padding: 0; 
+      z-index: 0; 
+      position: relative;
+  }
+
+  #regionP {
+    width: 173px;
+    height: 20px;
+    -webkit-app-region:drag; 
+    display:block; 
+    margin-left: auto; 
+    margin-right: auto; 
+    padding: 0; 
+    margin-top:-28px; 
+    margin-bottom: 0;
+    position: relative; 
+    z-index: 1;
+  }
+
+  #brown {
+      width: 173px;
+      height: 20px;
+      display:block; 
+      margin-left: auto; 
+      margin-right: auto; 
+      padding: 0; 
+      position: relative; 
+      z-index: -2;
+  }
+
+  #botStats {
+      width: 173px;
+      height:90px;
+      display:block; 
+      margin-left: auto; 
+      margin-right: auto; 
+      padding: 0; 
+      margin-top:-22px; 
+      z-index: -1; 
+      position: relative;
   }

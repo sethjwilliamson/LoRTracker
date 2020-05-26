@@ -190,7 +190,7 @@ function createWindow () {
     fullCardWindow.hide();
   });
 
-  ipcMain.on('size', (event, height) => {
+  ipcMain.on('size', (event, height, window) => {
     trackerWindow.setSize(trackerWindow.getSize()[0], parseInt(height));
   });
 
