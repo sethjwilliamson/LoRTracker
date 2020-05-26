@@ -1,61 +1,19 @@
 <html>
-
-    <head>
-        <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="myStyle.css">
-        
-        <!-- Bootstrap Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script>let $ = require('jquery');</script>
-        <script>require('popper.js');</script>
-        <script>require('bootstrap');</script>
-    </head>
-    <body>
-        <p class="font-loader" style="font-family: BeaufortforLOL-Bold;">. </p>
-        <p class="font-loader" style="font-family: BeaufortforLOL-Regular;">. </p>
-        <p class="font-loader" style="font-family: Univers;">. </p>
-        <p class="font-loader" style="font-family: Univers-Cond;">. </p>
-
-        <canvas class="top" id="top"></canvas>
-        <input class="btn-minimize" type="image" src="minimize.png" onclick="minimize()">
-        <div id="cardContents" style="height: calc(100% - 40px); overflow-y: auto; position: absolute; top: 40px"></div>
+  <head>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="myStyle.css">
+    <script>let $ = require('jquery');</script>
+    <script>require('popper.js');</script>
+    <script>require('bootstrap');</script>
+  </head>
+  <body>
+    <p class="font-loader" style="font-family: BeaufortforLOL-Bold;">. </p>
+    <p class="font-loader" style="font-family: BeaufortforLOL-Regular;">. </p>
+    <p class="font-loader" style="font-family: Univers;">. </p>
+    <p class="font-loader" style="font-family: Univers-Cond;">. </p>
+    <canvas class="top" id="top"></canvas>
+    <input class="btn-minimize" type="image" src="minimize.png" onclick="minimize()">
+    <div id="cardContents" style="height: calc(100% - 40px); overflow-y: auto; position: absolute; top: 40px"></div>
   </body>
   <script src="./oppDeckRenderer.js"></script>
-  <script>
-    $(".font-loader").each(function() {
-        this.remove();
-    })
-
-    function minimize() {
-      console.log("test")
-      if (document.getElementById("cardContents").style.display == "none") {
-        document.getElementById("cardContents").style.display = "grid";
-      }
-      else {
-        document.getElementById("cardContents").style.display = "none";
-      }
-      updateTracker();
-    }
-
-    document.getElementById("top").style.opacity = config.get("card-opacity");
-    document.getElementById("cardContents").style.opacity = config.get("card-opacity");
-
-    var cTop = document.getElementById("top");
-    var ctxTop = cTop.getContext("2d");
-    ctxTop.scale(cTop.width/226,cTop.height/40); 
-    //ctxTop.globalAlpha = config.get('opponent-deck-opacity');
-    var imgStart = new Image;
-    imgStart.src = './top-window.png';
-
-    imgStart.onload = function () {
-      ctxTop.drawImage(imgStart, 0 ,0);
-    
-      ctxTop.textAlign = "center";
-      ctxTop.fillStyle = "white";
-      
-      ctxTop.font = "16px BeaufortforLOL-Bold";
-      
-      ctxTop.fillText("OPPONENT", imgStart.width / 2, imgStart.height / 2 + 5);
-    };
-  </script>
 </html>

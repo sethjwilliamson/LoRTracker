@@ -1,90 +1,45 @@
 <html>
-
-    <head>
-        <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="myStyle.css">
-        
-        <!-- Bootstrap Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script>let $ = require('jquery');</script>
-        <script>require('popper.js');</script>
-        <script>require('bootstrap');</script>
-    </head>
-    <body style="overflow: hidden;">
-      <p class="font-loader" style="font-family: BeaufortforLOL-Bold;">. </p>
-      <p class="font-loader" style="font-family: BeaufortforLOL-Regular;">. </p>
-      <p class="font-loader" style="font-family: Univers;">. </p>
-      <p class="font-loader" style="font-family: Univers-Cond;">. </p>
-
-      <div id="top-container" class="top-container">
-        <canvas class="top" id="top"></canvas>
-        <input class="btn-minimize" type="image" src="minimize.png" onclick="minimize()">
-        
-        <div id="options">
-          <div class="btn-group" data-toggle="buttons" id="player">
-            <label class="btn btn-lor-left">
-              <input style="display: none;" type="radio" name="optionsPlayer" id="option-player-m" onclick="buttonPressed(this)"> My
-            </label>
-            <label class="btn btn-lor-middle btn-lor-middle-active">
-              <input style="display: none;" type="radio" name="optionsPlayer" id="option-player-b" onclick="buttonPressed(this)" checked> Both
-            </label>
-            <label class="btn btn-lor-right">
-              <input style="display: none;" type="radio" name="optionsPlayer" id="option-player-e" onclick="buttonPressed(this)"> Enemy
-            </label>
-          </div>   
-          <div class="btn-group" data-toggle="buttons" id="type">
-            <label class="btn btn-lor-left">
-              <input style="display: none;" type="radio" name="optionsType" id="option-type-u" onclick="buttonPressed(this)"> Units
-            </label>
-            <label class="btn btn-lor-middle btn-lor-middle-active">
-              <input style="display: none;" type="radio" name="optionsType" id="option-type-b" onclick="buttonPressed(this)" checked> Both
-            </label>
-            <label class="btn btn-lor-right">
-              <input style="display: none;" type="radio" name="optionsType" id="option-type-s" onclick="buttonPressed(this)"> Spells
-            </label>
-          </div>   
+  <head>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="myStyle.css">
+    <script>let $ = require('jquery');</script>
+    <script>require('popper.js');</script>
+    <script>require('bootstrap');</script>
+  </head>
+  <body style="overflow: hidden;">
+    <p class="font-loader" style="font-family: BeaufortforLOL-Bold;">. </p>
+    <p class="font-loader" style="font-family: BeaufortforLOL-Regular;">. </p>
+    <p class="font-loader" style="font-family: Univers;">. </p>
+    <p class="font-loader" style="font-family: Univers-Cond;">. </p>
+    <div id="top-container" class="top-container">
+      <canvas class="top" id="top"></canvas>
+      <input class="btn-minimize" type="image" src="minimize.png" onclick="minimize()">
+      <div id="options">
+        <div class="btn-group" data-toggle="buttons" id="player">
+          <label class="btn btn-lor-left">
+          <input style="display: none;" type="radio" name="optionsPlayer" id="option-player-m" onclick="buttonPressed(this)"> My
+          </label>
+          <label class="btn btn-lor-middle btn-lor-middle-active">
+          <input style="display: none;" type="radio" name="optionsPlayer" id="option-player-b" onclick="buttonPressed(this)" checked> Both
+          </label>
+          <label class="btn btn-lor-right">
+          <input style="display: none;" type="radio" name="optionsPlayer" id="option-player-e" onclick="buttonPressed(this)"> Enemy
+          </label>
+        </div>
+        <div class="btn-group" data-toggle="buttons" id="type">
+          <label class="btn btn-lor-left">
+          <input style="display: none;" type="radio" name="optionsType" id="option-type-u" onclick="buttonPressed(this)"> Units
+          </label>
+          <label class="btn btn-lor-middle btn-lor-middle-active">
+          <input style="display: none;" type="radio" name="optionsType" id="option-type-b" onclick="buttonPressed(this)" checked> Both
+          </label>
+          <label class="btn btn-lor-right">
+          <input style="display: none;" type="radio" name="optionsType" id="option-type-s" onclick="buttonPressed(this)"> Spells
+          </label>
         </div>
       </div>
-      <div id="cardContents" style="height: calc(100% - 124px); overflow: auto; position: absolute; top:124px"></div>
+    </div>
+    <div id="cardContents" style="height: calc(100% - 124px); overflow: auto; position: absolute; top:124px"></div>
   </body>
   <script src="./graveyardRenderer.js"></script>
-  <script>
-    $(".font-loader").each(function() {
-        this.remove();
-    })
-
-    function minimize() {
-      if (document.getElementById("cardContents").style.display == "none") {
-        document.getElementById("cardContents").style.display = "grid";
-        document.getElementById("options").style.display = "grid";
-      }
-      else {
-        document.getElementById("cardContents").style.display = "none";
-        document.getElementById("options").style.display = "none";
-
-      }
-      updateTracker();
-    }
-
-    document.getElementById("top-container").style.opacity = config.get("graveyard-opacity");
-    document.getElementById("cardContents").style.opacity = config.get("card-opacity");
-
-    var cTop = document.getElementById("top");
-    var ctxTop = cTop.getContext("2d");
-    ctxTop.scale(cTop.width/226,cTop.height/40); 
-    //ctxTop.globalAlpha = config.get("graveyard-opacity");
-    var imgStart = new Image;
-    imgStart.src = './top-window.png';
-
-    imgStart.onload = function () {
-      ctxTop.drawImage(imgStart, 0 ,0);
-    
-      ctxTop.textAlign = "center";
-      ctxTop.fillStyle = "white";
-      
-      ctxTop.font = "16px BeaufortforLOL-Bold";
-      
-      ctxTop.fillText("GRAVEYARD", imgStart.width / 2, imgStart.height / 2 + 5);
-    };
-  </script>
 </html>

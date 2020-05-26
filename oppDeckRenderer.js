@@ -15,6 +15,42 @@ ipcRenderer.on('resize', (event, width, height) => {
     updateTracker();
 });
 
+$(".font-loader").each(function() {
+    this.remove();
+})
+
+function minimize() {
+  console.log("test")
+  if (document.getElementById("cardContents").style.display == "none") {
+    document.getElementById("cardContents").style.display = "grid";
+  }
+  else {
+    document.getElementById("cardContents").style.display = "none";
+  }
+  updateTracker();
+}
+
+document.getElementById("top").style.opacity = config.get("card-opacity");
+document.getElementById("cardContents").style.opacity = config.get("card-opacity");
+
+var cTop = document.getElementById("top");
+var ctxTop = cTop.getContext("2d");
+ctxTop.scale(cTop.width/226,cTop.height/40); 
+
+var imgStart = new Image;
+imgStart.src = './top-window.png';
+
+imgStart.onload = function () {
+  ctxTop.drawImage(imgStart, 0 ,0);
+
+  ctxTop.textAlign = "center";
+  ctxTop.fillStyle = "white";
+  
+  ctxTop.font = "16px BeaufortforLOL-Bold";
+  
+  ctxTop.fillText("OPPONENT", imgStart.width / 2, imgStart.height / 2 + 5);
+};
+
 var cardArr = [];
 
 var imgCard;
@@ -41,10 +77,6 @@ function updateOppDeck() {
 }
     
 function updateTracker() {
-    console.log("TEST");
-    /// Individual Card Height
-    /// Transparency
-
     cardArr.sort((a,b) => (a.mana > b.mana) ? 1 : ((b.mana > a.mana) ? -1 : 0)); 
 
     createCanvas.render(cardArr);

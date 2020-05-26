@@ -6,7 +6,6 @@ const config = new Store();
 var trackerWindow, fullCardWindow, graveyardWindow, oppDeckWindow;
 
 function createWindow () {
-  // Create the browser window.
   trackerWindow = new BrowserWindow({
     width: config.get("tracker-width"),
     height: config.get("tracker-height"),
@@ -29,6 +28,14 @@ function createWindow () {
     trackerWindow.setVisibleOnAllWorkspaces(true);
     trackerWindow.setAlwaysOnTop(true, 'screen-saver');
     trackerWindow.setSkipTaskbar(true);
+    
+    if (config.get("tracker-ignore-mouse-events")) {
+      trackerWindow.setIgnoreMouseEvents(true);
+    }
+
+    if(config.get("tracker-disabled")) {
+      trackerWindow.hide();
+    }
 
     trackerWindow.on('resize', () => {
       let size = trackerWindow.getSize();
@@ -93,6 +100,14 @@ function createWindow () {
     graveyardWindow.setAlwaysOnTop(true, 'screen-saver');
     graveyardWindow.setSkipTaskbar(true);
 
+    if (config.get("graveyard-ignore-mouse-events")) {
+      graveyardWindow.setIgnoreMouseEvents(true);
+    }
+    
+    if(config.get("graveyard-disabled")) {
+      graveyardWindow.hide();
+    }
+
     graveyardWindow.on('resize', () => {
       let size = graveyardWindow.getSize();
       config.set("graveyard-width", size[0]);
@@ -129,6 +144,14 @@ function createWindow () {
     oppDeckWindow.setVisibleOnAllWorkspaces(true);
     oppDeckWindow.setAlwaysOnTop(true, 'screen-saver');
     oppDeckWindow.setSkipTaskbar(true);
+    
+    if (config.get("opponent-deck-ignore-mouse-events")) {
+      oppDeckWindow.setIgnoreMouseEvents(true);
+    }
+    
+    if(config.get("opponent-deck-disabled")) {
+      oppDeckWindow.hide();
+    }
 
     oppDeckWindow.on('resize', () => {
       let size = oppDeckWindow.getSize();
@@ -196,23 +219,14 @@ function createWindow () {
 
 }
 
-
-
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.whenReady().then(createWindow)
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
-  // On macOS it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') app.quit()
 })
 
 app.on('activate', function () {
-  // On macOS it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
 
@@ -276,9 +290,16 @@ function matchFound(r) {
   global.oppDeckArr = [];
   currentRectangles = [];
 
-  trackerWindow.show();
-  graveyardWindow.show();
-  oppDeckWindow.show();
+  
+  if(!config.get("tracker-disabled")) {
+    trackerWindow.show();
+  }
+  if(!config.get("graveyard-disabled")) {
+    graveyardWindow.show();
+  }
+  if(!config.get("opponent-deck-disabled")) {
+    oppDeckWindow.show();
+  }
   
   size = trackerWindow.getSize();
   trackerWindow.webContents.send('start', size[0], size[1]);
@@ -449,7 +470,6 @@ function trackingGame(r) {
 function matchOver(r) {
   if (!r)
     httpGet(url).then(res => waitingForGame(res));
-
 
   if (r.LocalPlayerWon)
     console.log("Victory");

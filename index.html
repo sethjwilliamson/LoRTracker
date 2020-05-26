@@ -4,27 +4,20 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="myStyle.css">
-    
-    <!-- Bootstrap Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script>let $ = require('jquery');</script>
     <script>require('popper.js');</script>
     <script>require('bootstrap');</script>
-
     <!--
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    ///Put this back I think
-    -->
-
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+      <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+      <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+      ///Put this back I think
+      -->
   </head>
   <body>
     <p class="font-loader" style="font-family: BeaufortforLOL-Bold;">. </p>
     <p class="font-loader" style="font-family: BeaufortforLOL-Regular;">. </p>
     <p class="font-loader" style="font-family: Univers;">. </p>
     <p class="font-loader" style="font-family: Univers-Cond;">. </p>
-
     <div id="top-container">
       <canvas id="main"></canvas>
       <canvas id="regionP" width="173px" height="20px"></canvas>
@@ -32,62 +25,7 @@
     </div>
     <div id="cardContents" style="display: grid;"></div>
     <canvas id="botStats"></canvas>
-
     </div>
   </body>
   <script src="./renderer.js"></script>
-  <script>
-    $(".font-loader").each(function() {
-        this.remove();
-    })
-
-    function minimize() {
-      if (document.getElementById("cardContents").style.display == "none") {
-        document.getElementById("cardContents").style.display = "grid";
-      }
-      else {
-        document.getElementById("cardContents").style.display = "none";
-      }
-      updateTracker();
-    }
-
-    document.getElementById("top-container").style.opacity = config.get("tracker-opacity");
-    document.getElementById("cardContents").style.opacity = config.get("card-opacity");
-    document.getElementById("botStats").style.opacity = config.get("tracker-opacity");
-
-    var cMain = document.getElementById("main");
-    var ctxMain = cMain.getContext("2d");
-    ctxMain.scale(cMain.width/230,cMain.height/96); 
-    ctxMain.globalAlpha = 1;
-    var imgStart = new Image;
-    imgStart.src = './double3-cropped.png';
-
-    imgStart.onload = function () {
-      ctxMain.drawImage(imgStart, 0 ,0);
-    };
-
-    cBot = document.getElementById("botStats");
-    ctxBot = cBot.getContext("2d");
-    
-    ctxBot.scale(cBot.width/230,cBot.height/120);
-
-    var imgBot = new Image;
-    imgBot.src = './bottom4-extended.png';
-
-    imgBot.onload = function() {
-      ctxBot.drawImage(imgBot, 0 ,0);
-    }
-
-    cBack = document.getElementById("brown");
-    ctxBack = cBack.getContext("2d");
-
-    ctxBack.scale(cBack.width/230,cBack.height/40);
-
-    var imgBrown = new Image;
-    imgBrown.src = './brown.png';
-    imgBrown.onload = function() {
-      ctxBack.drawImage(imgBrown, 0, 0);
-    }
-
-  </script>
 </html>

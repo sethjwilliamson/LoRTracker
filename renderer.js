@@ -59,6 +59,59 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
 }
 
 
+$(".font-loader").each(function() {
+    this.remove();
+})
+
+function minimize() {
+  if (document.getElementById("cardContents").style.display == "none") {
+    document.getElementById("cardContents").style.display = "grid";
+  }
+  else {
+    document.getElementById("cardContents").style.display = "none";
+  }
+  updateTracker();
+}
+
+document.getElementById("top-container").style.opacity = config.get("tracker-opacity");
+document.getElementById("cardContents").style.opacity = config.get("card-opacity");
+document.getElementById("botStats").style.opacity = config.get("tracker-opacity");
+
+var cMain = document.getElementById("main");
+var ctxMain = cMain.getContext("2d");
+ctxMain.scale(cMain.width/230,cMain.height/96); 
+ctxMain.globalAlpha = 1;
+var imgStart = new Image;
+imgStart.src = './double3-cropped.png';
+
+imgStart.onload = function () {
+  ctxMain.drawImage(imgStart, 0 ,0);
+};
+
+cBot = document.getElementById("botStats");
+ctxBot = cBot.getContext("2d");
+
+ctxBot.scale(cBot.width/230,cBot.height/120);
+
+var imgBot = new Image;
+imgBot.src = './bottom4-extended.png';
+
+imgBot.onload = function() {
+  ctxBot.drawImage(imgBot, 0 ,0);
+}
+
+cBack = document.getElementById("brown");
+ctxBack = cBack.getContext("2d");
+
+ctxBack.scale(cBack.width/230,cBack.height/40);
+
+var imgBrown = new Image;
+imgBrown.src = './brown.png';
+imgBrown.onload = function() {
+  ctxBack.drawImage(imgBrown, 0, 0);
+}
+
+
 var arr = require('./set1-en_us.json');
 var cardArr = [];
 var regionColors = {
@@ -156,8 +209,6 @@ function start() {
     
     let cMain = document.getElementById("main");
     let ctxMain = cMain.getContext("2d");
-    //ctxMainMain.scale(c.width / 230, c.height / 111);
-    //ctxMain.clearRect(0, 0, cMain.width, cMain.height);
 
     switch (deckRegions.length) {
         case 1:
@@ -177,7 +228,6 @@ function start() {
             imgRegion1.src = regionIcons[deckRegions[0]];
 
             imgRegion2.src = regionIcons[deckRegions[1]];
-           // setTimeout(function() {httpGet(url).then(res => waitingForGame(res));}, 5000);
 
             setTimeout(function() {
                 ctxMain.drawImage(imgMain, 0 , 0);
@@ -266,9 +316,6 @@ function updateTracker() {
         ctxRegion.fillText("", 55, 15);
         ctxRegion.fillText("", 118, 15);
     }
-
-    /// Individual Card Height
-    /// Transparency
 
     cardArr.sort((a,b) => (a.mana > b.mana) ? 1 : ((b.mana > a.mana) ? -1 : 0)); 
     
