@@ -20,10 +20,15 @@ $(".font-loader").each(function() {
 
 function minimize() {
   if (document.getElementById("cardContents").style.display == "none") {
-    document.getElementById("cardContents").style.display = "grid";
+    document.getElementById("cardContents").style.display = "block";
+
+    
+    ipcRenderer.send('size', config.get("opponent-deck-height"), "oppDeck"); 
   }
   else {
     document.getElementById("cardContents").style.display = "none";
+    
+    ipcRenderer.send('size', $("#top").height(), "oppDeck"); 
   }
   updateTracker();
 }

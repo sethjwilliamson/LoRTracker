@@ -20,12 +20,16 @@ $(".font-loader").each(function() {
 
 function minimize() {
   if (document.getElementById("cardContents").style.display == "none") {
-    document.getElementById("cardContents").style.display = "grid";
-    document.getElementById("options").style.display = "grid";
+    document.getElementById("cardContents").style.display = "block";
+    document.getElementById("options").style.display = "block";
+
+    ipcRenderer.send('size', config.get("graveyard-height"), "graveyard"); 
   }
   else {
     document.getElementById("cardContents").style.display = "none";
     document.getElementById("options").style.display = "none";
+
+    ipcRenderer.send('size', $("#top").height(), "graveyard"); 
   }
   
   updateTracker();
@@ -123,7 +127,7 @@ function updateGraveyard() {
             imgCard.onload = updateTracker;
         }
     }
-    
+
     updateTracker();
 }
     
