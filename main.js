@@ -3,17 +3,18 @@ const path = require('path');
 const {ipcMain, screen} = require('electron');
 const Store = require('electron-store');
 const config = new Store();
+const data = new Store({name:"data"});
 var trackerWindow, fullCardWindow, graveyardWindow, oppDeckWindow;
 
 function createWindow () {
   mainWindow = new BrowserWindow({
-    icon: "./images/icon.png",
+    icon: "./images/icon2.png",
     webPreferences: {
       nodeIntegration:true
     }
   })
 
-  mainWindow.loadFile("main.html");
+  mainWindow.loadFile("mainDefault.html");
 
   trackerWindow = new BrowserWindow({
     width: config.get("tracker-width"),
@@ -269,6 +270,9 @@ var prevDraw;
 var cardsLeft;
 var height;
 var handSize;
+var deckCode;
+var gameStartTime;
+var opponentName;
 var currentRectangles = [];
 global.cardArr = [];
 global.graveyardArr = [];
@@ -285,6 +289,7 @@ function waitingForGame(r) {
   }
   else {
     if ((r.GameState) === ('InProgress')) {
+      opponentName = r.OpponentName;
       prevDraw = null;
       cardsLeft = 40;
       height = r.Screen.ScreenHeight;
@@ -316,6 +321,10 @@ function matchFound(r) {
   }
   
   size = trackerWindow.getSize();
+
+  gameStartTime = Date.now();
+
+  deckCode = r.DeckCode;
 
   startTracker(size[0], size[1], r.CardsInDeck);
   
@@ -488,9 +497,9 @@ function matchOver(r) {
     httpGet(url).then(res => waitingForGame(res));
 
   if (r.LocalPlayerWon)
-    console.log("Victory");
+    logGame(true);
   else
-    console.log("Defeat");
+    logGame(false);
 
   trackerWindow.hide();
   graveyardWindow.hide();
@@ -541,4 +550,65 @@ function startTracker(width, height, obj) {
   }
   
   trackerWindow.webContents.send('start', width, height, cardsLeft, spellsLeft, unitsLeft);
+}
+
+
+function logGame (isMatchWin) {
+  let decksArr = data.get('decks');
+  let gamesArr = data.get('games');
+
+  if (!decksArr) {
+    decksArr = [];
+  }
+
+  let currDeck = decksArr.find(o => o.deckCode === deckCode);
+  
+  if (currDeck) {
+    if (isMatchWin) {
+      currDeck.wins++;
+    }
+    else {
+      currDeck.losses++;
+    }
+
+    currDeck.mostRecentPlay = Date.now();
+
+    data.set("decks", decksArr.filter( o => o.deckCode !== deckCode ).concat(currDeck));
+  }
+  else {
+    currDeck = {
+      'name': null,
+      'deckCode': deckCode,
+      'wins': 0,
+      'losses': 0,
+      'mostRecentPlay': Date.now(),
+      'regions': deckRegions,
+      'cards': cardArr
+    };
+
+    if (isMatchWin) {
+      currDeck.wins++;
+    }
+    else {
+      currDeck.losses++;
+    }
+
+    data.set("decks", decksArr.concat(currDeck));
+  }
+  
+  let gameObj = {
+    "deckCode": deckCode,
+    "isWin": isMatchWin,
+    "timePlayed": Date.now(),
+    "opponentName": opponentName,
+    "gameLength": gameStartTime - Date.now(),
+    "oppCards": oppDeckArr
+  }
+
+  if (gamesArr) {
+    data.set("games", gamesArr.concat(gameObj));
+  }
+  else {
+    data.set("games", [gameObj]);
+  }
 }
