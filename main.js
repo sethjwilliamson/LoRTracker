@@ -6,6 +6,15 @@ const config = new Store();
 var trackerWindow, fullCardWindow, graveyardWindow, oppDeckWindow;
 
 function createWindow () {
+  mainWindow = new BrowserWindow({
+    icon: "./images/icon.png",
+    webPreferences: {
+      nodeIntegration:true
+    }
+  })
+
+  mainWindow.loadFile("main.html");
+
   trackerWindow = new BrowserWindow({
     width: config.get("tracker-width"),
     height: config.get("tracker-height"),
@@ -21,7 +30,7 @@ function createWindow () {
     }
   })
 
-  trackerWindow.loadFile('index.html');
+  trackerWindow.loadFile('tracker.html');
   
   trackerWindow.webContents.on('did-finish-load', () => {
     trackerWindow.setVisibleOnAllWorkspaces(true);
@@ -105,7 +114,7 @@ function createWindow () {
       graveyardWindow.hide();
     }
 
-    graveyardWindow.on('resize', () => {
+    graveyardWindow.on('will-resize', () => {
       let size = graveyardWindow.getSize();
       config.set("graveyard-width", size[0]);
       config.set("graveyard-height", size[1]);
@@ -149,7 +158,7 @@ function createWindow () {
       oppDeckWindow.hide();
     }
 
-    oppDeckWindow.on('resize', () => {
+    oppDeckWindow.on('will-resize', () => {
       let size = oppDeckWindow.getSize();
       config.set("opponent-deck-width", size[0]);
       config.set("opponent-deck-height", size[1]);
@@ -210,7 +219,17 @@ function createWindow () {
   });
 
   ipcMain.on('size', (event, height, window) => {
-    trackerWindow.setSize(trackerWindow.getSize()[0], parseInt(height));
+    switch (window) {
+      case "tracker":
+        trackerWindow.setSize(trackerWindow.getSize()[0], parseInt(height));
+        break;
+      case "graveyard": 
+        graveyardWindow.setSize(graveyardWindow.getSize()[0], parseInt(height));
+        break;
+      case "oppDeck":
+        oppDeckWindow.setSize(oppDeckWindow.getSize()[0], parseInt(height));
+        break;
+    }
   });
 
 }
@@ -251,9 +270,11 @@ var cardsLeft;
 var height;
 var handSize;
 var currentRectangles = [];
-global.decklist = [];
+global.cardArr = [];
 global.graveyardArr = [];
 global.oppDeckArr = [];
+global.deckRegions = [];
+global.cardRegions = [];
 
 
 function waitingForGame(r) {
@@ -279,7 +300,6 @@ function matchFound(r) {
     setTimeout(function() {httpGet(url).then(res => waitingForGame(res));}, 500);
   }
 
-  global.decklist = r.CardsInDeck;
   global.graveyardArr = [];
   global.oppDeckArr = [];
   currentRectangles = [];
@@ -296,7 +316,12 @@ function matchFound(r) {
   }
   
   size = trackerWindow.getSize();
-  trackerWindow.webContents.send('start', size[0], size[1]);
+
+  startTracker(size[0], size[1], r.CardsInDeck);
+  
+  graveyardWindow.webContents.send('update', "test");
+  
+  oppDeckWindow.webContents.send('update', "test");
 
   handSize = 4;
   trackerWindow.webContents.send('handUpdate', handSize);
@@ -472,4 +497,48 @@ function matchOver(r) {
   oppDeckWindow.hide();
   
   httpGet(url).then(res => waitingForGame(res));
+}
+
+function startTracker(width, height, obj) {
+  let keys = Object.keys(obj);
+  cardsLeft = 0;
+  spellsLeft = 0;
+  unitsLeft = 0;
+  cardArr = [];
+  deckRegions = [];
+  cardRegions = [];
+
+  for (let element of keys) {
+
+    let card = setJson.find(o => o.cardCode === element);
+
+    for (i = 0; i < obj[element]; i++) {
+        cardsLeft++;
+        if (card.type === "Unit")
+            unitsLeft++;
+        else 
+            spellsLeft++;
+
+
+        if (!deckRegions.includes(card.regionRef)) {
+            deckRegions.push(card.regionRef);
+            cardRegions.push( {"region" : card.regionRef, "quantity" : 1})
+        }
+        else {
+            cardRegions.find(o => o.region === card.regionRef).quantity++;
+        }
+    }
+
+    cardArr.push({
+      "cardCode": card.cardCode,
+      "mana": card.cost,
+      "quantity": obj[element],
+      "imageUrl": null,
+      "name": card.name,
+      "region": card.regionRef,
+      "type": card.type
+    });
+  }
+  
+  trackerWindow.webContents.send('start', width, height, cardsLeft, spellsLeft, unitsLeft);
 }

@@ -3,7 +3,15 @@ const createCanvas = require('./createCanvas.js');
 const Store = require('electron-store');
 const config = new Store();
 
-ipcRenderer.on('start', (event, width, height) => {
+var cardsLeft;
+var spellsLeft;
+var unitsLeft;
+
+ipcRenderer.on('start', (event, width, height, cardsLeft, spellsLeft, unitsLeft) => {
+    this.cardsLeft = cardsLeft;
+    this.spellsLeft = spellsLeft;
+    this.unitsLeft = unitsLeft;
+
     this.width = width;
     this.height = height;
     start();
@@ -80,7 +88,6 @@ document.getElementById("botStats").style.opacity = config.get("tracker-opacity"
 var cMain = document.getElementById("main");
 var ctxMain = cMain.getContext("2d");
 ctxMain.scale(cMain.width/230,cMain.height/96); 
-ctxMain.globalAlpha = 1;
 var imgStart = new Image;
 imgStart.src = './images/double3-cropped.png';
 
@@ -111,19 +118,6 @@ imgBrown.onload = function() {
   ctxBack.drawImage(imgBrown, 0, 0);
 }
 
-
-var arr = require('./cards/set1-en_us.json');
-var cardArr = [];
-var regionColors = {
-    "Demacia": "#B9AC98",
-    "Noxus": "#962D27",
-    "Freljord": "#4A7DC3",
-    "PiltoverZaun": "#B05925",
-    "Ionia": "#C45987",
-    "ShadowIsles": "#2A725D",
-    "Bilgewater": "#FD9061"
-
-};
 var regionIcons = {
     "Demacia": "icons/icon-demacia.png",
     "Noxus": "icons/icon-noxus.png",
@@ -150,9 +144,7 @@ imgUnit.src = 'icons/icon-unit2.png';
 imgDeck.src = 'icons/icon-deck.png';
 imgHand.src = 'icons/icon-hand.png';
 
-var cardsLeft;
-var spellsLeft;
-var unitsLeft;
+
 var width;
 var height;
 var margin = 3;
@@ -162,50 +154,12 @@ var handSize;
 
 function start() {
     console.log("Start");
-    let obj = remote.getGlobal('decklist');
 
-    let keys = Object.keys(obj);
-    cardsLeft = 0;
-    spellsLeft = 0;
-    unitsLeft = 0;
-    cardArr = [];
-    deckRegions = [];
-    cardRegions = [];
+    cardArr = remote.getGlobal("cardArr");
+    deckRegions = remote.getGlobal("deckRegions");
+    cardRegions = remote.getGlobal("cardRegions");
 
-    for (let element of keys) {
-
-        let card = arr.find(o => o.cardCode === element);
-
-        for (i = 0; i < obj[element]; i++) {
-            cardsLeft++;
-            if (card.type === "Unit")
-                unitsLeft++;
-            else 
-                spellsLeft++;
-
-
-            if (!deckRegions.includes(card.regionRef)) {
-                deckRegions.push(card.regionRef);
-                cardRegions.push( {"region" : card.regionRef, "quantity" : 1})
-            }
-            else {
-                cardRegions.find(o => o.region === card.regionRef).quantity++;
-            }
-        }
-
-        imgCard = new Image;
-        imgCard.src = "./cropped/" + card.cardCode + "-full.jpg";
-
-        cardArr.push({
-            "cardCode": card.cardCode,
-            "mana": card.cost,
-            "quantity": obj[element],
-            "image": imgCard,
-            "color": regionColors[card.regionRef],
-            "name": card.name,
-            "region": card.regionRef
-        });
-    }
+    
     
     let cMain = document.getElementById("main");
     let ctxMain = cMain.getContext("2d");
@@ -284,12 +238,15 @@ async function editCard(cardCode, isUnit) {
 }
     
 function updateTracker() {
+    cardArr = remote.getGlobal("cardArr");
+    deckRegions = remote.getGlobal("deckRegions");
+    cardRegions = remote.getGlobal("cardRegions");
+
+
     let cRegion = document.getElementById("regionP");
     let ctxRegion = cRegion.getContext("2d");
 
     ctxRegion.clearRect(0, 0, cRegion.width, cRegion.height);
-    console.log(cRegion.width);
-    console.log(cRegion.height)
     
     ctxRegion.textAlign = "center";
     ctxRegion.fillStyle = "white";
@@ -318,8 +275,16 @@ function updateTracker() {
     }
 
     cardArr.sort((a,b) => (a.mana > b.mana) ? 1 : ((b.mana > a.mana) ? -1 : 0)); 
+
+    for (let element of cardArr) {
+        if (!element.image) {
+            imgCard = new Image;
+            imgCard.src = "./cropped/" + element.cardCode + "-full.jpg";
+            element.image = imgCard;
+        }
+    }
     
-    createCanvas.render(cardArr);
+    imgCard.onload = createCanvas.render(cardArr);
   
     cBot = document.getElementById("botStats");
     ctxBot = cBot.getContext("2d");
