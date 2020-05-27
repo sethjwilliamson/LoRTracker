@@ -116,6 +116,34 @@
     height: 512;
   }
 
+
+  .regionPicture {
+    height: 50px;
+    width: 50px;
+}
+
+.champPicture {
+    height: 20px;
+    width: 20px;
+    margin: 2px;
+}
+
+.deck-preview {
+    height:50px;
+}
+
+.col-champ {
+    height:50px;
+    width: 25px;
+    display:grid;
+}
+
+.no-margin {
+    margin: 0;
+}
+
+
+
   ::-webkit-scrollbar {
     display: none;
   }
