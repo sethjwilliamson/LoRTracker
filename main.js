@@ -273,6 +273,7 @@ var handSize;
 var deckCode;
 var gameStartTime;
 var opponentName;
+var initialCardArr;
 var currentRectangles = [];
 global.cardArr = [];
 global.graveyardArr = [];
@@ -431,7 +432,8 @@ function trackingGame(r) {
                 "region": card.regionRef,
                 "localPlayer": element.LocalPlayer,
                 "type": card.type,
-                "IDs": [element.CardID]
+                "isChamp": (card.supertype === "Champion"),
+                "IDs": [element.CardID],
               });
             }
           }
@@ -545,9 +547,13 @@ function startTracker(width, height, obj) {
       "imageUrl": null,
       "name": card.name,
       "region": card.regionRef,
-      "type": card.type
+      "type": card.type,
+      "isChamp": (card.supertype === "Champion")
     });
   }
+
+
+  initialCardArr = cardArr;
   
   trackerWindow.webContents.send('start', width, height, cardsLeft, spellsLeft, unitsLeft);
 }
@@ -556,6 +562,7 @@ function startTracker(width, height, obj) {
 function logGame (isMatchWin) {
   let decksArr = data.get('decks');
   let gamesArr = data.get('games');
+  let oppRegions = [];
 
   if (!decksArr) {
     decksArr = [];
@@ -583,7 +590,7 @@ function logGame (isMatchWin) {
       'losses': 0,
       'mostRecentPlay': Date.now(),
       'regions': deckRegions,
-      'cards': cardArr
+      'cards': initialCardArr
     };
 
     if (isMatchWin) {
@@ -595,14 +602,21 @@ function logGame (isMatchWin) {
 
     data.set("decks", decksArr.concat(currDeck));
   }
+
+  for (let oppCard of oppDeckArr) {
+    if (!oppRegions.includes(oppCard.region)) {
+      oppRegions.push(oppCard.region);
+    }
+  }
   
   let gameObj = {
     "deckCode": deckCode,
     "isWin": isMatchWin,
     "timePlayed": Date.now(),
     "opponentName": opponentName,
-    "gameLength": gameStartTime - Date.now(),
-    "oppCards": oppDeckArr
+    "gameLength": Date.now() - gameStartTime,
+    "oppCards": oppDeckArr,
+    "oppRegions": oppRegions
   }
 
   if (gamesArr) {
