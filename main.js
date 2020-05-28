@@ -195,7 +195,14 @@ function createWindow () {
         windowPosition = oppDeckWindow.getPosition();
         windowSize = oppDeckWindow.getSize();
         break;
+      case "main":
+        windowPosition = mainWindow.getPosition();
+        windowPosition[0] += x;
+        windowSize = 0;
+        break;
     }
+
+    console.log(windowPosition);
 
     if (windowPosition[1] - 256 + y < 0) {
       windowY = 0;
@@ -207,7 +214,7 @@ function createWindow () {
       windowY = windowPosition[1] - 256 + y;
     }
 
-    if (windowPosition[0] > screen.getPrimaryDisplay().workAreaSize.width / 2) { // config
+    if (windowPosition[0] > screen.getPrimaryDisplay().workAreaSize.width / 2 || window === "main") { // config
       fullCardWindow.setPosition(windowPosition[0] - 340, windowY); 
     }
     else {

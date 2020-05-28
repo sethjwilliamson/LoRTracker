@@ -11,6 +11,7 @@ var regionColors = {
     "Bilgewater": "#FD9061"
 
 };
+var margin = 3;
 
 function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
     if (typeof stroke === 'undefined') {
