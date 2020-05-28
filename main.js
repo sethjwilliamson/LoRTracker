@@ -37,6 +37,7 @@ function createWindow () {
     trackerWindow.setVisibleOnAllWorkspaces(true);
     trackerWindow.setAlwaysOnTop(true, 'screen-saver');
     trackerWindow.setSkipTaskbar(true);
+    trackerWindow.hide()
     
     if (config.get("tracker-ignore-mouse-events")) {
       trackerWindow.setIgnoreMouseEvents(true);
@@ -106,6 +107,7 @@ function createWindow () {
     graveyardWindow.setVisibleOnAllWorkspaces(true);
     graveyardWindow.setAlwaysOnTop(true, 'screen-saver');
     graveyardWindow.setSkipTaskbar(true);
+    graveyardWindow.hide();
 
     if (config.get("graveyard-ignore-mouse-events")) {
       graveyardWindow.setIgnoreMouseEvents(true);
@@ -150,6 +152,7 @@ function createWindow () {
     oppDeckWindow.setVisibleOnAllWorkspaces(true);
     oppDeckWindow.setAlwaysOnTop(true, 'screen-saver');
     oppDeckWindow.setSkipTaskbar(true);
+    oppDeckWindow.hide();
     
     if (config.get("opponent-deck-ignore-mouse-events")) {
       oppDeckWindow.setIgnoreMouseEvents(true);
