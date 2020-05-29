@@ -7,149 +7,34 @@
     <script>require('bootstrap');</script>
   </head>
   <body>
-    <div class="row border-top" style="height:100%; margin:0; width:100%">
-        <ul class="list-group list-group-flush" style="min-width: 491px;">
-            <li class="list-group-item">
-                <div class="row">
-                    <div class="col">
-                        <div class="deck-preview d-flex justify-content-start">
-                            <img src="https://vignette.wikia.nocookie.net/leagueoflegends/images/4/45/Noxus_LoR_Region.png/revision/latest?cb=20191022161806" class="regionPicture"/>
-                            <img src="https://vignette.wikia.nocookie.net/leagueoflegends/images/4/45/Noxus_LoR_Region.png/revision/latest?cb=20191022161806" class="regionPicture"/>
-                            
-                            <div class="col-champ align-content-center">
-                                <img src="https://vignette.wikia.nocookie.net/leagueoflegends/images/f/f2/Draven_OriginalSquare.png/revision/latest/scale-to-width-down/50?cb=20160526212252" class="rounded-circle champPicture"/>
-                                <img src="https://vignette.wikia.nocookie.net/leagueoflegends/images/f/f2/Draven_OriginalSquare.png/revision/latest/scale-to-width-down/50?cb=20160526212252" class="rounded-circle champPicture"/>
-                            </div>
-                            <div class="col-champ align-content-center">
-                                <img src="https://vignette.wikia.nocookie.net/leagueoflegends/images/f/f2/Draven_OriginalSquare.png/revision/latest/scale-to-width-down/50?cb=20160526212252" class="rounded-circle champPicture "/>
-                                <img src="https://vignette.wikia.nocookie.net/leagueoflegends/images/f/f2/Draven_OriginalSquare.png/revision/latest/scale-to-width-down/50?cb=20160526212252" class="rounded-circle champPicture "/>
-                            </div>
-                            <div class="col-champ align-content-center">
-                                <img src="https://vignette.wikia.nocookie.net/leagueoflegends/images/f/f2/Draven_OriginalSquare.png/revision/latest/scale-to-width-down/50?cb=20160526212252" class="rounded-circle champPicture "/>
-                                <img src="https://vignette.wikia.nocookie.net/leagueoflegends/images/f/f2/Draven_OriginalSquare.png/revision/latest/scale-to-width-down/50?cb=20160526212252" class="rounded-circle champPicture "/>
-                            </div>
-                        </div>
-                    </div>
+    <p class="font-loader" style="font-family: BeaufortforLOL-Bold;">. </p>
+    <p class="font-loader" style="font-family: BeaufortforLOL-Regular;">. </p>
+    <p class="font-loader" style="font-family: Univers;">. </p>
+    <p class="font-loader" style="font-family: Univers-Cond;">. </p>
+
+
+    <div class="row border-top no-margin full">
+        <div class="history-tab flex-2 full-height">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" style="width:50%">
+                <a class="nav-link active" id="matches-tab" data-toggle="tab" href="#" role="tab" aria-controls="matches" aria-selected="true" onclick="loadMatches()">Matches</a>
+                </li>
+                <li class="nav-item" style="width:50%">
+                <a class="nav-link" id="decks-tab" data-toggle="tab" href="#" role="tab" aria-controls="decks" aria-selected="false" onclick="loadDecks()">Decks</a>
+                </li>
+            </ul>
+            <ul class="list-group list-group-flush flex-2-child" id="historyWindow" style="overflow-y: auto;">
+                
+            </ul>
+        </div>
+        <div class="col border-left no-padding">
+            <div class="row flex-grow-1 no-margin full" id="detailsWindow">
+                <div class="col flex-column full-height">
                     
-                    <div class="col align-self-center">
-                        <p class="text-center h3">Win</p>
-                    </div>
-                    
-                    <div class="col">
-                        <div class="deck-preview d-flex justify-content-end">
-                            <div class="col-champ align-content-center">
-                                <img src="https://vignette.wikia.nocookie.net/leagueoflegends/images/f/f2/Draven_OriginalSquare.png/revision/latest/scale-to-width-down/50?cb=20160526212252" class="rounded-circle champPicture"/>
-                            </div>
-                            <div class="col-champ align-content-center">
-                                <img src="https://vignette.wikia.nocookie.net/leagueoflegends/images/f/f2/Draven_OriginalSquare.png/revision/latest/scale-to-width-down/50?cb=20160526212252" class="rounded-circle champPicture "/>
-                                <img src="https://vignette.wikia.nocookie.net/leagueoflegends/images/f/f2/Draven_OriginalSquare.png/revision/latest/scale-to-width-down/50?cb=20160526212252" class="rounded-circle champPicture "/>
-                            </div>
-                            <div class="col-champ align-content-center">
-                                <img src="https://vignette.wikia.nocookie.net/leagueoflegends/images/f/f2/Draven_OriginalSquare.png/revision/latest/scale-to-width-down/50?cb=20160526212252" class="rounded-circle champPicture "/>
-                                <img src="https://vignette.wikia.nocookie.net/leagueoflegends/images/f/f2/Draven_OriginalSquare.png/revision/latest/scale-to-width-down/50?cb=20160526212252" class="rounded-circle champPicture "/>
-                            </div>
-                            
-                            <img src="https://vignette.wikia.nocookie.net/leagueoflegends/images/4/45/Noxus_LoR_Region.png/revision/latest?cb=20191022161806" class="regionPicture"/>
-                            <img src="https://vignette.wikia.nocookie.net/leagueoflegends/images/4/45/Noxus_LoR_Region.png/revision/latest?cb=20191022161806" class="regionPicture"/>
-                        </div>
-                    </div>
-                </div>
-            </li>
-        </ul>
-        <div class="col border-left" style="width: 70%;">
-            <div class="row flex-grow-1 no-margin" style="height: 100%; width: 100%;">
-                <div class="col flex-column" style="height: 100%;">
-                    <div class="row justify-content-center">
-                        <p class="h1">Win</p>
-                    </div>
-                    <div class="row justify-content-center">
-                        <p class="h2">Date</p>
-                    </div>
-                    <div class="row justify-content-center">
-                        <p class="h3">Time</p>
-                    </div>
-                    <div class="row justify-content-center">
-                        <p></p>
-                    </div>
-                    <div class="row justify-content-center">
-                        <p class="h2">Other User</p>
-                    </div>
-                    <div class="row justify-content-center">
-                        <p class="h3">Time of Game</p>
-                    </div>
-                    <div class="row justify-content-center">
-                        <p></p>
-                    </div>
-                    <div class="row justify-content-center">
-                        <p class="h2">More Stats Here Eventually</p>
-                    </div>
-                </div>
-                <div class="border-left" style=" height: 100%; width:200px;" >
-                    <div class="card" style="padding:5px; height: calc(50% - 15px); min-height: 20px; margin:10px">
-                        <div class="card-heading">Opponent Cards</div>
-                        <div id="yourCardContents" style="overflow: auto; height:100%">
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                        </div>
-                    </div>
-                    <div class="card" style="padding:5px; height: calc(50% - 15px); min-height: 20px; margin:10px">
-                        <div class="card-heading">Your Cards</div>
-                        <div id="yourCardContents" style="overflow: auto; height:100%">
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                            <p>Test</p>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
-</body>
+  </body>
+  <script src="mainRenderer.js"></script>
 </html>
