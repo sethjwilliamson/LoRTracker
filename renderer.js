@@ -284,7 +284,7 @@ function updateTracker() {
         }
     }
     
-    imgCard.onload = createCanvas.render(cardArr);
+    imgCard.onload = createCanvas.render(cardArr, $("#cardContents"));
   
     cBot = document.getElementById("botStats");
     ctxBot = cBot.getContext("2d");

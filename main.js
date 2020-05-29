@@ -8,6 +8,8 @@ var trackerWindow, fullCardWindow, graveyardWindow, oppDeckWindow;
 
 function createWindow () {
   mainWindow = new BrowserWindow({
+    minWidth: 975,
+    minHeight: 300,
     icon: "./images/icon2.png",
     webPreferences: {
       nodeIntegration:true
@@ -563,7 +565,7 @@ function startTracker(width, height, obj) {
   }
 
 
-  initialCardArr = cardArr;
+  initialCardArr = cardArr.slice();
   
   trackerWindow.webContents.send('start', width, height, cardsLeft, spellsLeft, unitsLeft);
 }

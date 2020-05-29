@@ -50,11 +50,9 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
 
 
 module.exports = {
-    render: function (cardArr) {
-        
-      let div = document.getElementById("cardContents");
+    render: function (cardArr, div) {
     
-      div.innerHTML = '';
+      div.html("");
 
       for (let [index, element] of cardArr.entries()) {
         cCard = document.createElement("canvas"); 
@@ -69,7 +67,6 @@ module.exports = {
         cCard.addEventListener('mouseenter', function() {previewCard(element.cardCode, this)});
         cCard.addEventListener('mouseleave', function() {unpreviewCard()})
         ctxCard = cCard.getContext("2d"); 
-        div.appendChild(cCard);
         ctxCard.scale(cCard.width / 720, cCard.height / 100);
 
         
@@ -122,6 +119,10 @@ module.exports = {
             ctxCard.fillStyle ="rgba(50, 50, 50, 0.7)";
             roundRect(ctxCard, 0, 0, 720, 100, 15, true,false);
         }
+ 
+        div.append($(cCard));
       }
+
+      console.log(div.html());
     }
   };
