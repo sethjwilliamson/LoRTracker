@@ -122,7 +122,5 @@ module.exports = {
  
         div.append($(cCard));
       }
-
-      console.log(div.html());
     }
   };

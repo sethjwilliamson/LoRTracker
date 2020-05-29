@@ -7,8 +7,14 @@
     <script>require('bootstrap');</script>
   </head>
   <body>
+    <p class="font-loader" style="font-family: BeaufortforLOL-Bold;">. </p>
+    <p class="font-loader" style="font-family: BeaufortforLOL-Regular;">. </p>
+    <p class="font-loader" style="font-family: Univers;">. </p>
+    <p class="font-loader" style="font-family: Univers-Cond;">. </p>
+
+
     <div class="row border-top no-margin full">
-        <div class="history-tab">
+        <div class="history-tab flex-2 full-height">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" style="width:50%">
                 <a class="nav-link active" id="matches-tab" data-toggle="tab" href="#" role="tab" aria-controls="matches" aria-selected="true" onclick="loadMatches()">Matches</a>
@@ -17,7 +23,7 @@
                 <a class="nav-link" id="decks-tab" data-toggle="tab" href="#" role="tab" aria-controls="decks" aria-selected="false" onclick="loadDecks()">Decks</a>
                 </li>
             </ul>
-            <ul class="list-group list-group-flush" id="historyWindow">
+            <ul class="list-group list-group-flush flex-2-child" id="historyWindow" style="overflow-y: auto;">
                 
             </ul>
         </div>

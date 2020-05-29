@@ -1,15 +1,58 @@
-const {app, BrowserWindow, remote} = require('electron');
+const {app, BrowserWindow, remote, Menu} = require('electron');
 const path = require('path');
 const {ipcMain, screen} = require('electron');
 const Store = require('electron-store');
-const config = new Store();
+const config = new Store({
+  "defaults" : {
+    "tracker-width": 173,
+    "tracker-height": 550,
+    "tracker-x": 1735,
+    "tracker-y": 70,
+    "tracker-opacity": 0.75,
+    "tracker-ignore-mouse-events": false,
+    "tracker-disabled": false,
+    "opponent-deck-width": 173,
+    "opponent-deck-height": 150,
+    "opponent-deck-x": 10,
+    "opponent-deck-y": 140,
+    "opponent-deck-opacity": 0.75,
+    "opponent-deck-ignore-mouse-events": false,
+    "opponent-deck-disabled": false,
+    "graveyard-width": 173,
+    "graveyard-height": 225,
+    "graveyard-x": 10,
+    "graveyard-y": 735,
+    "graveyard-opacity": 0.75,
+    "graveyard-ignore-mouse-events": false,
+    "graveyard-disabled": false,
+    "card-opacity": 0.75
+  }
+});
 const data = new Store({name:"data"});
 var trackerWindow, fullCardWindow, graveyardWindow, oppDeckWindow;
 
 function createWindow () {
+
+//  let menu = Menu.buildFromTemplate([
+//    {
+//        label: 'Menu',
+//        submenu: [
+//            {label:'Adjust Notification Value'},
+//            {label:'Config', click() {
+//              config.openInEditor();
+//            }},
+//            {label:'Exit', click() {
+//              app.quit();
+//            }}
+//        ]
+//    }
+//])
+
+  //Menu.setApplicationMenu(menu);
+
   mainWindow = new BrowserWindow({
     minWidth: 975,
-    minHeight: 300,
+    minHeight: 600,
     icon: "./images/icon2.png",
     webPreferences: {
       nodeIntegration:true
@@ -203,8 +246,6 @@ function createWindow () {
         windowSize = 0;
         break;
     }
-
-    console.log(windowPosition);
 
     if (windowPosition[1] - 256 + y < 0) {
       windowY = 0;
@@ -421,8 +462,11 @@ function trackingGame(r) {
       }
     };
     
+    // I don't think the first condition does anything
+
     if (currentRectangles !== tempCurrentRectangles && tempHandSize !== 0) {
       for (let element of tempCurrentRectangles) {
+        console.log("test")
         if ( !currentRectangles.find(o => o.CardID === element.CardID) && !element.LocalPlayer) {
           let card = setJson.find(o => o.cardCode === element.CardCode);
 
@@ -455,29 +499,34 @@ function trackingGame(r) {
 
       for (let element of currentRectangles) {
         if ( !tempCurrentRectangles.find(o => o.CardID === element.CardID)) {//!tempCurrentRectangles.includes(element)) {
-          let card = setJson.find(o => o.cardCode === element.CardCode);
+          try {
+            let card = setJson.find(o => o.cardCode === element.CardCode);
 
-          if (card.type === "Unit" || card.type === "Spell") {
-            if (graveyardArr.find(o => o.cardCode === element.CardCode && o.localPlayer === element.LocalPlayer)) {
-              let existingCard = graveyardArr.find(o => o.cardCode === element.CardCode);
-              if (!existingCard.IDs.includes(element.CardID)) {
-                existingCard.quantity++;
-                existingCard.IDs.push(element.CardID)
+            if (card.type === "Unit" || card.type === "Spell") {
+              if (graveyardArr.find(o => o.cardCode === element.CardCode && o.localPlayer === element.LocalPlayer)) {
+                let existingCard = graveyardArr.find(o => o.cardCode === element.CardCode);
+                if (!existingCard.IDs.includes(element.CardID)) {
+                  existingCard.quantity++;
+                  existingCard.IDs.push(element.CardID)
+                }
+              }
+              else {
+                graveyardArr.push({
+                  "cardCode": card.cardCode,
+                  "mana": card.cost,
+                  "quantity": 1,
+                  "imageUrl": null,
+                  "name": card.name,
+                  "region": card.regionRef,
+                  "localPlayer": element.LocalPlayer,
+                  "type": card.type,
+                  "IDs": [element.CardID]
+                });
               }
             }
-            else {
-              graveyardArr.push({
-                "cardCode": card.cardCode,
-                "mana": card.cost,
-                "quantity": 1,
-                "imageUrl": null,
-                "name": card.name,
-                "region": card.regionRef,
-                "localPlayer": element.LocalPlayer,
-                "type": card.type,
-                "IDs": [element.CardID]
-              });
-            }
+          }
+          catch {
+            console.log("ERROR " + elememt.CardCode)
           }
           graveyardWindow.webContents.send('update', "test");
         }
@@ -565,7 +614,8 @@ function startTracker(width, height, obj) {
   }
 
 
-  initialCardArr = cardArr.slice();
+  initialCardArr = JSON.parse(JSON.stringify(cardArr));
+
   
   trackerWindow.webContents.send('start', width, height, cardsLeft, spellsLeft, unitsLeft);
 }

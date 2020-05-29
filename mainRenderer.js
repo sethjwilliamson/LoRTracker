@@ -3,8 +3,8 @@ const createCanvas = require('./createCanvas.js');
 const Store = require('electron-store');
 const data = new Store({name:"data"});
 
-var games = data.get("games");
-var decks = data.get("decks");
+var games = data.get("games").sort((a,b) => (a.timePlayed < b.timePlayed) ? 1 : ((b.timePlayed < a.timePlayed) ? -1 : 0));
+var decks = data.get("decks").sort((a,b) => (a.mostRecentPlay < b.mostRecentPlay) ? 1 : ((b.mostRecentPlay < a.mostRecentPlay) ? -1 : 0));
 
 var regionIcons = {
     "Demacia": "icons/icon-demacia.png",
@@ -16,12 +16,19 @@ var regionIcons = {
     "Bilgewater": "icons/icon-bilgewater.png"
 };
 
+$(".font-loader").each(function() {
+    this.remove();
+})
+
+
 loadMatches();
 
 function loadMatches() {
-    let string = "";
+    games = data.get("games").sort((a,b) => (a.timePlayed < b.timePlayed) ? 1 : ((b.timePlayed < a.timePlayed) ? -1 : 0));
+    $("#historyWindow").html("");
 
     for (let game of games) {
+        string = "";
         let deck = decks.find(o => o.deckCode === game.deckCode);
         let yourChamps = deck.cards.filter(o => o.isChamp);
         let yourRegions = deck.regions;
@@ -31,8 +38,9 @@ function loadMatches() {
         let oppChamps = oppDeck.filter(o => o.isChamp);
         let oppRegions = game.oppRegions;
 
+
+
         string += `
-        <li class="list-group-item">
             <div class="row">
                 <div class="col">
                     <div class="deck-preview d-flex justify-content-start">
@@ -68,9 +76,11 @@ function loadMatches() {
                     </div>
                 </div>
 
-                <div class="col align-self-center">
-                    <p class="text-center h3">${(game.isWin) ? "Win" : "Loss"}</div>
-
+                <div class="col align-self-center align-content-center">
+                    <p class="text-center h4">${(game.isWin) ? "Win" : "Loss"}</p>
+                    <p class="text-center no-margin">${new Date(game.timePlayed).toLocaleDateString("en-US")}</p>
+                    <p class="text-center no-margin">${new Date(game.timePlayed).toLocaleTimeString("en-US")}</p>                
+                </div>
                 <div class="col">
                     <div class="deck-preview d-flex justify-content-end">
         `
@@ -125,24 +135,43 @@ function loadMatches() {
                     </div>
                 </div>
             </div>
-        </li>
         `
 
-    }
+        let li = document.createElement("LI");
 
-    $("#historyWindow").html(string);
+        li.classList.add("list-group-item");
+
+        if (game.isWin) {
+            li.classList.add("win")
+        }
+        else {
+            li.classList.add("loss")
+        }
+
+        li.innerHTML = string;
+        li.onclick = function() {
+            loadMatch(game);
+        }
+        //$(li).addClass("list-group-item");
+        //$(li).on("click", loadMatch(game))
+//
+        //$(li).html(string);
+
+        $("#historyWindow").append(li);
+    }
 }
 
 function loadDecks() {
-    let string = "";
+    decks = data.get("decks").sort((a,b) => (a.mostRecentPlay < b.mostRecentPlay) ? 1 : ((b.mostRecentPlay < a.mostRecentPlay) ? -1 : 0));
+    $("#historyWindow").html("");
 
     for (let deck of decks) {
+        string = "";
         let yourChamps = deck.cards.filter(o => o.isChamp);
         let yourRegions = deck.regions;
         
 
         string += `
-        <li class="list-group-item">
             <div class="row">
                 <div class="col">
                     <div class="deck-preview d-flex justify-content-start">
@@ -189,13 +218,22 @@ function loadDecks() {
             </div>
         `
 
-    }
+        let li = document.createElement("LI");
 
-    $("#historyWindow").html(string);
+        li.classList.add("list-group-item");
+        li.innerHTML = string;
+        li.onclick = function() {
+            loadDeck(deck);
+        }
+
+        $("#historyWindow").append(li);
+    }
 }
 
 function loadDeck(deck) {
     let string = '';
+
+    $('#detailsWindow').data("deck", deck)
 
     if (!deck.name) {
         deck.name = deck.deckCode;
@@ -204,7 +242,7 @@ function loadDeck(deck) {
     string += `
     <div class="col flex-column full-height">
         <div class="row justify-content-center">
-            <p class="h1">${deck.name.slice(0,14)}</p>
+            <p class="h1" id="name">${deck.name.slice(0,14)}</p>
         </div>
         <div class="row justify-content-center">
             <div class="progress" style="width: 90%;">
@@ -225,9 +263,10 @@ function loadDeck(deck) {
 
         <div class="row justify-content-center" style="height: calc(100% - 56px - 56px); margin:0">
             <div class="card" style=" overflow: auto; height: calc(100% - 20px); margin:10px; width: 90%; min-width: 400px;">
-                <ul class="list-group list-group-flush">
+                <ul class="list-group list-group-flush" id="gamesList">
     `
 
+    $("#detailsWindow").html(string);
     let games = data.get("games").filter(o => o.deckCode === deck.deckCode);
 
     for (let game of games) {
@@ -235,8 +274,9 @@ function loadDeck(deck) {
         let oppChamps = oppDeck.filter(o => o.isChamp);
         let oppRegions = game.oppRegions;
 
-        string += `
-                    <li class="list-group-item">
+        let liString = "";
+
+        liString += `
                         <div class="row align-content-center">
                             <div class="col align-self-left align-content-center">
                                 <p class="h3 no-margin">${(game.isWin) ? "Win" : "Loss"}</p>
@@ -250,7 +290,7 @@ function loadDeck(deck) {
         for (let [index, champ] of oppChamps.entries()) {
             if (oppChamps.length % 2 == 1) {
                 if (index == 0) {
-                    string += `
+                    liString += `
                                     <div class="col-champ align-content-center">
                                         <img src="${'icons/champions/' + champ.cardCode + '.png'}" class="rounded-circle champPicture"/>
                                     </div>
@@ -258,13 +298,13 @@ function loadDeck(deck) {
                 }
                 else {
                     if (index % 2 == 1) {
-                        string += `
+                        liString += `
                                     <div class="col-champ align-content-center">
                                         <img src="${'icons/champions/' + champ.cardCode + '.png'}" class="rounded-circle champPicture"/>
                         `
                     }
                     else {
-                        string += `
+                        liString += `
                                         <img src="${'icons/champions/' + champ.cardCode + '.png'}" class="rounded-circle champPicture"/>
                                     </div>
                         `
@@ -273,13 +313,13 @@ function loadDeck(deck) {
             }
             else {
                 if (index % 2 == 0) {
-                    string += `
+                    liString += `
                                     <div class="col-champ align-content-center">
                                         <img src="${'icons/champions/' + champ.cardCode + '.png'}" class="rounded-circle champPicture"/>
                     `
                 }
                 else {
-                    string += `
+                    liString += `
                                         <img src="${'icons/champions/' + champ.cardCode + '.png'}" class="rounded-circle champPicture"/>
                                     </div>
                     `
@@ -288,21 +328,38 @@ function loadDeck(deck) {
         }
 
         for (let region of oppRegions) {
-            string += `
+            liString += `
                                     <img src="${regionIcons[region]}" class="regionPicture"/>
             `
         }
 
-        string += `
+        liString += `
                                 </div>
                             </div>
                         </div
-                    </li>
         `
+
+        let li = document.createElement("LI");
+
+        li.classList.add("list-group-item");
+
+        if (game.isWin) {
+            li.classList.add("win")
+        }
+        else {
+            li.classList.add("loss")
+        }
+
+        li.innerHTML = liString;
+        li.onclick = function() {
+            loadMatch(game);
+        }
+
+        $("#gamesList").append(li);
 
     }
 
-    string += `
+    string = `
                 </ul>
             </div>
         </div>
@@ -318,26 +375,27 @@ function loadDeck(deck) {
     </div>
     `
     
-    $('#detailsWindow').html(string)
-    
-    console.log(string)
+    $('#detailsWindow').append(string)
 
     for (let [index, element] of deck.cards.entries()) {
-        console.log(element.cardCode);
         let imgCard;
-        if (!element.image) {
-            imgCard = new Image;
-            imgCard.src = "./cropped/" + element.cardCode + "-full.jpg";
-            element.image = imgCard;
-        }
-        if (index == deck.cards.length - 1) {
-            console.log(deck.cards);
-            
-            imgCard.onload = createCanvas.render(deck.cards, $("#cardContents"));
+
+        imgCard = new Image;
+        imgCard.src = "./cropped/" + element.cardCode + "-full.jpg";
+        element.image = imgCard;
+
+        if (index == deck.cards.length - 1) {            
+            element.image.onload = updateCards(deck.cards, $("#cardContents"));
         }
     }
     
+    
 
+    $("#name").dblclick(function() {
+        console.log("testsd")
+        $("#name").replaceWith(`<input type="text" class="form-control textbox" id="nameBox" style="width:90%; margin-bottom:10px"></input>`)
+        enableOnKeyPress();
+    })
 }
 
 
@@ -465,7 +523,7 @@ function loadMatch(game) {
                 <p></p>
             </div>
             <div class="row justify-content-center">
-                <p class="h2">More Stats Here Eventually</p>
+                <p>More Stats Here Eventually</p>
             </div>
         </div>
         <div class="border-left flex-2" style=" height: 100%; width:200px; margin-right:20px" >
@@ -487,38 +545,51 @@ function loadMatch(game) {
     $('#detailsWindow').html(string)
 
     for (let [index, element] of deck.cards.entries()) {
-        console.log(element.cardCode);
         let imgCard;
-        if (!element.image) {
-            imgCard = new Image;
-            imgCard.src = "./cropped/" + element.cardCode + "-full.jpg";
-            element.image = imgCard;
-        }
+        
+        imgCard = new Image;
+        imgCard.src = "./cropped/" + element.cardCode + "-full.jpg";
+        element.image = imgCard;
+        
         if (index == deck.cards.length - 1) {
-            console.log(element.image)
             element.image.onload = updateCards(deck.cards, $("#yourCardContents"));
         }
     }
 
     for (let [index, element] of oppDeck.entries()) {
         let imgCard;
-        if (!element.image) {
-            imgCard = new Image;
-            imgCard.src = "./cropped/" + element.cardCode + "-full.jpg";
-            element.image = imgCard;
-        }
+        
+        imgCard = new Image;
+        imgCard.src = "./cropped/" + element.cardCode + "-full.jpg";
+        element.image = imgCard;
+        
         if (index == oppDeck.length - 1) {
-            console.log("HERE")
             element.image.onload = updateCards(oppDeck, $("#oppCardContents"));
         }
     }
     
 }
 
+function enableOnKeyPress() {
+    $(".textbox").on('keyup', function(e) {
+        //alert(e.keyCode);
+        if(e.keyCode == 13) {
+            let deck = $('#detailsWindow').data("deck");
+            deck.name = $("#nameBox").val();
+            data.set("decks", data.get("decks").filter( o => o.deckCode !== deck.deckCode ).concat(deck));
+            //$("#name").html(deck.name)
+            $("#nameBox").replaceWith(`<p class="h1" id="name">${deck.name.slice(0,14)}</p>`)
+
+            $("#name").dblclick(function() {
+                $("#name").replaceWith(`<input type="text" class="form-control textbox" id="nameBox" style="width:90%; margin-bottom:10px"></input>`)
+                enableOnKeyPress();
+            })
+        }
+    });
+}
+
 function updateCards (cards, div) {
     cards.sort((a,b) => (a.mana > b.mana) ? 1 : ((b.mana > a.mana) ? -1 : 0)); 
-
-    console.log(cards)
     
     createCanvas.render(cards, div);
     setTimeout(createCanvas.render(cards, div), 1000)

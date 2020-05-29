@@ -240,3 +240,11 @@
     flex:1;
     flex-direction: column;
   }
+
+  .win {
+    background-color: #B7E1CD;
+  }
+  
+  .loss {
+    background-color: #F4C7C3;
+  }
