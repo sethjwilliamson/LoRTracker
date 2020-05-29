@@ -166,7 +166,7 @@ function start() {
 
     switch (deckRegions.length) {
         case 1:
-            imgMain.src = './single.png';
+            imgMain.src = './images/single.png';
 
             imgRegion1.src = regionIcons[deckRegions[0]];
 
@@ -241,6 +241,8 @@ function updateTracker() {
     cardArr = remote.getGlobal("cardArr");
     deckRegions = remote.getGlobal("deckRegions");
     cardRegions = remote.getGlobal("cardRegions");
+    
+    console.log(cardArr)
 
 
     let cRegion = document.getElementById("regionP");
@@ -277,14 +279,16 @@ function updateTracker() {
     cardArr.sort((a,b) => (a.mana > b.mana) ? 1 : ((b.mana > a.mana) ? -1 : 0)); 
 
     for (let element of cardArr) {
-        if (!element.image) {
-            imgCard = new Image;
-            imgCard.src = "./cropped/" + element.cardCode + "-full.jpg";
-            element.image = imgCard;
-        }
+        imgCard = new Image;
+        imgCard.src = "./cropped/" + element.cardCode + "-full.jpg";
+        element.image = imgCard;
+    }
+
+    imgCard.onload = function() {
+        createCanvas.render(cardArr, $("#cardContents"));
     }
     
-    imgCard.onload = createCanvas.render(cardArr, $("#cardContents"));
+    createCanvas.render(cardArr, $("#cardContents"));
   
     cBot = document.getElementById("botStats");
     ctxBot = cBot.getContext("2d");
@@ -391,7 +395,7 @@ function updateTracker() {
     ctxBot.fillText(handSize, 203, 48, 30); 
 
     
-    ipcRenderer.send('size', $("body").height(), "tracker"); 
+    setTimeout(ipcRenderer.send('size', $("body").height(), "tracker"), 100); 
 }
 
 function previewCard (cardCode, element) {

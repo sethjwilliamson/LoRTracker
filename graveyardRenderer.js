@@ -124,7 +124,9 @@ function updateGraveyard() {
             imgCard = new Image;
             imgCard.src = "./cropped/" + element.cardCode + "-full.jpg";
             element.image = imgCard;
-            imgCard.onload = updateTracker;
+            imgCard.onload = function() {
+                updateTracker();
+            }
         }
     }
 

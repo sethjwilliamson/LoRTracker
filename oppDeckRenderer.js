@@ -66,14 +66,13 @@ function updateOppDeck() {
     cardArr = remote.getGlobal('oppDeckArr');
 
     for (let element of cardArr) {
-        if (!element.image) {
-            imgCard = new Image;
-            imgCard.src = "./cropped/" + element.cardCode + "-full.jpg";
-            element.image = imgCard;
-            imgCard.onload = updateTracker;
+        imgCard = new Image;
+        imgCard.src = "./cropped/" + element.cardCode + "-full.jpg";
+        element.image = imgCard;
+        imgCard.onload = function() {
+            updateTracker();
         }
     }
-
     updateTracker();
 }
     

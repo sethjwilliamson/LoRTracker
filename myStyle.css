@@ -248,3 +248,8 @@
   .loss {
     background-color: #F4C7C3;
   }
+  
+  .clickable:hover {
+    background-color: lightblue;
+    cursor: pointer;
+  }

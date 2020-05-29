@@ -22,6 +22,7 @@ $(".font-loader").each(function() {
 
 
 loadMatches();
+loadMatch(games[0])
 
 function loadMatches() {
     games = data.get("games").sort((a,b) => (a.timePlayed < b.timePlayed) ? 1 : ((b.timePlayed < a.timePlayed) ? -1 : 0));
@@ -140,6 +141,7 @@ function loadMatches() {
         let li = document.createElement("LI");
 
         li.classList.add("list-group-item");
+        li.classList.add("clickable");
 
         if (game.isWin) {
             li.classList.add("win")
@@ -221,6 +223,8 @@ function loadDecks() {
         let li = document.createElement("LI");
 
         li.classList.add("list-group-item");
+        li.classList.add("clickable");
+
         li.innerHTML = string;
         li.onclick = function() {
             loadDeck(deck);
@@ -267,7 +271,7 @@ function loadDeck(deck) {
     `
 
     $("#detailsWindow").html(string);
-    let games = data.get("games").filter(o => o.deckCode === deck.deckCode);
+    let games = data.get("games").filter(o => o.deckCode === deck.deckCode).sort((a,b) => (a.timePlayed < b.timePlayed) ? 1 : ((b.timePlayed < a.timePlayed) ? -1 : 0));
 
     for (let game of games) {
         let oppDeck = game.oppCards;
@@ -342,6 +346,7 @@ function loadDeck(deck) {
         let li = document.createElement("LI");
 
         li.classList.add("list-group-item");
+        li.classList.add("clickable");
 
         if (game.isWin) {
             li.classList.add("win")
@@ -383,9 +388,9 @@ function loadDeck(deck) {
         imgCard = new Image;
         imgCard.src = "./cropped/" + element.cardCode + "-full.jpg";
         element.image = imgCard;
-
-        if (index == deck.cards.length - 1) {            
-            element.image.onload = updateCards(deck.cards, $("#cardContents"));
+        
+        element.image.onload = function() {
+            updateCards(deck.cards, $("#cardContents"));
         }
     }
     
@@ -551,8 +556,8 @@ function loadMatch(game) {
         imgCard.src = "./cropped/" + element.cardCode + "-full.jpg";
         element.image = imgCard;
         
-        if (index == deck.cards.length - 1) {
-            element.image.onload = updateCards(deck.cards, $("#yourCardContents"));
+        element.image.onload = function() {
+            updateCards(deck.cards, $("#yourCardContents"));
         }
     }
 
@@ -563,8 +568,8 @@ function loadMatch(game) {
         imgCard.src = "./cropped/" + element.cardCode + "-full.jpg";
         element.image = imgCard;
         
-        if (index == oppDeck.length - 1) {
-            element.image.onload = updateCards(oppDeck, $("#oppCardContents"));
+        element.image.onload = function() {
+            updateCards(oppDeck, $("#oppCardContents"));
         }
     }
     

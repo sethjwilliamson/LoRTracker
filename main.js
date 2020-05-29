@@ -33,24 +33,23 @@ var trackerWindow, fullCardWindow, graveyardWindow, oppDeckWindow;
 
 function createWindow () {
 
-//  let menu = Menu.buildFromTemplate([
-//    {
-//        label: 'Menu',
-//        submenu: [
-//            {label:'Adjust Notification Value'},
-//            {label:'Config', click() {
-//              config.openInEditor();
-//            }},
-//            {label:'Exit', click() {
-//              app.quit();
-//            }}
-//        ]
-//    }
-//])
-
+  //let menu = Menu.buildFromTemplate([
+  //  {
+  //    label: 'Menu',
+  //    submenu: [
+  //        {label:'Config', click() {
+  //          config.openInEditor();
+  //        }},
+  //        {label:'Exit', click() {
+  //          app.quit();
+  //        }}
+  //    ]
+  //  }
+  //])
   //Menu.setApplicationMenu(menu);
 
   mainWindow = new BrowserWindow({
+    width:1200,
     minWidth: 975,
     minHeight: 600,
     icon: "./images/icon2.png",
@@ -466,7 +465,6 @@ function trackingGame(r) {
 
     if (currentRectangles !== tempCurrentRectangles && tempHandSize !== 0) {
       for (let element of tempCurrentRectangles) {
-        console.log("test")
         if ( !currentRectangles.find(o => o.CardID === element.CardID) && !element.LocalPlayer) {
           let card = setJson.find(o => o.cardCode === element.CardCode);
 
@@ -525,8 +523,8 @@ function trackingGame(r) {
               }
             }
           }
-          catch {
-            console.log("ERROR " + elememt.CardCode)
+          catch(e) {
+            console.log(currentRectangles)
           }
           graveyardWindow.webContents.send('update', "test");
         }
@@ -614,7 +612,7 @@ function startTracker(width, height, obj) {
   }
 
 
-  initialCardArr = JSON.parse(JSON.stringify(cardArr));
+  initialCardArr = JSON.parse(JSON.stringify(Array.from(cardArr)));
 
   
   trackerWindow.webContents.send('start', width, height, cardsLeft, spellsLeft, unitsLeft);
