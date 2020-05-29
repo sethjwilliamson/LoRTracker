@@ -1,20 +1,15 @@
 {
   "name": "lor-tracker",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "A deck tracker for Legends of Runeterra",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
   "repository": "https://github.com/sethjwilliamson/LoRTracker",
   "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
   ],
-  "author": "GitHub",
+  "author": "sethjwilliamson",
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^8.2.3"
@@ -24,9 +19,6 @@
     "bootstrap": "^4.4.1",
     "electron-store": "^5.1.1",
     "jquery": "^3.5.0",
-    "popper": "^1.0.1",
-    "popper.js": "^1.16.1",
-    "xhr2": "^0.2.0",
-    "xmlhttprequest": "^1.8.0"
+    "popper.js": "^1.16.1"
   }
 }
