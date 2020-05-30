@@ -28,6 +28,10 @@ function loadMatches() {
     games = data.get("games").sort((a,b) => (a.timePlayed < b.timePlayed) ? 1 : ((b.timePlayed < a.timePlayed) ? -1 : 0));
     $("#historyWindow").html("");
 
+    if (games.length == 0) {
+        $("#historyWindow").html("<li class='h4 text-center'>Matches will be listed here.</li>")
+    }
+
     for (let game of games) {
         string = "";
         let deck = decks.find(o => o.deckCode === game.deckCode);
@@ -166,6 +170,11 @@ function loadMatches() {
 function loadDecks() {
     decks = data.get("decks").sort((a,b) => (a.mostRecentPlay < b.mostRecentPlay) ? 1 : ((b.mostRecentPlay < a.mostRecentPlay) ? -1 : 0));
     $("#historyWindow").html("");
+
+    
+    if (games.length == 0) {
+        $("#historyWindow").html("<li class='h4 text-center'>Decks will be listed here.</li>")
+    }
 
     for (let deck of decks) {
         string = "";
@@ -585,6 +594,10 @@ function enableOnKeyPress() {
             //$("#name").html(deck.name)
             $("#nameBox").replaceWith(`<p class="h1" id="name">${deck.name.slice(0,14)}</p>`)
 
+            if ($("#decks-tab").attr("aria-selected") === "true") {
+                loadDecks();
+            }
+
             $("#name").dblclick(function() {
                 $("#name").replaceWith(`<input type="text" class="form-control textbox" id="nameBox" style="width:90%; margin-bottom:10px"></input>`)
                 enableOnKeyPress();
@@ -619,3 +632,12 @@ function msToTime(duration) {
   
     return hours + ":" + minutes + ":" + seconds;
 }
+
+ipcRenderer.on('update', (event) => {
+    if ($("#matches-tab").attr("aria-selected") === "true") {
+        loadMatches();
+    }
+    else {
+        loadDecks();
+    }
+});

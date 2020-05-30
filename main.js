@@ -28,37 +28,44 @@ const config = new Store({
     "card-opacity": 0.75
   }
 });
-const data = new Store({name:"data"});
+const data = new Store({
+  name:"data",
+  "defaults": {
+    "games": [],
+    "decks": []
+  }
+});
 var trackerWindow, fullCardWindow, graveyardWindow, oppDeckWindow;
 
 function createWindow () {
 
-  //let menu = Menu.buildFromTemplate([
-  //  {
-  //    label: 'Menu',
-  //    submenu: [
-  //        {label:'Config', click() {
-  //          config.openInEditor();
-  //        }},
-  //        {label:'Exit', click() {
-  //          app.quit();
-  //        }}
-  //    ]
-  //  }
-  //])
-  //Menu.setApplicationMenu(menu);
+  let menu = Menu.buildFromTemplate([
+    {
+      label: 'Menu',
+      submenu: [
+          {label:'Config', click() {
+            config.openInEditor();
+          }},
+          {label:'Exit', click() {
+            app.quit();
+          }}
+      ]
+    }
+  ])
+  Menu.setApplicationMenu(menu);
 
   mainWindow = new BrowserWindow({
     width:1200,
     minWidth: 975,
     minHeight: 600,
-    icon: "./images/icon2.png",
+    icon: "./icon.png",
+    title: "Legends of Runeterra Deck Tracker",
     webPreferences: {
       nodeIntegration:true
     }
   })
 
-  mainWindow.loadFile("mainDefault.html");
+  mainWindow.loadFile("main.html");
 
   trackerWindow = new BrowserWindow({
     width: config.get("tracker-width"),
@@ -685,4 +692,7 @@ function logGame (isMatchWin) {
   else {
     data.set("games", [gameObj]);
   }
+
+  
+  mainWindow.webContents.send('update');
 }

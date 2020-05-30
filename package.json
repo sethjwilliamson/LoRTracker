@@ -4,15 +4,17 @@
   "description": "A deck tracker for Legends of Runeterra",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "repository": "https://github.com/sethjwilliamson/LoRTracker",
-  "keywords": [
-  ],
-  "author": "sethjwilliamson",
+  "keywords": [],
+  "author": "lor-tracker.com",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^8.2.3"
+    "electron": "^8.2.3",
+    "electron-builder": "^22.7.0"
   },
   "dependencies": {
     "axios": "^0.19.2",
@@ -20,5 +22,11 @@
     "electron-store": "^5.1.1",
     "jquery": "^3.5.0",
     "popper.js": "^1.16.1"
+  },
+  "build": {
+    "nsis": {
+      "createStartMenuShortcut": true
+    },
+    "productName": "Legends of Runeterra Deck Tracker"
   }
 }
