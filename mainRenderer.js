@@ -27,6 +27,7 @@ loadMatch(games[0])
 function loadMatches() {
     games = data.get("games").sort((a,b) => (a.timePlayed < b.timePlayed) ? 1 : ((b.timePlayed < a.timePlayed) ? -1 : 0));
     $("#historyWindow").html("");
+    console.log(games)
 
     if (games.length == 0) {
         $("#historyWindow").html("<li class='h4 text-center'>Matches will be listed here.</li>")
@@ -48,7 +49,7 @@ function loadMatches() {
         string += `
             <div class="row">
                 <div class="col">
-                    <div class="deck-preview d-flex justify-content-start">
+                    <div class="deck-preview d-flex justify-content-start" style="position:absolute; top:0; left:0;">
         `
         for (let region of yourRegions) {
             string += `
@@ -87,7 +88,7 @@ function loadMatches() {
                     <p class="text-center no-margin">${new Date(game.timePlayed).toLocaleTimeString("en-US")}</p>                
                 </div>
                 <div class="col">
-                    <div class="deck-preview d-flex justify-content-end">
+                    <div class="deck-preview d-flex justify-content-end" style="position:absolute; top:0; right:0;">
         `
 
         for (let [index, champ] of oppChamps.entries()) {
@@ -153,6 +154,7 @@ function loadMatches() {
         else {
             li.classList.add("loss")
         }
+
 
         li.innerHTML = string;
         li.onclick = function() {
@@ -224,7 +226,7 @@ function loadDecks() {
 
                 <div class="col align-self-right flex-grow-1" style="max-width: 250px;">
                     <p class="text-right h4 no-margin" style="white-space: nowrap;">${deck.name.slice(0,14)}</p>
-                    <p class="text-right no-margin">${deck.wins}-${deck.losses} | ${(deck.wins) / (deck.wins + deck.losses) * 100}%</p>
+                    <p class="text-right no-margin">${deck.wins}-${deck.losses} | ${parseInt((deck.wins) / (deck.wins + deck.losses) * 100)}%</p>
                 </div>
             </div>
         `
@@ -266,7 +268,7 @@ function loadDeck(deck) {
                     ${deck.wins} Wins
                 </div>
                 <div class="d-flex p-2">
-                    ${deck.wins / (deck.wins + deck.losses) * 100}%
+                    ${parseInt((deck.wins) / (deck.wins + deck.losses) * 100)}%
                 </div>
                 <div class="d-flex p-2">
                     ${deck.losses} Losses
@@ -623,21 +625,20 @@ function unpreviewCard () {
 
 function msToTime(duration) {
     var seconds = Math.floor((duration / 1000) % 60),
-      minutes = Math.floor((duration / (1000 * 60)) % 60),
-      hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+      minutes = Math.floor((duration / (1000 * 60)) % 60);
   
-    hours = (hours < 10) ? "0" + hours : hours;
     minutes = (minutes < 10) ? "0" + minutes : minutes;
     seconds = (seconds < 10) ? "0" + seconds : seconds;
   
-    return hours + ":" + minutes + ":" + seconds;
+    return minutes + ":" + seconds;
 }
 
 ipcRenderer.on('update', (event) => {
+    console.log("update")
     if ($("#matches-tab").attr("aria-selected") === "true") {
-        loadMatches();
+        setTimeout(loadMatches(), 1000);
     }
     else {
-        loadDecks();
+        setTimeout(loadDecks(), 1000);
     }
 });

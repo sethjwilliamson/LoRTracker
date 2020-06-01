@@ -1,4 +1,4 @@
-const {app, BrowserWindow, remote, Menu} = require('electron');
+const {app, BrowserWindow, remote, Menu, Tray} = require('electron');
 const path = require('path');
 const {ipcMain, screen} = require('electron');
 const Store = require('electron-store');
@@ -35,9 +35,28 @@ const data = new Store({
     "decks": []
   }
 });
+const imgPath = path.join(process.resourcesPath, 'icon.png');
+const nativeImage = require('electron').nativeImage
+let icon = nativeImage.createFromPath(imgPath)
+
+
 var trackerWindow, fullCardWindow, graveyardWindow, oppDeckWindow;
 
+
+
+
 function createWindow () {
+  const tray = new Tray(icon)
+
+  let contextMenu = Menu.buildFromTemplate([
+    { label: 'Show App', click:  function(){
+        mainWindow.show();
+    } },
+    { label: 'Quit', click:  function(){
+        app.isQuiting = true;
+        app.quit();
+    } }
+  ]);
 
   let menu = Menu.buildFromTemplate([
     {
@@ -47,12 +66,23 @@ function createWindow () {
             config.openInEditor();
           }},
           {label:'Exit', click() {
+            app.isQuiting = true;
             app.quit();
           }}
       ]
     }
   ])
   Menu.setApplicationMenu(menu);
+
+  
+  tray.setToolTip('Legends of Runeterra Deck Tracker');
+  tray.setContextMenu(contextMenu);
+  tray.on('right-click', () => {
+    tray.popUpContextMenu();
+  })
+  tray.on('click', () => {
+    mainWindow.show();
+  });
 
   mainWindow = new BrowserWindow({
     width:1200,
@@ -66,6 +96,15 @@ function createWindow () {
   })
 
   mainWindow.loadFile("main.html");
+  
+  mainWindow.on('close', function (event) {
+    if(!app.isQuiting){
+        event.preventDefault();
+        mainWindow.hide();
+    }
+
+    return false;
+  });
 
   trackerWindow = new BrowserWindow({
     width: config.get("tracker-width"),
@@ -386,17 +425,25 @@ function matchFound(r) {
 
   deckCode = r.DeckCode;
 
-  startTracker(size[0], size[1], r.CardsInDeck);
-  
-  graveyardWindow.webContents.send('update', "test");
-  
-  oppDeckWindow.webContents.send('update', "test");
+  if(Object.keys(r.CardsInDeck).length > 0) {
+    console.log(r.CardsInDeck)
 
-  handSize = 4;
-  trackerWindow.webContents.send('handUpdate', handSize);
+    startTracker(size[0], size[1], r.CardsInDeck);
 
-  console.log("Waiting for Mulligan");
-  httpGet(url).then(res => waitingForMulligan(res));
+    graveyardWindow.webContents.send('update', "test");
+    
+    oppDeckWindow.webContents.send('update', "test");
+  
+    handSize = 4;
+    trackerWindow.webContents.send('handUpdate', handSize);
+  
+    console.log("Waiting for Mulligan");
+    httpGet(url).then(res => waitingForMulligan(res));
+  }
+  else {
+    console.log("Searching for deck again")
+    setTimeout(function() {httpGet("http://127.0.0.1:21337/static-decklist").then(res => matchFound(res))}, 500);
+  }
 }
 
 function waitingForMulligan(r) { //Mulligan  

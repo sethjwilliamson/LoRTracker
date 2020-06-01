@@ -27,6 +27,12 @@
     "nsis": {
       "createStartMenuShortcut": true
     },
-    "productName": "Legends of Runeterra Deck Tracker"
+    "productName": "Legends of Runeterra Deck Tracker",
+    "extraFiles": [
+      {
+        "from": "build",
+        "to": "resources"
+      }
+    ]
   }
 }
