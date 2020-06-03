@@ -101,7 +101,7 @@ function createWindow () {
     width:1200,
     minWidth: 975,
     minHeight: 600,
-    icon: "./icon.png",
+    icon: "icon.png",
     title: "Legends of Runeterra Deck Tracker",
     webPreferences: {
       nodeIntegration:true
@@ -125,7 +125,7 @@ function createWindow () {
     x: config.get("tracker-x"),
     y: config.get("tracker-y"),
     minWidth:173,
-    icon: "./images/icon.png",
+    icon: "icon.png",
     maximizable:false,
     transparent:true,
     frame:false,
@@ -135,12 +135,12 @@ function createWindow () {
   })
 
   trackerWindow.loadFile('tracker.html');
+  trackerWindow.hide()
   
   trackerWindow.webContents.on('did-finish-load', () => {
     trackerWindow.setVisibleOnAllWorkspaces(true);
     trackerWindow.setAlwaysOnTop(true, 'screen-saver');
     trackerWindow.setSkipTaskbar(true);
-    trackerWindow.hide()
     
     if (config.get("tracker-ignore-mouse-events")) {
       trackerWindow.setIgnoreMouseEvents(true);
@@ -195,7 +195,7 @@ function createWindow () {
     x: config.get("graveyard-x"),
     y: config.get("graveyard-y"),
     minWidth:173,
-    icon: "./images/icon.png",
+    icon: "icon.png",
     maximizable:false,
     transparent:true,
     frame:false,
@@ -204,13 +204,14 @@ function createWindow () {
     }
   })
 
+  graveyardWindow.hide();
+
   graveyardWindow.loadFile('graveyard.html');
 
   graveyardWindow.webContents.on('did-finish-load', () => {
     graveyardWindow.setVisibleOnAllWorkspaces(true);
     graveyardWindow.setAlwaysOnTop(true, 'screen-saver');
     graveyardWindow.setSkipTaskbar(true);
-    graveyardWindow.hide();
 
     if (config.get("graveyard-ignore-mouse-events")) {
       graveyardWindow.setIgnoreMouseEvents(true);
@@ -240,7 +241,7 @@ function createWindow () {
     x: config.get("opponent-deck-x"),
     y: config.get("opponent-deck-y"),
     minWidth:173,
-    icon: "./images/icon.png",
+    icon: "icon.png",
     maximizable:false,
     transparent:true,
     frame:false,
@@ -250,12 +251,13 @@ function createWindow () {
   })
 
   oppDeckWindow.loadFile('oppDeck.html');
+  
+  oppDeckWindow.hide();
 
   oppDeckWindow.webContents.on('did-finish-load', () => {
     oppDeckWindow.setVisibleOnAllWorkspaces(true);
     oppDeckWindow.setAlwaysOnTop(true, 'screen-saver');
     oppDeckWindow.setSkipTaskbar(true);
-    oppDeckWindow.hide();
     
     if (config.get("opponent-deck-ignore-mouse-events")) {
       oppDeckWindow.setIgnoreMouseEvents(true);
