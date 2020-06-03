@@ -1,13 +1,13 @@
 {
   "name": "lor-tracker",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A deck tracker for Legends of Runeterra",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "release": "build -p always"
+    "release": "electron-builder -p always"
   },
   "repository": "https://github.com/sethjwilliamson/LoRTracker",
   "keywords": [],

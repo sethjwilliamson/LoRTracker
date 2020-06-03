@@ -66,7 +66,10 @@ autoUpdater.on('update-downloaded', info => {
   autoUpdater.quitAndInstall();
 });
 
-autoUpdater.logger = require("electron-log")
+const log = require("electron-log");
+log.catchErrors();
+
+autoUpdater.logger = log
 autoUpdater.logger.transports.file.level = "info"
 
 const imgPath = path.join(process.resourcesPath, 'icon.png');
@@ -394,7 +397,7 @@ app.on('activate', function () {
 
 
 const sendStatusToWindow = (text) => {
-  //log.info(text);
+  log.info(text);
   if (mainWindow) {
     mainWindow.webContents.send('message', text);
   }

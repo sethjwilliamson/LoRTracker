@@ -2,6 +2,8 @@ const {ipcRenderer, remote} = require('electron');
 const createCanvas = require('./createCanvas.js');
 const Store = require('electron-store');
 const config = new Store();
+const log = require("electron-log");
+log.catchErrors();
 
 var cardsLeft;
 var spellsLeft;
