@@ -23,7 +23,7 @@ $(".font-loader").each(function() {
 })
 
 ipcRenderer.on('message', function (event, text) {
-    alert('Message from updater:', text);
+    alert('Message from updater: ' +  text);
 });
 
 loadMatches();

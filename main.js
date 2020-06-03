@@ -57,6 +57,7 @@ autoUpdater.on('download-progress', progressObj => {
 });
 autoUpdater.on('update-downloaded', info => {
   sendStatusToWindow('Update downloaded; will install now', false);
+  app.isQuiting = true;
   autoUpdater.quitAndInstall();
 });
 
