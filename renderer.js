@@ -280,7 +280,7 @@ function updateTracker() {
 
     for (let element of cardArr) {
         imgCard = new Image;
-        imgCard.src = "./cropped/" + element.cardCode + "-full.jpg";
+        imgCard.src = "./cropped/" + element.cardCode + "-full.webp";
         element.image = imgCard;
     }
 
@@ -399,7 +399,7 @@ function updateTracker() {
 }
 
 function previewCard (cardCode, element) {
-    ipcRenderer.send('preview', "./cards/" + cardCode + ".png", "x", parseInt(element.getBoundingClientRect()['y']), "tracker"); 
+    ipcRenderer.send('preview', "./cards/" + cardCode + ".webp", "x", parseInt(element.getBoundingClientRect()['y']), "tracker"); 
     /// Send Quantity
 }
 

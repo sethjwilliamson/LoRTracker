@@ -67,7 +67,7 @@ function updateOppDeck() {
 
     for (let element of cardArr) {
         imgCard = new Image;
-        imgCard.src = "./cropped/" + element.cardCode + "-full.jpg";
+        imgCard.src = "./cropped/" + element.cardCode + "-full.webp";
         element.image = imgCard;
         imgCard.onload = function() {
             updateTracker();
@@ -84,7 +84,7 @@ function updateTracker() {
 }
 
 function previewCard (cardCode, element) {
-    ipcRenderer.send('preview', "./cards/" + cardCode + ".png", "x", parseInt(element.getBoundingClientRect()['y']), "oppDeck"); 
+    ipcRenderer.send('preview', "./cards/" + cardCode + ".webp", "x", parseInt(element.getBoundingClientRect()['y']), "oppDeck"); 
     /// Send Quantity
 }
 

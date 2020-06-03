@@ -397,7 +397,7 @@ function loadDeck(deck) {
         let imgCard;
 
         imgCard = new Image;
-        imgCard.src = "./cropped/" + element.cardCode + "-full.jpg";
+        imgCard.src = "./cropped/" + element.cardCode + "-full.webp";
         element.image = imgCard;
         
         element.image.onload = function() {
@@ -564,7 +564,7 @@ function loadMatch(game) {
         let imgCard;
         
         imgCard = new Image;
-        imgCard.src = "./cropped/" + element.cardCode + "-full.jpg";
+        imgCard.src = "./cropped/" + element.cardCode + "-full.webp";
         element.image = imgCard;
         
         element.image.onload = function() {
@@ -576,7 +576,7 @@ function loadMatch(game) {
         let imgCard;
         
         imgCard = new Image;
-        imgCard.src = "./cropped/" + element.cardCode + "-full.jpg";
+        imgCard.src = "./cropped/" + element.cardCode + "-full.webp";
         element.image = imgCard;
         
         element.image.onload = function() {
@@ -616,7 +616,7 @@ function updateCards (cards, div) {
 }
 
 function previewCard (cardCode, element) {
-    ipcRenderer.send('preview', "./cards/" + cardCode + ".png", parseInt(element.getBoundingClientRect()['x']), parseInt(element.getBoundingClientRect()['y']), "main");
+    ipcRenderer.send('preview', "./cards/" + cardCode + ".webp", parseInt(element.getBoundingClientRect()['x']), parseInt(element.getBoundingClientRect()['y']), "main");
 }
 
 function unpreviewCard () {
