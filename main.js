@@ -35,10 +35,41 @@ const data = new Store({
     "decks": []
   }
 });
+
+const { autoUpdater } = require("electron-updater");
+
+autoUpdater.on('checking-for-update', () => {
+  sendStatusToWindow('Checking for update...', false);
+});
+autoUpdater.on('update-available', info => {
+  sendStatusToWindow('Update available.', true);
+});
+autoUpdater.on('update-not-available', info => {
+  sendStatusToWindow('Update not available.', false);
+});
+autoUpdater.on('error', err => {
+  sendStatusToWindow(`Error in auto-updater: ${err.toString()}`, true);
+});
+autoUpdater.on('download-progress', progressObj => {
+  sendStatusToWindow(
+    `Download speed: ${progressObj.bytesPerSecond} - Downloaded ${progressObj.percent}% (${progressObj.transferred} + '/' + ${progressObj.total} + )`, false
+  );
+});
+autoUpdater.on('update-downloaded', info => {
+  sendStatusToWindow('Update downloaded; will install now', false);
+  app.isQuiting = true;
+  autoUpdater.quitAndInstall();
+});
+
+const log = require("electron-log");
+log.catchErrors();
+
+autoUpdater.logger = log
+autoUpdater.logger.transports.file.level = "info"
+
 const imgPath = path.join(process.resourcesPath, 'icon.png');
 const nativeImage = require('electron').nativeImage
 let icon = nativeImage.createFromPath(imgPath)
-
 
 var trackerWindow, fullCardWindow, graveyardWindow, oppDeckWindow;
 
@@ -56,7 +87,6 @@ if (!gotTheLock) {
     }
   })
 }
-
 
 function createWindow () {
   const tray = new Tray(icon)
@@ -346,6 +376,7 @@ function createWindow () {
     }
   });
 
+  autoUpdater.checkForUpdates();
 }
 
 app.whenReady().then(createWindow)
@@ -359,8 +390,15 @@ app.on('activate', function () {
   if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
 
-const axios = require('axios');
 
+const sendStatusToWindow = (text, alert) => {
+  log.info(text);
+  if (mainWindow && alert) {
+    mainWindow.webContents.send('message', text);
+  }
+};
+
+const axios = require('axios');
 
 async function httpGet(theUrl)
 {

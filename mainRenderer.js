@@ -2,6 +2,8 @@ const {ipcRenderer, remote} = require('electron');
 const createCanvas = require('./createCanvas.js');
 const Store = require('electron-store');
 const data = new Store({name:"data"});
+const log = require("electron-log");
+log.catchErrors();
 
 var games = data.get("games").sort((a,b) => (a.timePlayed < b.timePlayed) ? 1 : ((b.timePlayed < a.timePlayed) ? -1 : 0));
 var decks = data.get("decks").sort((a,b) => (a.mostRecentPlay < b.mostRecentPlay) ? 1 : ((b.mostRecentPlay < a.mostRecentPlay) ? -1 : 0));
@@ -20,6 +22,9 @@ $(".font-loader").each(function() {
     this.remove();
 })
 
+ipcRenderer.on('message', function (event, text) {
+    alert('Message from updater: ' +  text);
+});
 
 loadMatches();
 loadMatch(games[0])
