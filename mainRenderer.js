@@ -20,6 +20,9 @@ $(".font-loader").each(function() {
     this.remove();
 })
 
+ipcRenderer.on('message', function (event, text) {
+    alert('Message from updater:', text);
+});
 
 loadMatches();
 loadMatch(games[0])

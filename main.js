@@ -35,10 +35,43 @@ const data = new Store({
     "decks": []
   }
 });
+
+const { autoUpdater } = require("electron-updater");
+
+autoUpdater.on('checking-for-update', () => {
+  sendStatusToWindow('Checking for update...');
+});
+autoUpdater.on('update-available', info => {
+  sendStatusToWindow('Update available.');
+});
+autoUpdater.on('update-not-available', info => {
+  sendStatusToWindow('Update not available.');
+});
+autoUpdater.on('error', err => {
+  sendStatusToWindow(`Error in auto-updater: ${err.toString()}`);
+});
+autoUpdater.on('download-progress', progressObj => {
+  sendStatusToWindow(
+    `Download speed: ${progressObj.bytesPerSecond} - Downloaded ${progressObj.percent}% (${progressObj.transferred} + '/' + ${progressObj.total} + )`
+  );
+});
+autoUpdater.on('update-downloaded', info => {
+  sendStatusToWindow('Update downloaded; will install now');
+});
+
+autoUpdater.on('update-downloaded', info => {
+  // Wait 5 seconds, then quit and install
+  // In your application, you don't need to wait 500 ms.
+  // You could call autoUpdater.quitAndInstall(); immediately
+  autoUpdater.quitAndInstall();
+});
+
+autoUpdater.logger = require("electron-log")
+autoUpdater.logger.transports.file.level = "info"
+
 const imgPath = path.join(process.resourcesPath, 'icon.png');
 const nativeImage = require('electron').nativeImage
 let icon = nativeImage.createFromPath(imgPath)
-
 
 var trackerWindow, fullCardWindow, graveyardWindow, oppDeckWindow;
 
@@ -56,7 +89,6 @@ if (!gotTheLock) {
     }
   })
 }
-
 
 function createWindow () {
   const tray = new Tray(icon)
@@ -346,6 +378,7 @@ function createWindow () {
     }
   });
 
+  autoUpdater.checkForUpdates();
 }
 
 app.whenReady().then(createWindow)
@@ -359,8 +392,15 @@ app.on('activate', function () {
   if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
 
-const axios = require('axios');
 
+const sendStatusToWindow = (text) => {
+  //log.info(text);
+  if (mainWindow) {
+    mainWindow.webContents.send('message', text);
+  }
+};
+
+const axios = require('axios');
 
 async function httpGet(theUrl)
 {
