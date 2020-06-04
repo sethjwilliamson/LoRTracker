@@ -4,6 +4,7 @@ const Store = require('electron-store');
 const config = new Store();
 const log = require("electron-log");
 log.catchErrors();
+log.log("Tracker Started.")
 
 var cardsLeft;
 var spellsLeft;
@@ -226,17 +227,19 @@ async function updateCard(cardCode, isUnit) {
 }
 
 async function editCard(cardCode, isUnit) {
-    card = cardArr.find(o => o.cardCode == cardCode);
-    card.quantity--;
-    
-    cardRegions.find(o => o.region == card.region).quantity--;
+    if (cardArr.find(o => o.cardCode == cardCode)) {
+        card = cardArr.find(o => o.cardCode == cardCode);
+        card.quantity--;
+        
+        cardRegions.find(o => o.region == card.region).quantity--;
 
-    if (isUnit)
-        unitsLeft--;
-    else
-        spellsLeft--;
-    
-    cardsLeft--;
+        if (isUnit)
+            unitsLeft--;
+        else
+            spellsLeft--;
+        
+        cardsLeft--;
+    }
 }
     
 function updateTracker() {

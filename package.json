@@ -1,6 +1,6 @@
 {
   "name": "lor-tracker",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A deck tracker for Legends of Runeterra",
   "main": "main.js",
   "scripts": {

@@ -1,4 +1,4 @@
-const {app, BrowserWindow, remote, Menu, Tray} = require('electron');
+const {app, BrowserWindow, remote, Menu, Tray, globalShortcut} = require('electron');
 const path = require('path');
 const {ipcMain, screen} = require('electron');
 const Store = require('electron-store');
@@ -108,10 +108,14 @@ function createWindow () {
           {label:'Config', click() {
             config.openInEditor();
           }},
+          {label:'Set Hotkey', click() {
+            mainWindow.loadFile("hotkeySettings.html")
+          }},
           {label:'Exit', click() {
             app.isQuiting = true;
             app.quit();
-          }}
+          }
+        }  
       ]
     }
   ])
@@ -137,7 +141,7 @@ function createWindow () {
       nodeIntegration:true
     }
   })
-
+  //mainWindow.webContents.openDevTools()
   mainWindow.loadFile("main.html");
   
   mainWindow.on('close', function (event) {
@@ -376,6 +380,13 @@ function createWindow () {
     }
   });
 
+  ipcMain.on('hotkeySet', (event) => {
+    registerHotkeys();
+    mainWindow.loadFile('main.html');
+  });
+
+  registerHotkeys();
+
   autoUpdater.checkForUpdates();
 }
 
@@ -390,6 +401,20 @@ app.on('activate', function () {
   if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
 
+function registerHotkeys() {
+  globalShortcut.register(config.get("hotkey"), () => {
+    if (trackerWindow.isVisible()) {
+      trackerWindow.hide();
+      graveyardWindow.hide();
+      oppDeckWindow.hide();
+    }
+    else {
+      trackerWindow.show();
+      graveyardWindow.show();
+      oppDeckWindow.show();
+    }
+  })
+}
 
 const sendStatusToWindow = (text, alert) => {
   log.info(text);
@@ -456,46 +481,47 @@ function matchFound(r) {
   if (!r) {
     setTimeout(function() {httpGet(url).then(res => waitingForGame(res));}, 500);
   }
-
-  global.graveyardArr = [];
-  global.oppDeckArr = [];
-  currentRectangles = [];
-
-  
-  if(!config.get("tracker-disabled")) {
-    trackerWindow.show();
-  }
-  if(!config.get("graveyard-disabled")) {
-    graveyardWindow.show();
-  }
-  if(!config.get("opponent-deck-disabled")) {
-    oppDeckWindow.show();
-  }
-  
-  size = trackerWindow.getSize();
-
-  gameStartTime = Date.now();
-
-  deckCode = r.DeckCode;
-
-  if(Object.keys(r.CardsInDeck).length > 0) {
-    console.log(r.CardsInDeck)
-
-    startTracker(size[0], size[1], r.CardsInDeck);
-
-    graveyardWindow.webContents.send('update', "test");
-    
-    oppDeckWindow.webContents.send('update', "test");
-  
-    handSize = 4;
-    trackerWindow.webContents.send('handUpdate', handSize);
-  
-    console.log("Waiting for Mulligan");
-    httpGet(url).then(res => waitingForMulligan(res));
-  }
   else {
-    console.log("Searching for deck again")
-    setTimeout(function() {httpGet("http://127.0.0.1:21337/static-decklist").then(res => matchFound(res))}, 500);
+
+    global.graveyardArr = [];
+    global.oppDeckArr = [];
+    currentRectangles = [];
+
+    
+    if(!config.get("tracker-disabled")) {
+      trackerWindow.show();
+    }
+    if(!config.get("graveyard-disabled")) {
+      graveyardWindow.show();
+    }
+    if(!config.get("opponent-deck-disabled")) {
+      oppDeckWindow.show();
+    }
+    
+    size = trackerWindow.getSize();
+
+    gameStartTime = Date.now();
+
+    deckCode = r.DeckCode;
+
+    if(Object.keys(r.CardsInDeck).length > 0) {
+      startTracker(size[0], size[1], r.CardsInDeck);
+
+      graveyardWindow.webContents.send('update', "test");
+      
+      oppDeckWindow.webContents.send('update', "test");
+    
+      handSize = 4;
+      trackerWindow.webContents.send('handUpdate', handSize);
+    
+      console.log("Waiting for Mulligan");
+      httpGet(url).then(res => waitingForMulligan(res));
+    }
+    else {
+      log.log("Searching for deck again")
+      console.log("Searching for deck again")
+      setTimeout(function() {httpGet("http://127.0.0.1:21337/static-decklist").then(res => matchFound(res))}, 500);
+    }
   }
 }
 
@@ -503,41 +529,43 @@ function waitingForMulligan(r) { //Mulligan
   if (!r) {
     setTimeout(function() {httpGet(url).then(res => waitingForGame(res));}, 500);
   }
-  var card = null;
-  var firstCard = null;
-  
-  for (let element of r.Rectangles) {
-    if ((element.Height > height / 2 - 10) && (element.Height < height / 2 + 10)) {
-      card = element;
-      firstCard = element.CardID;
-      break;
-    }
-  };
-
-  if (card == null) {
-    setTimeout(function() {httpGet(url).then(res => waitingForMulligan(res));}, 1000);
-  }
-  else { // First Draw
-
-    prevDraw = card;
+  else {
+    var card = null;
+    var firstCard = null;
     
     for (let element of r.Rectangles) {
-
-      if ((element.CardCode !== ("face")) && (element.LocalPlayer) && (element.CardID !== firstCard)) {
-        cardsLeft--;
-        
-        let setCard = setJson.find(o => o.cardCode === element.CardCode);
-        
-        if (setCard.type === "Unit") 
-          trackerWindow.webContents.send('update', element.CardCode, true);
-        else
-          trackerWindow.webContents.send('update', element.CardCode, false);
+      if ((element.Height > height / 2 - 10) && (element.Height < height / 2 + 10)) {
+        card = element;
+        firstCard = element.CardID;
+        break;
       }
     };
 
-    console.log("Tracking Game");
+    if (card == null) {
+      setTimeout(function() {httpGet(url).then(res => waitingForMulligan(res));}, 1000);
+    }
+    else { // First Draw
 
-    httpGet(url).then(res => trackingGame(res));
+      prevDraw = card;
+      
+      for (let element of r.Rectangles) {
+
+        if ((element.CardCode !== ("face")) && (element.LocalPlayer) && (element.CardID !== firstCard)) {
+          cardsLeft--;
+          
+          let setCard = setJson.find(o => o.cardCode === element.CardCode);
+          
+          if (setCard.type === "Unit") 
+            trackerWindow.webContents.send('update', element.CardCode, true);
+          else
+            trackerWindow.webContents.send('update', element.CardCode, false);
+        }
+      };
+
+      console.log("Tracking Game");
+
+      httpGet(url).then(res => trackingGame(res));
+    }
   }
 }
 
@@ -545,78 +573,46 @@ function trackingGame(r) {
   if (!r) {
     setTimeout(function() {httpGet(url).then(res => waitingForGame(res));}, 500);
   }
-
-  var tempHandSize = 0;
-  let tempCurrentRectangles = [];
-
-  if (r.GameState !== ("InProgress")) {
-    httpGet("http://127.0.0.1:21337/game-result").then(res => matchOver(res));
-  }
   else {
-    //let card;
-    for (let element of r.Rectangles) {
-      if (element.CardCode !== "face") {
-        tempCurrentRectangles.push({"CardID": element.CardID, "CardCode": element.CardCode, "LocalPlayer": element.LocalPlayer});
-      }
+    var tempHandSize = 0;
+    let tempCurrentRectangles = [];
 
-      if ((element.TopLeftY < height * 0.17)) {
-        tempHandSize++;
-      }
-      if ((element.Height > height / 2 - 10) && (element.Height < height / 2 + 10)) {
-        card = element;
-        break;
-      }
-    };
-    
-    // I don't think the first condition does anything
-
-    if (currentRectangles !== tempCurrentRectangles && tempHandSize !== 0) {
-      for (let element of tempCurrentRectangles) {
-        if ( !currentRectangles.find(o => o.CardID === element.CardID) && !element.LocalPlayer) {
-          let card = setJson.find(o => o.cardCode === element.CardCode);
-
-          if (card.type === "Unit" || card.type === "Spell") {
-            if (oppDeckArr.find(o => o.cardCode === element.CardCode && o.localPlayer === element.LocalPlayer)) {
-              let existingCard = oppDeckArr.find(o => o.cardCode === element.CardCode);
-              if (!existingCard.IDs.includes(element.CardID)) {
-                existingCard.quantity++;
-                existingCard.IDs.push(element.CardID)
-              }
-            }
-            else {
-              oppDeckArr.push({
-                "cardCode": card.cardCode,
-                "mana": card.cost,
-                "quantity": 1,
-                "imageUrl": null,
-                "name": card.name,
-                "region": card.regionRef,
-                "localPlayer": element.LocalPlayer,
-                "type": card.type,
-                "isChamp": (card.supertype === "Champion"),
-                "IDs": [element.CardID],
-              });
-            }
-          }
-          oppDeckWindow.webContents.send('update', "test");
+    if (r.GameState !== ("InProgress")) {
+      httpGet("http://127.0.0.1:21337/game-result").then(res => matchOver(res));
+    }
+    else {
+      //let card;
+      for (let element of r.Rectangles) {
+        if (element.CardCode !== "face") {
+          tempCurrentRectangles.push({"CardID": element.CardID, "CardCode": element.CardCode, "LocalPlayer": element.LocalPlayer});
         }
-      }
 
-      for (let element of currentRectangles) {
-        if ( !tempCurrentRectangles.find(o => o.CardID === element.CardID)) {//!tempCurrentRectangles.includes(element)) {
-          try {
+        if ((element.TopLeftY < height * 0.17)) {
+          tempHandSize++;
+        }
+        if ((element.Height > height / 2 - 10) && (element.Height < height / 2 + 10)) {
+          card = element;
+          break;
+        }
+      };
+      
+      // I don't think the first condition does anything
+
+      if (currentRectangles !== tempCurrentRectangles && tempHandSize !== 0) {
+        for (let element of tempCurrentRectangles) {
+          if ( !currentRectangles.find(o => o.CardID === element.CardID) && !element.LocalPlayer) {
             let card = setJson.find(o => o.cardCode === element.CardCode);
 
             if (card.type === "Unit" || card.type === "Spell") {
-              if (graveyardArr.find(o => o.cardCode === element.CardCode && o.localPlayer === element.LocalPlayer)) {
-                let existingCard = graveyardArr.find(o => o.cardCode === element.CardCode);
+              if (oppDeckArr.find(o => o.cardCode === element.CardCode && o.localPlayer === element.LocalPlayer)) {
+                let existingCard = oppDeckArr.find(o => o.cardCode === element.CardCode);
                 if (!existingCard.IDs.includes(element.CardID)) {
                   existingCard.quantity++;
                   existingCard.IDs.push(element.CardID)
                 }
               }
               else {
-                graveyardArr.push({
+                oppDeckArr.push({
                   "cardCode": card.cardCode,
                   "mana": card.cost,
                   "quantity": 1,
@@ -625,55 +621,89 @@ function trackingGame(r) {
                   "region": card.regionRef,
                   "localPlayer": element.LocalPlayer,
                   "type": card.type,
-                  "IDs": [element.CardID]
+                  "isChamp": (card.supertype === "Champion"),
+                  "IDs": [element.CardID],
                 });
               }
             }
+            oppDeckWindow.webContents.send('update', "test");
           }
-          catch(e) {
-            console.log(currentRectangles)
-          }
-          graveyardWindow.webContents.send('update', "test");
         }
+
+        for (let element of currentRectangles) {
+          if ( !tempCurrentRectangles.find(o => o.CardID === element.CardID)) {//!tempCurrentRectangles.includes(element)) {
+            try {
+              let card = setJson.find(o => o.cardCode === element.CardCode);
+
+              if (card.type === "Unit" || card.type === "Spell") {
+                if (graveyardArr.find(o => o.cardCode === element.CardCode && o.localPlayer === element.LocalPlayer)) {
+                  let existingCard = graveyardArr.find(o => o.cardCode === element.CardCode);
+                  if (!existingCard.IDs.includes(element.CardID)) {
+                    existingCard.quantity++;
+                    existingCard.IDs.push(element.CardID)
+                  }
+                }
+                else {
+                  graveyardArr.push({
+                    "cardCode": card.cardCode,
+                    "mana": card.cost,
+                    "quantity": 1,
+                    "imageUrl": null,
+                    "name": card.name,
+                    "region": card.regionRef,
+                    "localPlayer": element.LocalPlayer,
+                    "type": card.type,
+                    "IDs": [element.CardID]
+                  });
+                }
+              }
+            }
+            catch(e) {
+              console.log(currentRectangles)
+            }
+            graveyardWindow.webContents.send('update', "test");
+          }
+        }
+
+        currentRectangles = tempCurrentRectangles;
       }
 
-      currentRectangles = tempCurrentRectangles;
+
+      if (card != null && card.CardID !== prevDraw) {
+        let setCard = setJson.find(o => o.cardCode === card.CardCode);
+        prevDraw = card.CardID;
+        cardsLeft--;
+        if (setCard.type === "Unit") 
+          trackerWindow.webContents.send('update', card.CardCode, true);
+        else
+          trackerWindow.webContents.send('update', card.CardCode, false);
+      }
+
+      if (handSize !== tempHandSize && tempHandSize !== 0) {
+        handSize = tempHandSize;
+        trackerWindow.webContents.send('handUpdate', handSize);
+      }
+
+      setTimeout(function() {httpGet(url).then(res => trackingGame(res));}, 1000);
     }
-
-
-    if (card != null && card.CardID !== prevDraw) {
-      let setCard = setJson.find(o => o.cardCode === card.CardCode);
-      prevDraw = card.CardID;
-      cardsLeft--;
-      if (setCard.type === "Unit") 
-        trackerWindow.webContents.send('update', card.CardCode, true);
-      else
-        trackerWindow.webContents.send('update', card.CardCode, false);
-    }
-
-    if (handSize !== tempHandSize && tempHandSize !== 0) {
-      handSize = tempHandSize;
-      trackerWindow.webContents.send('handUpdate', handSize);
-    }
-
-    setTimeout(function() {httpGet(url).then(res => trackingGame(res));}, 1000);
   }
 }
 
 function matchOver(r) {
   if (!r)
     httpGet(url).then(res => waitingForGame(res));
+  else {
+    if (r.LocalPlayerWon)
+      logGame(true);
+    else
+      logGame(false);
 
-  if (r.LocalPlayerWon)
-    logGame(true);
-  else
-    logGame(false);
-
-  trackerWindow.hide();
-  graveyardWindow.hide();
-  oppDeckWindow.hide();
-  
-  httpGet(url).then(res => waitingForGame(res));
+    trackerWindow.hide();
+    graveyardWindow.hide();
+    oppDeckWindow.hide();
+    
+    httpGet(url).then(res => waitingForGame(res));
+  }
 }
 
 function startTracker(width, height, obj) {
