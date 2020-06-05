@@ -317,7 +317,7 @@ function loadDeck(deck) {
                                 <p class="no-margin">${(new Date(game.timePlayed).toLocaleDateString() + ' ' + new Date(game.timePlayed).toLocaleTimeString())}</p>
                             </div>
                             
-                            <div class="col">
+                            <div style="position:absolute; right:0">
                                 <div class="deck-preview d-flex justify-content-end">
         `
 
@@ -378,14 +378,6 @@ function loadDeck(deck) {
             <p class="no-margin" style="position:absolute; right:10; bottom:0">vs AI</p>
             `
         }
-        else {
-            liString += `
-            <p class=" no-margin" style="position:absolute; right:10; bottom:0">Normal</p>
-            `
-        }
-
-        liString += `
-        `
 
         let li = document.createElement("LI");
 
