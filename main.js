@@ -25,7 +25,8 @@ const config = new Store({
     "graveyard-opacity": 0.75,
     "graveyard-ignore-mouse-events": false,
     "graveyard-disabled": false,
-    "card-opacity": 0.75
+    "card-opacity": 0.75,
+    "record-ai-games": false 
   }
 });
 const data = new Store({
@@ -141,7 +142,7 @@ function createWindow () {
       nodeIntegration:true
     }
   })
-  //mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
   mainWindow.loadFile("main.html");
   
   mainWindow.on('close', function (event) {
@@ -778,13 +779,18 @@ function logGame (isMatchWin) {
   let decksArr = data.get('decks');
   let gamesArr = data.get('games');
   let oppRegions = [];
+  let isComputer = opponentName.startsWith('decks_') || opponentName.startsWith('deckname_');
+
+  if (isComputer && !config.get("record-ai-games")) {
+    return;
+  }
 
   if (!decksArr) {
     decksArr = [];
   }
 
   let currDeck = decksArr.find(o => o.deckCode === deckCode);
-  
+
   if (currDeck) {
     if (isMatchWin) {
       currDeck.wins++;
@@ -831,7 +837,8 @@ function logGame (isMatchWin) {
     "opponentName": opponentName,
     "gameLength": Date.now() - gameStartTime,
     "oppCards": oppDeckArr,
-    "oppRegions": oppRegions
+    "oppRegions": oppRegions,
+    "isComputer": isComputer
   }
 
   if (gamesArr) {
