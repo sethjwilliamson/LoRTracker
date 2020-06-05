@@ -21,7 +21,7 @@ ipcRenderer.on('start', (event, width, height, cardsLeft, spellsLeft, unitsLeft)
 });
 
 ipcRenderer.on('update', (event, cardCode, isUnit) => {
-    updateCard(cardCode, isUnit);
+    updateCard(cardCode, isUnit, -1);
 });
 
 ipcRenderer.on('handUpdate', (event, handSize) => {
@@ -221,24 +221,24 @@ function start() {
     }
 }
 
-async function updateCard(cardCode, isUnit) {
-    await editCard(cardCode, isUnit);
+async function updateCard(cardCode, isUnit, change) {
+    await editCard(cardCode, isUnit, change);
     updateTracker();
 }
 
-async function editCard(cardCode, isUnit) {
+async function editCard(cardCode, isUnit, change) {
     if (cardArr.find(o => o.cardCode == cardCode)) {
         card = cardArr.find(o => o.cardCode == cardCode);
-        card.quantity--;
+        card.quantity += change;
         
-        cardRegions.find(o => o.region == card.region).quantity--;
+        cardRegions.find(o => o.region == card.region).quantity += change;
 
         if (isUnit)
-            unitsLeft--;
+            unitsLeft += change;
         else
-            spellsLeft--;
+            spellsLeft += change;
         
-        cardsLeft--;
+        cardsLeft += change;
     }
 }
     

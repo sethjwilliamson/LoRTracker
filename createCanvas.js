@@ -119,6 +119,26 @@ module.exports = {
             ctxCard.fillStyle ="rgba(50, 50, 50, 0.7)";
             roundRect(ctxCard, 0, 0, 720, 100, 15, true,false);
         }
+
+        cCard.addEventListener('click', function(event) {
+            console.log(remote.getCurrentWindow().accessibleTitle);
+            if (event.x < $(document).width() / 720 * 620) {
+                if (remote.getCurrentWindow().accessibleTitle === "tracker") {
+                    updateCard(element.cardCode, element.type === "Unit", -1)
+                }
+                else {
+                    ipcRenderer.send("arrUpdate", remote.getCurrentWindow().accessibleTitle, element.cardCode, -1);
+                }
+            }
+            else {
+                if (remote.getCurrentWindow().accessibleTitle === "tracker") {
+                    updateCard(element.cardCode, element.type === "Unit", 1)
+                }
+                else {
+                    ipcRenderer.send("arrUpdate", remote.getCurrentWindow().accessibleTitle, element.cardCode, 1);
+                }
+            }
+        })
  
         div.append($(cCard));
       }

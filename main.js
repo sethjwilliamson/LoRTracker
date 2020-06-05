@@ -167,9 +167,10 @@ function createWindow () {
       nodeIntegration:true
     }
   })
-
+  trackerWindow.accessibleTitle = "tracker";
   trackerWindow.loadFile('tracker.html');
   trackerWindow.hide()
+  //trackerWindow.webContents.openDevTools();
   
   trackerWindow.webContents.on('did-finish-load', () => {
     trackerWindow.setVisibleOnAllWorkspaces(true);
@@ -238,6 +239,7 @@ function createWindow () {
     }
   })
 
+  graveyardWindow.accessibleTitle = "graveyard";
   graveyardWindow.hide();
 
   graveyardWindow.loadFile('graveyard.html');
@@ -284,9 +286,10 @@ function createWindow () {
     }
   })
 
-  oppDeckWindow.loadFile('oppDeck.html');
-  
+  oppDeckWindow.accessibleTitle = "oppDeck";
   oppDeckWindow.hide();
+
+  oppDeckWindow.loadFile('oppDeck.html');
 
   oppDeckWindow.webContents.on('did-finish-load', () => {
     oppDeckWindow.setVisibleOnAllWorkspaces(true);
@@ -705,6 +708,21 @@ function matchOver(r) {
     httpGet(url).then(res => waitingForGame(res));
   }
 }
+
+ipcMain.on("arrUpdate", (event, window, cardCode, change) => {
+  if (window == graveyardWindow.accessibleTitle) {
+    if (graveyardArr.find(o => o.cardCode === cardCode)) {
+      graveyardArr.find(o => o.cardCode === cardCode).quantity += change;
+      graveyardWindow.webContents.send('update', "test");
+    }
+  } 
+  else if (window == oppDeckWindow.accessibleTitle) {
+    if (oppDeckArr.find(o => o.cardCode === cardCode)) {
+      oppDeckArr.find(o => o.cardCode === cardCode).quantity += change;
+      oppDeckWindow.webContents.send('update', "test");
+    }
+  }
+})
 
 function startTracker(width, height, obj) {
   let keys = Object.keys(obj);
