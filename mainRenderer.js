@@ -53,8 +53,8 @@ function loadMatches() {
 
         string += `
             <div class="row">
-                <div class="col">
-                    <div class="deck-preview d-flex justify-content-start" style="position:absolute; top:0; left:0;">
+                <div class="col" style="position:absolute; top:5; left:0;">
+                    <div class="deck-preview d-flex justify-content-start">
         `
         for (let region of yourRegions) {
             string += `
@@ -92,8 +92,8 @@ function loadMatches() {
                     <p class="text-center no-margin">${new Date(game.timePlayed).toLocaleDateString("en-US")}</p>
                     <p class="text-center no-margin">${new Date(game.timePlayed).toLocaleTimeString("en-US")}</p>                
                 </div>
-                <div class="col">
-                    <div class="deck-preview d-flex justify-content-end" style="position:absolute; top:0; right:0;">
+                <div class="col" style="position:absolute; top:5; right:0;">
+                    <div class="deck-preview d-flex justify-content-end">
         `
 
         for (let [index, champ] of oppChamps.entries()) {
@@ -261,8 +261,9 @@ function loadDeck(deck) {
 
     string += `
     <div class="col flex-column full-height">
-        <div class="row justify-content-center">
+        <div class="row justify-content-center d-flex">
             <p class="h1" id="name">${deck.name.slice(0,14)}</p>
+            <a href="#" style="position:absolute; right:10px; top:10px"><img src="node_modules/open-iconic/svg/pencil.svg" id="editName" style="width: 20px;"></a>
         </div>
         <div class="row justify-content-center">
             <div class="progress" style="width: 90%;">
@@ -417,8 +418,14 @@ function loadDeck(deck) {
         require("electron").clipboard.writeText(deck.deckCode)
     })
 
+    $("#editName").click(function() {
+        $("#editName").css("display", "none")
+        $("#name").replaceWith(`<input type="text" class="form-control textbox" id="nameBox" style="width:90%; margin-bottom:10px"></input>`)
+        enableOnKeyPress();
+    })
+
     $("#name").dblclick(function() {
-        console.log("testsd")
+        $("#editName").css("display", "none")
         $("#name").replaceWith(`<input type="text" class="form-control textbox" id="nameBox" style="width:90%; margin-bottom:10px"></input>`)
         enableOnKeyPress();
     })
@@ -437,8 +444,8 @@ function loadMatch(game) {
 
     string = `
         <div class="col flex-column align-content-center" style="height: 100%;">
-            <div class="row border-bottom">
-                <div class="col">
+            <div class="row border-bottom" style="height:50px">
+                <div class="col" style="position: absolute; left:0;top:0">
                     <div class="deck-preview d-flex justify-content-start">
         `
     for (let region of yourRegions) {
@@ -475,7 +482,7 @@ function loadMatch(game) {
                 <div class="col align-self-center">
                     <p class="text-center h3">${(game.isWin) ? "Win" : "Loss"}</div>
 
-                <div class="col">
+                <div class="col" style="position: absolute; right:0;top:0">
                     <div class="deck-preview d-flex justify-content-end">
     `
 
@@ -554,13 +561,18 @@ function loadMatch(game) {
         </div>
         <div class="border-left flex-2" style=" height: 100%; width:200px; margin-right:20px" >
             <div class="card flex-2-child flex-2" style="padding:5px; min-height: 20px; margin:10px; width:100%">
-                <div class="card-heading">Your Cards</div>
+                <div class="card-heading d-flex justify-content-between">
+                    <p class="no-margin font-weight-bold">Your Cards</p>
+                    <a href="#"><img src="node_modules/open-iconic/svg/share-boxed.svg" id="copyDeck" style="width: 24px;"></a>
+                </div>
                 <div id="yourCardContents" flex-2-child" style="overflow: auto;">
 
                 </div>
             </div>
             <div class="card flex-2-child flex-2" style="padding:5px; min-height: 20px; margin:10px; width:100%">
-                <div class="card-heading">Opponent Cards</div>
+                <div class="card-heading">
+                <p class="no-margin font-weight-bold">Opponent Cards</p>
+                </div>
                 <div id="oppCardContents" flex-2-child" style="overflow: auto; height:100%">
 
                 </div>
@@ -569,6 +581,10 @@ function loadMatch(game) {
     `
 
     $('#detailsWindow').html(string)
+
+    $("#copyDeck").click(function() {
+        require("electron").clipboard.writeText(deck.deckCode)
+    })
 
     for (let [index, element] of deck.cards.entries()) {
         let imgCard;
@@ -614,6 +630,9 @@ function enableOnKeyPress() {
                 $("#name").replaceWith(`<input type="text" class="form-control textbox" id="nameBox" style="width:90%; margin-bottom:10px"></input>`)
                 enableOnKeyPress();
             })
+            
+            
+            $("#editName").css("display", "block")
         }
     });
 }
