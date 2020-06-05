@@ -1,6 +1,6 @@
 {
   "name": "lor-tracker",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "A deck tracker for Legends of Runeterra",
   "main": "main.js",
   "scripts": {
@@ -24,6 +24,7 @@
     "electron-store": "^5.1.1",
     "electron-updater": "^4.3.1",
     "jquery": "^3.5.0",
+    "open-iconic": "^1.1.1",
     "popper.js": "^1.16.1"
   },
   "build": {

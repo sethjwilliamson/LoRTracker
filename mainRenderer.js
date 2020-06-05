@@ -273,7 +273,7 @@ function loadDeck(deck) {
                     ${deck.wins} Wins
                 </div>
                 <div class="d-flex p-2">
-                    ${parseInt((deck.wins) / (deck.wins + deck.losses) * 100)}%
+                    <h4>${parseInt((deck.wins) / (deck.wins + deck.losses) * 100)}%</h4>
                 </div>
                 <div class="d-flex p-2">
                     ${deck.losses} Losses
@@ -387,7 +387,10 @@ function loadDeck(deck) {
         </div>
         <div class="border-left flex-2" style=" height: 100%; width:200px; margin-right:20px" >
             <div class="card flex-2-child flex-2" style="padding:5px; min-height: 20px; margin:10px; width:100%">
-                <div class="card-heading">Your Cards</div>
+                <div class="card-heading d-flex justify-content-between">
+                    <p class="no-margin font-weight-bold">Your Cards</p>
+                    <a href="#"><img src="node_modules/open-iconic/svg/share-boxed.svg" id="copyDeck" style="width: 24px;"></a>
+                </div>
                 <div id="cardContents" flex-2-child" style="overflow: auto;">
 
                 </div>
@@ -410,7 +413,9 @@ function loadDeck(deck) {
         }
     }
     
-    
+    $("#copyDeck").click(function() {
+        require("electron").clipboard.writeText(deck.deckCode)
+    })
 
     $("#name").dblclick(function() {
         console.log("testsd")
