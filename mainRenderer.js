@@ -53,7 +53,7 @@ function loadMatches() {
 
         string += `
             <div class="row">
-                <div class="col" style="position:absolute; top:5; left:0;">
+                <div class="align-middle" style="position:absolute; top:25%">
                     <div class="deck-preview d-flex justify-content-start">
         `
         for (let region of yourRegions) {
@@ -89,10 +89,10 @@ function loadMatches() {
 
                 <div class="col align-self-center align-content-center">
                     <p class="text-center h4">${(game.isWin) ? "Win" : "Loss"}</p>
-                    <p class="text-center no-margin">${new Date(game.timePlayed).toLocaleDateString("en-US")}</p>
-                    <p class="text-center no-margin">${new Date(game.timePlayed).toLocaleTimeString("en-US")}</p>                
+                    <p class="text-center no-margin">${new Date(game.timePlayed).toLocaleDateString()}</p>
+                    <p class="text-center no-margin">${new Date(game.timePlayed).toLocaleTimeString()}</p>                
                 </div>
-                <div class="col" style="position:absolute; top:5; right:0;">
+                <div class="align-middle" style="position:absolute; top:25%; right:0">
                     <div class="deck-preview d-flex justify-content-end">
         `
 
@@ -146,6 +146,19 @@ function loadMatches() {
                     </div>
                 </div>
             </div>
+        `
+        if(game.isComputer) {
+            string += `
+            <p class="font-weight-bold no-margin" style="position:absolute; left:10; top:0">vs AI</p>
+            `
+        }
+        else {
+            string += `
+            <p class="font-weight-bold no-margin" style="position:absolute; left:10; top:0">Normal</p>
+            `
+        }
+        string += `
+            <p class="font-weight-bold no-margin" style="position:absolute; right:10; top:0">${game.opponentName}</p>
         `
 
         let li = document.createElement("LI");
@@ -301,7 +314,7 @@ function loadDeck(deck) {
                         <div class="row align-content-center">
                             <div class="col align-self-left align-content-center">
                                 <p class="h3 no-margin">${(game.isWin) ? "Win" : "Loss"}</p>
-                                <p class="no-margin">${(new Date(game.timePlayed).toLocaleDateString("en-US") + ' ' + new Date(game.timePlayed).toLocaleTimeString("en-US"))}</p>
+                                <p class="no-margin">${(new Date(game.timePlayed).toLocaleDateString() + ' ' + new Date(game.timePlayed).toLocaleTimeString())}</p>
                             </div>
                             
                             <div class="col">
@@ -357,7 +370,21 @@ function loadDeck(deck) {
         liString += `
                                 </div>
                             </div>
-                        </div
+                        </div>
+        `
+
+        if(game.isComputer) {
+            liString += `
+            <p class="no-margin" style="position:absolute; right:10; bottom:0">vs AI</p>
+            `
+        }
+        else {
+            liString += `
+            <p class=" no-margin" style="position:absolute; right:10; bottom:0">Normal</p>
+            `
+        }
+
+        liString += `
         `
 
         let li = document.createElement("LI");
@@ -538,10 +565,10 @@ function loadMatch(game) {
             </div>
 
             <div class="row justify-content-center">
-                <p class="h2">${new Date(game.timePlayed).toLocaleDateString("en-US")}</p>
+                <p class="h2">${new Date(game.timePlayed).toLocaleDateString()}</p>
             </div>
             <div class="row justify-content-center">
-                <p class="h3">${new Date(game.timePlayed).toLocaleTimeString("en-US")}</p>
+                <p class="h3">${new Date(game.timePlayed).toLocaleTimeString()}</p>
             </div>
             <div class="row justify-content-center">
                 <p></p>
