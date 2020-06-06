@@ -164,13 +164,13 @@ function createWindow () {
     maximizable:false,
     transparent:true,
     frame:false,
+    show:false,
     webPreferences: {
       nodeIntegration:true
     }
   })
   trackerWindow.accessibleTitle = "tracker";
   trackerWindow.loadFile('tracker.html');
-  trackerWindow.hide()
   //trackerWindow.webContents.openDevTools();
   
   trackerWindow.webContents.on('did-finish-load', () => {
@@ -210,6 +210,7 @@ function createWindow () {
     skipTaskbar:true,
     frame:false,
     focusable:false,
+    show:false,
     webPreferences: {
       nodeIntegration:true
     }
@@ -222,7 +223,6 @@ function createWindow () {
     fullCardWindow.setSkipTaskbar(true);
     fullCardWindow.setAlwaysOnTop(true, 'screen-saver');
     fullCardWindow.setIgnoreMouseEvents(true);
-    fullCardWindow.hide();
   })
 
   graveyardWindow = new BrowserWindow({
@@ -235,13 +235,13 @@ function createWindow () {
     maximizable:false,
     transparent:true,
     frame:false,
+    show:false,
     webPreferences: {
       nodeIntegration:true
     }
   })
 
   graveyardWindow.accessibleTitle = "graveyard";
-  graveyardWindow.hide();
 
   graveyardWindow.loadFile('graveyard.html');
 
@@ -272,6 +272,7 @@ function createWindow () {
     });
   });
 
+
   oppDeckWindow = new BrowserWindow({
     width: config.get("opponent-deck-width"),
     height: config.get("opponent-deck-height"),
@@ -282,13 +283,13 @@ function createWindow () {
     maximizable:false,
     transparent:true,
     frame:false,
+    show:false,
     webPreferences: {
       nodeIntegration:true
     }
   })
 
   oppDeckWindow.accessibleTitle = "oppDeck";
-  oppDeckWindow.hide();
 
   oppDeckWindow.loadFile('oppDeck.html');
 
@@ -318,7 +319,34 @@ function createWindow () {
       config.set("opponent-deck-y", position[1]);
     });
   });
+
   
+  overlayWindow = new BrowserWindow({
+    icon: "icon.png",
+    transparent:true,
+    frame:false,
+    fullscreen:true,
+    //show:false,
+    webPreferences: {
+      nodeIntegration:true
+    }
+  })
+
+  overlayWindow.accessibleTitle = "overlay";
+
+  overlayWindow.loadFile('overlay.html');
+
+  overlayWindow.webContents.on('did-finish-load', () => {
+    overlayWindow.setVisibleOnAllWorkspaces(true);
+    overlayWindow.setAlwaysOnTop(true, 'screen-saver');
+    overlayWindow.setSkipTaskbar(true);
+    overlayWindow.setIgnoreMouseEvents(true);
+
+    
+    if(config.get("overlay-disabled")) {
+      overlayWindow.hide();
+    }
+  });
 
   ipcMain.on('preview', (event, src, x, y, window) => {
     let windowPosition;
@@ -697,10 +725,14 @@ function matchOver(r) {
   if (!r)
     httpGet(url).then(res => waitingForGame(res));
   else {
-    if (r.LocalPlayerWon)
-      logGame(true);
-    else
-      logGame(false);
+    if (r.LocalPlayerWon) {
+      //logGame(true);
+      setTimeout(function() {httpGet("http://127.0.0.1:21337/expeditions-state").then(res => logGame(true, res))}, 3000);
+    }
+    else {
+      //logGame(false);
+      setTimeout(function() {httpGet("http://127.0.0.1:21337/expeditions-state").then(res => logGame(false, res))}, 3000);
+    }
 
     trackerWindow.hide();
     graveyardWindow.hide();
@@ -775,15 +807,34 @@ function startTracker(width, height, obj) {
 }
 
 
-function logGame (isMatchWin) {
+function logGame (isMatchWin, expeditionR) {
   let decksArr = data.get('decks');
   let gamesArr = data.get('games');
   let oppRegions = [];
   let isComputer = opponentName.startsWith('decks_') || opponentName.startsWith('deckname_');
+  let isExpedition = false;
+  let expeditionRecord = null;
+
+  log.log(expeditionR);
 
   if (isComputer && !config.get("record-ai-games")) {
     return;
   }
+
+
+  if (expeditionR.State === "Picking" || expeditionR.State === "Swapping" || expeditionR.State === "Other") {
+    isExpedition = true;
+    expeditionRecord = expeditionR.Record;
+
+    if (expeditionR.games == 1 || !decksArr.find( o => o.isExpedition) || JSON.stringify(deckRegions) !== JSON.stringify(decksArr.reverse().find( o => o.isExpedition).regions)) {
+      deckCode = "ex_" + Date.now();
+    }
+    else {
+      deckCode = decksArr.find( o => o.isExpedition).deckCode;
+    }
+  }
+  
+  log.log(decksArr.find( o => o.isExpedition));
 
   if (!decksArr) {
     decksArr = [];
@@ -811,7 +862,9 @@ function logGame (isMatchWin) {
       'losses': 0,
       'mostRecentPlay': Date.now(),
       'regions': deckRegions,
-      'cards': initialCardArr
+      'cards': initialCardArr,
+      'isExpedition': isExpedition,
+      'expeditionRecord': expeditionRecord
     };
 
     if (isMatchWin) {
