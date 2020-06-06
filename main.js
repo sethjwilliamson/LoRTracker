@@ -142,7 +142,7 @@ function createWindow () {
       nodeIntegration:true
     }
   })
-  mainWindow.webContents.openDevTools()
+  //mainWindow.webContents.openDevTools()
   mainWindow.loadFile("main.html");
   
   mainWindow.on('close', function (event) {
