@@ -482,6 +482,7 @@ var deckCode;
 var gameStartTime;
 var opponentName;
 var initialCardArr;
+var initialIsExpedition;
 var currentRectangles = [];
 global.cardArr = [];
 global.graveyardArr = [];
@@ -557,7 +558,7 @@ function matchFound(r) {
   }
 }
 
-function waitingForMulligan(r) { //Mulligan  
+function waitingForMulligan(r, rExpedition) { //Mulligan  
   if (!r) {
     setTimeout(function() {httpGet(url).then(res => waitingForGame(res));}, 500);
   }
@@ -577,7 +578,8 @@ function waitingForMulligan(r) { //Mulligan
       setTimeout(function() {httpGet(url).then(res => waitingForMulligan(res));}, 1000);
     }
     else { // First Draw
-
+      //initialIsExpedition = httpGet("http://127.0.0.1:21337/expeditions-state").IsActive;
+      httpGet("http://127.0.0.1:21337/expeditions-state").then(res => initialIsExpedition = res.IsActive);
       prevDraw = card;
       
       for (let element of r.Rectangles) {
@@ -815,26 +817,23 @@ function logGame (isMatchWin, expeditionR) {
   let isExpedition = false;
   let expeditionRecord = null;
 
-  log.log(expeditionR);
-
   if (isComputer && !config.get("record-ai-games")) {
     return;
   }
 
-
-  if (expeditionR.State === "Picking" || expeditionR.State === "Swapping" || expeditionR.State === "Other") {
+  if (expeditionR.State === "Picking" || expeditionR.State === "Swapping" || expeditionR.State === "Other" || expeditionR.IsActive !== initialIsExpedition) {
     isExpedition = true;
     expeditionRecord = expeditionR.Record;
+    reversedArr = Array.from(decksArr).reverse()
 
-    if (expeditionR.games == 1 || !decksArr.find( o => o.isExpedition) || JSON.stringify(deckRegions) !== JSON.stringify(decksArr.reverse().find( o => o.isExpedition).regions)) {
+    if (expeditionR.games == 1 || !decksArr.find( o => o.isExpedition) || JSON.stringify(deckRegions) !== JSON.stringify(reversedArr.find( o => o.isExpedition).regions)) {
       deckCode = "ex_" + Date.now();
     }
     else {
-      deckCode = decksArr.find( o => o.isExpedition).deckCode;
+      deckCode = reversedArr.find( o => o.isExpedition).deckCode;
     }
   }
   
-  log.log(decksArr.find( o => o.isExpedition));
 
   if (!decksArr) {
     decksArr = [];
@@ -851,6 +850,12 @@ function logGame (isMatchWin, expeditionR) {
     }
 
     currDeck.mostRecentPlay = Date.now();
+
+    currDeck.expeditionRecord = expeditionRecord;
+
+    if (isExpedition) {
+      currDeck.cards = initialCardArr;
+    }
 
     data.set("decks", decksArr.filter( o => o.deckCode !== deckCode ).concat(currDeck));
   }

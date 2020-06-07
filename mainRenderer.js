@@ -152,6 +152,11 @@ function loadMatches() {
             <p class="font-weight-bold no-margin" style="position:absolute; left:10; top:0">vs AI</p>
             `
         }
+        else if (deck.isExpedition) {
+            string += `
+            <p class="font-weight-bold no-margin" style="position:absolute; left:10; top:0">Expedition</p>
+            `
+        }
         else {
             string += `
             <p class="font-weight-bold no-margin" style="position:absolute; left:10; top:0">Normal</p>
@@ -244,10 +249,43 @@ function loadDecks() {
 
                 <div class="col align-self-right flex-grow-1" style="max-width: 250px;">
                     <p class="text-right h4 no-margin" style="white-space: nowrap;">${deck.name.slice(0,14)}</p>
+        `
+
+        if (deck.isExpedition) {
+            string += `
+                    <div style="position:absolute; right:0">
+            `
+            for (let gRecord of deck.expeditionRecord) {
+                if (gRecord == "win") {
+                    string += `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 8 8" fill="green">
+                        <path d="M6.41 0l-.69.72-2.78 2.78-.81-.78-.72-.72-1.41 1.41.72.72 1.5 1.5.69.72.72-.72 3.5-3.5.72-.72-1.44-1.41z" transform="translate(0 1)"/>
+                    </svg>
+                    `
+                }
+                else {
+                    //<img src="node_modules/open-iconic/svg/x.svg" class="svg-inject" style="width: 16px;">
+                    string += `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 8 8" fill="red">
+                            <path d="M1.41 0l-1.41 1.41.72.72 1.78 1.81-1.78 1.78-.72.69 1.41 1.44.72-.72 1.81-1.81 1.78 1.81.69.72 1.44-1.44-.72-.69-1.81-1.78 1.81-1.81.72-.72-1.44-1.41-.69.72-1.78 1.78-1.81-1.78-.72-.72z"/>
+                        </svg>
+                    `
+                }
+            }
+            string += `
+                    </div>
+            `
+        }
+        else {
+            string += `
                     <p class="text-right no-margin">${deck.wins}-${deck.losses} | ${parseInt((deck.wins) / (deck.wins + deck.losses) * 100)}%</p>
+            `
+        }
+
+        string += `
                 </div>
             </div>
-        `
+            `
 
         let li = document.createElement("LI");
 
