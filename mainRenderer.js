@@ -41,9 +41,17 @@ function loadMatches() {
     for (let game of games) {
         string = "";
         let deck = decks.find(o => o.deckCode === game.deckCode);
-        let yourChamps = deck.cards.filter(o => o.isChamp);
-        let yourRegions = deck.regions;
-
+        let yourChamps;
+        let yourRegions;
+        if (deck) {
+            yourChamps = deck.cards.filter(o => o.isChamp);
+            yourRegions = deck.regions;
+        }
+        else {
+            decks = data.get("decks").sort((a,b) => (a.mostRecentPlay < b.mostRecentPlay) ? 1 : ((b.mostRecentPlay < a.mostRecentPlay) ? -1 : 0));
+            setTimeout(loadMatches(), 1000);
+            return;
+        }
 
         let oppDeck = game.oppCards;
         let oppChamps = oppDeck.filter(o => o.isChamp);

@@ -26,7 +26,8 @@ const config = new Store({
     "graveyard-ignore-mouse-events": false,
     "graveyard-disabled": false,
     "card-opacity": 0.75,
-    "record-ai-games": false 
+    "record-ai-games": false,
+    "hotkey": "Control+Shift+D"
   }
 });
 const data = new Store({
@@ -824,7 +825,7 @@ function logGame (isMatchWin, expeditionR) {
   if (expeditionR.State === "Picking" || expeditionR.State === "Swapping" || expeditionR.State === "Other" || expeditionR.IsActive !== initialIsExpedition) {
     isExpedition = true;
     expeditionRecord = expeditionR.Record;
-    reversedArr = Array.from(decksArr).reverse()
+    reversedArr = Array.from(decksArr).reverse();
 
     if (expeditionR.games == 1 || !decksArr.find( o => o.isExpedition) || JSON.stringify(deckRegions) !== JSON.stringify(reversedArr.find( o => o.isExpedition).regions)) {
       deckCode = "ex_" + Date.now();
@@ -842,13 +843,18 @@ function logGame (isMatchWin, expeditionR) {
   let currDeck = decksArr.find(o => o.deckCode === deckCode);
 
   if (currDeck) {
-    if (isMatchWin) {
-      currDeck.wins++;
+    if (isExpedition) {
+      currDeck.wins = expeditionR.Wins;
+      currDeck.losses = expeditionR.Losses
     }
     else {
-      currDeck.losses++;
+      if (isMatchWin) {
+        currDeck.wins++;
+      }
+      else {
+        currDeck.losses++;
+      }
     }
-
     currDeck.mostRecentPlay = Date.now();
 
     currDeck.expeditionRecord = expeditionRecord;
@@ -872,11 +878,17 @@ function logGame (isMatchWin, expeditionR) {
       'expeditionRecord': expeditionRecord
     };
 
-    if (isMatchWin) {
-      currDeck.wins++;
+    if (isExpedition) {
+      currDeck.wins = expeditionR.Wins;
+      currDeck.losses = expeditionR.Losses
     }
     else {
-      currDeck.losses++;
+      if (isMatchWin) {
+        currDeck.wins++;
+      }
+      else {
+        currDeck.losses++;
+      }
     }
 
     data.set("decks", decksArr.concat(currDeck));
