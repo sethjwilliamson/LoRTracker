@@ -493,6 +493,7 @@ global.cardRegions = [];
 
 
 function waitingForGame(r) {
+  log.log(r)
   console.log("Waiting");
 
   if (!r) {
@@ -512,6 +513,7 @@ function waitingForGame(r) {
 }
 
 function matchFound(r) {
+  log.log(r)
   if (!r) {
     setTimeout(function() {httpGet(url).then(res => waitingForGame(res));}, 500);
   }
@@ -560,6 +562,7 @@ function matchFound(r) {
 }
 
 function waitingForMulligan(r, rExpedition) { //Mulligan  
+  log.log(r)
   if (!r) {
     setTimeout(function() {httpGet(url).then(res => waitingForGame(res));}, 500);
   }
@@ -811,6 +814,7 @@ function startTracker(width, height, obj) {
 
 
 function logGame (isMatchWin, expeditionR) {
+  log.log("Game finished")
   let decksArr = data.get('decks');
   let gamesArr = data.get('games');
   let oppRegions = [];
@@ -918,6 +922,10 @@ function logGame (isMatchWin, expeditionR) {
     data.set("games", [gameObj]);
   }
 
+  log.log("Update1")
+  log.log(gamesArr);
+  log.log(decksArr);
+  log.log("Update2")
   
   mainWindow.webContents.send('update');
 }
