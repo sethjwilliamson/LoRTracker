@@ -5,6 +5,9 @@ const data = new Store({name:"data"});
 const log = require("electron-log");
 log.catchErrors();
 
+var start = 0;
+var load = 10;
+
 var games = data.get("games").sort((a,b) => (a.timePlayed < b.timePlayed) ? 1 : ((b.timePlayed < a.timePlayed) ? -1 : 0));
 var decks = data.get("decks").sort((a,b) => (a.mostRecentPlay < b.mostRecentPlay) ? 1 : ((b.mostRecentPlay < a.mostRecentPlay) ? -1 : 0));
 
@@ -31,12 +34,28 @@ loadMatch(games[0])
 
 function loadMatches() {
     games = data.get("games").sort((a,b) => (a.timePlayed < b.timePlayed) ? 1 : ((b.timePlayed < a.timePlayed) ? -1 : 0));
-    $("#historyWindow").html("");
-    console.log(games)
 
+    
     if (games.length == 0) {
         $("#historyWindow").html("<li class='h4 text-center'>Matches will be listed here.</li>")
     }
+
+    if (start >= games.length) {
+        return;
+    }
+
+    if (start + load >= games.length) {
+        games = games.slice(start, games.length);
+    }
+    else {
+        games = games.slice(start, start + load);
+    }
+    
+    if (start == 0) {
+        $("#historyWindow").html("");
+    }
+    console.log(games)
+
 
     for (let game of games) {
         string = "";
@@ -202,12 +221,27 @@ function loadMatches() {
 
 function loadDecks() {
     decks = data.get("decks").sort((a,b) => (a.mostRecentPlay < b.mostRecentPlay) ? 1 : ((b.mostRecentPlay < a.mostRecentPlay) ? -1 : 0));
-    $("#historyWindow").html("");
 
     
-    if (games.length == 0) {
+    if (decks.length == 0) {
         $("#historyWindow").html("<li class='h4 text-center'>Decks will be listed here.</li>")
     }
+    
+    if (start >= decks.length) {
+        return;
+    }
+
+    if (start + load >= decks.length) {
+        decks = decks.slice(start, decks.length);
+    }
+    else {
+        decks = decks.slice(start, start + load);
+    }
+
+    if (start == 0) {
+        $("#historyWindow").html("");
+    }
+
 
     for (let deck of decks) {
         string = "";
@@ -347,7 +381,7 @@ function loadDeck(deck) {
     `
 
     $("#detailsWindow").html(string);
-    let games = data.get("games").filter(o => o.deckCode === deck.deckCode).sort((a,b) => (a.timePlayed < b.timePlayed) ? 1 : ((b.timePlayed < a.timePlayed) ? -1 : 0));
+    let games = data.get("games").filter(o => o.deckCode === deck.deckCode).sort((a,b) => (a.timePlayed < b.timePlayed) ? 1 : ((b.timePlayed < a.timePlayed) ? -1 : 0)).slice(start, start + load);
 
     for (let game of games) {
         let oppDeck = game.oppCards;
@@ -729,6 +763,7 @@ function msToTime(duration) {
 
 ipcRenderer.on('update', (event) => {
     console.log("update")
+    start = 0;
     if ($("#matches-tab").attr("aria-selected") === "true") {
         setTimeout(loadMatches(), 1000);
     }
@@ -736,3 +771,26 @@ ipcRenderer.on('update', (event) => {
         setTimeout(loadDecks(), 1000);
     }
 });
+
+function decksPressed() {
+    start = 0;
+    loadDecks();
+}
+
+function matchesPressed() {
+    start = 0;
+    loadMatches();
+}
+
+$('#historyWindow').on('scroll', function() {
+    if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+        start += 10;
+
+        if ($("#matches-tab").attr("aria-selected") === "true") {
+            setTimeout(loadMatches(), 1000);
+        }
+        else {
+            setTimeout(loadDecks(), 1000);
+        }
+    }
+})
