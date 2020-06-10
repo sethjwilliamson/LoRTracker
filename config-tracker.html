@@ -1,0 +1,88 @@
+
+<body>
+    <h2>Tracker</h2>
+    <div>
+        <table class="table" style="margin-bottom: 0;">
+            <tbody>
+            <tr>
+                <th scope="row"><h5 class="no-margin">Size</h4></th>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row" style="padding-left: 40px;">Width</th>
+                <td>
+                <input type="text" class="form-control" id="tracker-width">
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><h5 class="no-margin">Position</h4></th>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row" style="padding-left: 40px;">Horizontal (X)</th>
+                <td>
+                    <input type="text" class="form-control" id="tracker-x">
+
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" style="padding-left: 40px;">Vertical (Y)</th>
+                <td>
+                    <input type="text" class="form-control" id="tracker-y">
+
+                </td>
+            </tr>          
+            <tr>
+                <th scope="row"><h5 class="no-margin">Misc.</h4></th>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row" style="padding-left: 40px;">Opacity</th>
+                <td>
+                    <input type="text" class="form-control" id="tracker-opacity">
+
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" style="padding-left: 60px;">
+                    <input type="checkbox" class="form-check-input" id="tracker-ignore-mouse-events">
+                    <label class="form-check-label" for="tracker-ignore-mouse-events">Ignore Mouse Events</label>
+                </th>
+                <td>
+
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" style="padding-left: 60px;">
+                    <input type="checkbox" class="form-check-input" id="tracker-disabled">
+                    <label class="form-check-label" for="tracker-disabled">Disable</label>
+                </th>
+                <td>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="d-flex">
+            <a id="save" class="ml-auto btn btn-primary" href="#" role="button">Save</a>
+        </div>
+    </div>
+</body>
+
+<script>
+    $("#tracker-width").val(config.get("tracker-width"));
+    $("#tracker-x").val(config.get("tracker-x"));
+    $("#tracker-y").val(config.get("tracker-y"));
+    $("#tracker-opacity").val(config.get("tracker-opacity"));
+    $('#tracker-ignore-mouse-events').prop('checked', config.get("tracker-ignore-mouse-events"));
+    $('#tracker-disabled').prop('checked', config.get("tracker-disabled"));
+
+    $('#save').click(function() {
+        config.set("tracker-width", parseInt($("#tracker-width").val()));
+        config.set("tracker-x", parseInt($("#tracker-x").val()));
+        config.set("tracker-y", parseInt($("#tracker-y").val()));
+        config.set("tracker-opacity", parseFloat($("#tracker-opacity").val()));
+        config.set("tracker-ignore-mouse-events", $('#tracker-disabled').is(':checked'));
+        config.set("tracker-disabled", $('#tracker-disabled').is(':checked'));
+    })
+</script>

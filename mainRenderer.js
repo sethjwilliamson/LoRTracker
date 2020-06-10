@@ -1,6 +1,7 @@
 const {ipcRenderer, remote} = require('electron');
 const createCanvas = require('./createCanvas.js');
 const Store = require('electron-store');
+const config = new Store();
 const data = new Store({name:"data"});
 const log = require("electron-log");
 log.catchErrors();
@@ -28,6 +29,10 @@ $(".font-loader").each(function() {
 ipcRenderer.on('message', function (event, text) {
     alert('Message from updater: ' +  text);
 });
+
+ipcRenderer.on('modal', function (event) {
+    $("#myModal").modal();
+})
 
 loadMatches();
 loadMatch(games[0])
@@ -226,7 +231,7 @@ function loadDecks() {
     if (decks.length == 0) {
         $("#historyWindow").html("<li class='h4 text-center'>Decks will be listed here.</li>")
     }
-    
+
     if (start >= decks.length) {
         return;
     }
@@ -794,3 +799,13 @@ $('#historyWindow').on('scroll', function() {
         }
     }
 })
+
+//$(function() {
+//        
+//    $('.list-group-item').on('click', function() {
+//      $('.glyphicon', this)
+//        .toggleClass('glyphicon-chevron-right')
+//        .toggleClass('glyphicon-chevron-down');
+//    });
+//  
+//  });

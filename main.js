@@ -108,10 +108,7 @@ function createWindow () {
       label: 'Menu',
       submenu: [
           {label:'Config', click() {
-            config.openInEditor();
-          }},
-          {label:'Set Hotkey', click() {
-            mainWindow.loadFile("hotkeySettings.html")
+            mainWindow.webContents.send('modal');
           }},
           {label:'Exit', click() {
             app.isQuiting = true;
@@ -415,7 +412,6 @@ function createWindow () {
 
   ipcMain.on('hotkeySet', (event) => {
     registerHotkeys();
-    mainWindow.loadFile('main.html');
   });
 
   registerHotkeys();
@@ -435,6 +431,8 @@ app.on('activate', function () {
 })
 
 function registerHotkeys() {
+  globalShortcut.unregisterAll();
+
   globalShortcut.register(config.get("hotkey"), () => {
     if (trackerWindow.isVisible()) {
       trackerWindow.hide();

@@ -1,0 +1,96 @@
+
+<body>
+    <h2>Graveyard</h2>
+    <div>
+        <table class="table" style="margin-bottom: 0;">
+            <tbody>
+            <tr>
+                <th scope="row"><h5 class="no-margin">Size</h4></th>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row" style="padding-left: 40px;">Width</th>
+                <td>
+                <input type="text" class="form-control" id="graveyard-width">
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" style="padding-left: 40px;">Height</th>
+                <td>
+                <input type="text" class="form-control" id="graveyard-height">
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><h5 class="no-margin">Position</h4></th>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row" style="padding-left: 40px;">Horizontal (X)</th>
+                <td>
+                    <input type="text" class="form-control" id="graveyard-x">
+
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" style="padding-left: 40px;">Vertical (Y)</th>
+                <td>
+                    <input type="text" class="form-control" id="graveyard-y">
+
+                </td>
+            </tr>          
+            <tr>
+                <th scope="row"><h5 class="no-margin">Misc.</h4></th>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row" style="padding-left: 40px;">Opacity</th>
+                <td>
+                    <input type="text" class="form-control" id="graveyard-opacity">
+
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" style="padding-left: 60px;">
+                    <input type="checkbox" class="form-check-input" id="graveyard-ignore-mouse-events">
+                    <label class="form-check-label" for="graveyard-ignore-mouse-events">Ignore Mouse Events</label>
+                </th>
+                <td>
+
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" style="padding-left: 60px;">
+                    <input type="checkbox" class="form-check-input" id="graveyard-disabled">
+                    <label class="form-check-label" for="graveyard-disabled">Disable</label>
+                </th>
+                <td>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="d-flex">
+            <a id="save" class="ml-auto btn btn-primary" href="#" role="button">Save</a>
+        </div>
+    </div>
+</body>
+
+<script>
+    $("#graveyard-width").val(config.get("graveyard-width"));
+    $("#graveyard-height").val(config.get("graveyard-height"));
+    $("#graveyard-x").val(config.get("graveyard-x"));
+    $("#graveyard-y").val(config.get("graveyard-y"));
+    $("#graveyard-opacity").val(config.get("graveyard-opacity"));
+    $('#graveyard-ignore-mouse-events').prop('checked', config.get("graveyard-ignore-mouse-events"));
+    $('#graveyard-disabled').prop('checked', config.get("graveyard-disabled"));
+
+    $('#save').click(function() {
+        config.set("graveyard-width", parseInt($("#graveyard-width").val()));
+        config.set("graveyard-height", parseInt($("#graveyard-height").val()));
+        config.set("graveyard-x", parseInt($("#graveyard-x").val()));
+        config.set("graveyard-y", parseInt($("#graveyard-y").val()));
+        config.set("graveyard-opacity", parseFloat($("#graveyard-opacity").val()));
+        config.set("graveyard-ignore-mouse-events", $('#graveyard-disabled').is(':checked'));
+        config.set("graveyard-disabled", $('#graveyard-disabled').is(':checked'));
+    })
+</script>

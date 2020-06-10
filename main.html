@@ -11,29 +11,58 @@
     <p class="font-loader" style="font-family: BeaufortforLOL-Regular;">. </p>
     <p class="font-loader" style="font-family: Univers;">. </p>
     <p class="font-loader" style="font-family: Univers-Cond;">. </p>
-
-
     <div class="row border-top no-margin full">
-        <div class="history-tab flex-2 full-height">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item" style="width:50%">
-                <a class="nav-link active" id="matches-tab" data-toggle="tab" href="#" role="tab" aria-controls="matches" aria-selected="true" onclick="matchesPressed()">Matches</a>
-                </li>
-                <li class="nav-item" style="width:50%">
-                <a class="nav-link" id="decks-tab" data-toggle="tab" href="#" role="tab" aria-controls="decks" aria-selected="false" onclick="decksPressed()">Decks</a>
-                </li>
-            </ul>
-            <ul class="list-group list-group-flush flex-2-child" id="historyWindow" style="overflow-y: auto;">
-                
-            </ul>
-        </div>
-        <div class="col border-left no-padding">
-            <div class="row flex-grow-1 no-margin full" id="detailsWindow">
-                <div class="col flex-column full-height">
-                    
+      <div class="modal left fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <!--<div class="modal-header">
+              <h4 class="modal-title" id="myModalLabel">Config</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>-->
+            <div class="modal-body">
+              <div class="d-flex full-height">
+                <div class="list-group list-group-root card" style="width:150px">
+                  <a href="#item-1" class="list-group-item" data-toggle="collapse">
+                  Windows
+                  </a>
+                  <div class="list-group collapse" id="item-1">
+                    <a href="#" class="list-group-item" onclick="$('#configContent').load('config-tracker.html')">Tracker</a>
+                    <a href="#" class="list-group-item" onclick="$('#configContent').load('config-opponent.html')">Opponent Deck</a>
+                    <a href="#" class="list-group-item" onclick="$('#configContent').load('config-graveyard.html')">Graveyard</a>
+                  </div>
+                  <a href="#" class="list-group-item" onclick="$('#configContent').load('config-cards.html')">Cards</a>
+                  <a href="#" class="list-group-item" onclick="$('#configContent').load('config-preferences.html')">Preferences</a>
                 </div>
+
+                <div id="configContent" class="flex-grow-1" style="margin-left: 15px; ">
+
+                </div>
+              </div>
             </div>
+          </div>
+          <!-- modal-content -->
         </div>
+        <!-- modal-dialog -->
+      </div>
+      <!-- modal -->
+      <div class="history-tab flex-2 full-height">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item" style="width:50%">
+            <a class="nav-link active" id="matches-tab" data-toggle="tab" href="#" role="tab" aria-controls="matches" aria-selected="true" onclick="matchesPressed()">Matches</a>
+          </li>
+          <li class="nav-item" style="width:50%">
+            <a class="nav-link" id="decks-tab" data-toggle="tab" href="#" role="tab" aria-controls="decks" aria-selected="false" onclick="decksPressed()">Decks</a>
+          </li>
+        </ul>
+        <ul class="list-group list-group-flush flex-2-child" id="historyWindow" style="overflow-y: auto;">
+        </ul>
+      </div>
+      <div class="col border-left no-padding">
+        <div class="row flex-grow-1 no-margin full" id="detailsWindow">
+          <div class="col flex-column full-height">
+          </div>
+        </div>
+      </div>
     </div>
   </body>
   <script src="mainRenderer.js"></script>

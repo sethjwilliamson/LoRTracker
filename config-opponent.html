@@ -1,0 +1,96 @@
+
+<body>
+    <h2>Opponent Deck</h2>
+    <div>
+        <table class="table" style="margin-bottom: 0;">
+            <tbody>
+            <tr>
+                <th scope="row"><h5 class="no-margin">Size</h4></th>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row" style="padding-left: 40px;">Width</th>
+                <td>
+                <input type="text" class="form-control" id="opponent-deck-width">
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" style="padding-left: 40px;">Height</th>
+                <td>
+                <input type="text" class="form-control" id="opponent-deck-height">
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><h5 class="no-margin">Position</h4></th>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row" style="padding-left: 40px;">Horizontal (X)</th>
+                <td>
+                    <input type="text" class="form-control" id="opponent-deck-x">
+
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" style="padding-left: 40px;">Vertical (Y)</th>
+                <td>
+                    <input type="text" class="form-control" id="opponent-deck-y">
+
+                </td>
+            </tr>          
+            <tr>
+                <th scope="row"><h5 class="no-margin">Misc</h4></th>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row" style="padding-left: 40px;">Opacity</th>
+                <td>
+                    <input type="text" class="form-control" id="opponent-deck-opacity">
+
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" style="padding-left: 60px;">
+                    <input type="checkbox" class="form-check-input" id="opponent-deck-ignore-mouse-events">
+                    <label class="form-check-label" for="opponent-deck-ignore-mouse-events">Ignore Mouse Events</label>
+                </th>
+                <td>
+
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" style="padding-left: 60px;">
+                    <input type="checkbox" class="form-check-input" id="opponent-deck-disabled">
+                    <label class="form-check-label" for="opponent-deck-disabled">Disable</label>
+                </th>
+                <td>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="d-flex">
+            <a id="save" class="ml-auto btn btn-primary" href="#" role="button">Save</a>
+        </div>
+    </div>
+</body>
+
+<script>
+    $("#opponent-deck-width").val(config.get("opponent-deck-width"));
+    $("#opponent-deck-height").val(config.get("opponent-deck-height"));
+    $("#opponent-deck-x").val(config.get("opponent-deck-x"));
+    $("#opponent-deck-y").val(config.get("opponent-deck-y"));
+    $("#opponent-deck-opacity").val(config.get("opponent-deck-opacity"));
+    $('#opponent-deck-ignore-mouse-events').prop('checked', config.get("opponent-deck-ignore-mouse-events"));
+    $('#opponent-deck-disabled').prop('checked', config.get("opponent-deck-disabled"));
+
+    $('#save').click(function() {
+        config.set("opponent-deck-width", parseInt($("#opponent-deck-width").val()));
+        config.set("opponent-deck-height", parseInt($("#opponent-deck-height").val()));
+        config.set("opponent-deck-x", parseInt($("#opponent-deck-x").val()));
+        config.set("opponent-deck-y", parseInt($("#opponent-deck-y").val()));
+        config.set("opponent-deck-opacity", parseFloat($("#opponent-deck-opacity").val()));
+        config.set("opponent-deck-ignore-mouse-events", $('#opponent-deck-disabled').is(':checked'));
+        config.set("opponent-deck-disabled", $('#opponent-deck-disabled').is(':checked'));
+    })
+</script>

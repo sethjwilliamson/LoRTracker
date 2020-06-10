@@ -1,0 +1,30 @@
+
+<body>
+    <h2>Cards</h2>
+    <div>
+        <table class="table" style="margin-bottom: 0;">
+            <tbody>
+            <tr>
+                <th scope="row"><h5 class="no-margin">Misc.</h4></th>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row" style="padding-left: 40px;">Opacity</th>
+                <td>
+                <input type="text" class="form-control" id="card-opacity">
+                </td>
+            </tr>
+        </table>
+        <div class="d-flex">
+            <a id="save" class="ml-auto btn btn-primary" href="#" role="button">Save</a>
+        </div>
+    </div>
+</body>
+
+<script>
+    $("#card-opacity").val(config.get("card-opacity"));
+
+    $('#save').click(function() {
+        config.set("card-opacity", parseFloat($("#card-opacity").val()));
+    })
+</script>
