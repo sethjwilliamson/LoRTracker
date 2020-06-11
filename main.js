@@ -54,7 +54,7 @@ autoUpdater.on('error', err => {
 });
 autoUpdater.on('download-progress', progressObj => {
   sendStatusToWindow(
-    `Download speed: ${progressObj.bytesPerSecond} - Downloaded ${progressObj.percent}% (${progressObj.transferred} + '/' + ${progressObj.total} + )`, false
+    `Download speed: ${progressObj.bytesPerSecond}\nDownloaded ${progressObj.percent}%\n(${progressObj.transferred} / ${progressObj.total})`, true
   );
 });
 autoUpdater.on('update-downloaded', info => {
@@ -414,6 +414,10 @@ function createWindow () {
     registerHotkeys();
   });
 
+  ipcMain.on("update", (event) => {
+    autoUpdater.checkForUpdates();
+  });
+
   registerHotkeys();
 
   autoUpdater.checkForUpdates();
@@ -446,11 +450,15 @@ function registerHotkeys() {
     }
   })
 }
-
-const sendStatusToWindow = (text, alert) => {
+//var firstRun = true;
+const sendStatusToWindow = (text, important) => {
   log.info(text);
-  if (mainWindow && alert) {
-    mainWindow.webContents.send('message', text);
+  if (mainWindow) {
+    mainWindow.webContents.send('message', text, important, app.getVersion());
+    //firstRun = false;
+  }
+  else {
+    log.log("Skipped Status to Window")
   }
 };
 

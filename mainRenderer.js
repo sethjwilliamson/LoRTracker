@@ -6,6 +6,9 @@ const data = new Store({name:"data"});
 const log = require("electron-log");
 log.catchErrors();
 
+var updateMessage = "";
+var version = "";
+
 var start = 0;
 var load = 10;
 
@@ -26,8 +29,14 @@ $(".font-loader").each(function() {
     this.remove();
 })
 
-ipcRenderer.on('message', function (event, text) {
-    alert('Message from updater: ' +  text);
+ipcRenderer.on('message', function (event, text, important, version2) {
+    updateMessage = text;
+    version = version2;
+    if (important) {
+        $("#myModal").modal();
+        $('#configContent').load("config-update.html");
+    }
+    //alert('Message from updater: ' +  text);
 });
 
 ipcRenderer.on('modal', function (event) {

@@ -1,0 +1,47 @@
+<body>
+    <div>
+        <div class="row justify-content-center">
+            <p id="versionContent"></p>
+        </div>
+        <div class="row justify-content-center">
+            <button id="updateButton" type="button" class="btn btn-primary" onclick="updatePressed()" disabled>Check for Update</button>
+        </div>
+        <div class="row justify-content-center">
+            <p id="updateContent"></p>
+        </div>
+    </div>
+</body>
+<script>
+    //checkUpdateMessage();
+    var updating;
+    checkUpdate();
+    function checkUpdate() {
+        $("#versionContent").text("v" + version);
+        updating = setInterval(function() {checkUpdateMessage()}, 500);
+    }
+
+    function checkUpdateMessage() {
+        log.log(updating);
+        if (updateMessage.startsWith("Update not available")) {
+
+            $("#updateContent").text("Up to date!");
+            
+            clearInterval(updating);
+            
+            $("#updateButton").prop("disabled", false);
+            return;
+        }
+        else {
+            $("#updateContent").text(updateMessage);
+        }
+    }
+
+    function updatePressed() {
+        ipcRenderer.send('update');
+        updateMessage = 'Checking for update...';
+        
+        $("#updateContent").text(updateMessage);
+        $("#updateButton").prop("disabled", true);
+        checkUpdate();
+    }
+</script>
