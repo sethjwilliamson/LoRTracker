@@ -6,6 +6,25 @@ const data = new Store({name:"data"});
 const log = require("electron-log");
 log.catchErrors();
 
+const Darkmode = require('darkmode-js');
+
+var options = {
+    bottom: '64px', // default: '32px'
+    right: 'unset', // default: '32px'
+    left: '32px', // default: 'unset'
+    time: '0.5s', // default: '0.3s'
+    mixColor: '#E5E5E5', // default: '#fff'
+    backgroundColor: '#fff',  // default: '#fff'
+    buttonColorDark: '#100f2c',  // default: '#100f2c'
+    buttonColorLight: '#fff', // default: '#fff'
+    saveInCookies: false, // default: true,
+    label: '', // default: ''
+    autoMatchOsTheme: true // default: true
+  }
+  
+const darkmode = new Darkmode(options);
+darkmode.showWidget();
+
 var updateMessage = "";
 var version = "";
 
@@ -504,7 +523,7 @@ function loadDeck(deck) {
                     <p class="no-margin font-weight-bold">Your Cards</p>
                     <a href="#"><img src="node_modules/open-iconic/svg/share-boxed.svg" id="copyDeck" style="width: 24px;"></a>
                 </div>
-                <div id="cardContents" flex-2-child" style="overflow: auto;">
+                <div id="cardContents" class="cardContent" style="overflow: auto;">
 
                 </div>
             </div>
@@ -677,7 +696,7 @@ function loadMatch(game) {
                     <p class="no-margin font-weight-bold">Your Cards</p>
                     <a href="#"><img src="node_modules/open-iconic/svg/share-boxed.svg" id="copyDeck" style="width: 24px;"></a>
                 </div>
-                <div id="yourCardContents" flex-2-child" style="overflow: auto;">
+                <div id="yourCardContents" class="cardContent" style="overflow: auto;">
 
                 </div>
             </div>
@@ -685,7 +704,7 @@ function loadMatch(game) {
                 <div class="card-heading">
                 <p class="no-margin font-weight-bold">Opponent Cards</p>
                 </div>
-                <div id="oppCardContents" flex-2-child" style="overflow: auto; height:100%">
+                <div id="oppCardContents" class="cardContent" style="overflow: auto; height:100%">
 
                 </div>
             </div>
