@@ -244,7 +244,7 @@ function createWindow () {
   graveyardWindow.accessibleTitle = "graveyard";
 
   graveyardWindow.loadFile('graveyard.html');
-  graveyardWindow.webContents.openDevTools();
+  //graveyardWindow.webContents.openDevTools();
 
   graveyardWindow.webContents.on('did-finish-load', () => {
     graveyardWindow.setVisibleOnAllWorkspaces(true);
