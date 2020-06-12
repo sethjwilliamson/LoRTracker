@@ -44,6 +44,7 @@
         config.set("hotkey", $("#hotkey").val());
         
         require("electron").ipcRenderer.send('hotkeySet');
+        require("electron").ipcRenderer.send('saveUpdate');
     })
 
     function keyUp(event) {

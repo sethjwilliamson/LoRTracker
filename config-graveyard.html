@@ -92,5 +92,6 @@
         config.set("graveyard-opacity", parseFloat($("#graveyard-opacity").val()));
         config.set("graveyard-ignore-mouse-events", $('#graveyard-disabled').is(':checked'));
         config.set("graveyard-disabled", $('#graveyard-disabled').is(':checked'));
+        require("electron").ipcRenderer.send('saveUpdate');
     })
 </script>

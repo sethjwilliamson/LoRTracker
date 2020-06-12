@@ -14,6 +14,7 @@
                 <input type="text" class="form-control" id="card-opacity">
                 </td>
             </tr>
+            
         </table>
         <div class="d-flex">
             <a id="save" class="ml-auto btn btn-primary" href="#" role="button">Save</a>
@@ -26,5 +27,6 @@
 
     $('#save').click(function() {
         config.set("card-opacity", parseFloat($("#card-opacity").val()));
+        require("electron").ipcRenderer.send('saveUpdate');
     })
 </script>

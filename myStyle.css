@@ -19,10 +19,14 @@
 }
 
 .btn-lor {
+    text-align: center;
+    vertical-align: middle;
     color:#C6B7A0;
     padding: 6px;
     margin-bottom: 0;
     font-family: "Univers-Cond";
+
+    cursor: pointer;
   }
   .btn-lor-left {
     background-image: url("buttons/button-left-unselected.png");

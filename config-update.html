@@ -9,6 +9,12 @@
         <div class="row justify-content-center">
             <p id="updateContent"></p>
         </div>
+        <div id="progress" class="progress" style="display: none;">
+            <div id="progressBar" class="progress-bar" role="progressbar" style="width: 1%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div class="row justify-content-center">
+            <p id="updateContent2"></p>
+        </div>
     </div>
 </body>
 <script>
@@ -21,7 +27,6 @@
     }
 
     function checkUpdateMessage() {
-        log.log(updating);
         if (updateMessage.startsWith("Update not available")) {
 
             $("#updateContent").text("Up to date!");
@@ -30,6 +35,13 @@
             
             $("#updateButton").prop("disabled", false);
             return;
+        }
+        else if (updateMessage.startsWith("Download speed")) {
+            let downloadArr = updateMessage.split("|");
+            $("#updateContent").text(downloadArr[0]);
+            $("#progress").css("display", "");
+            $("#progressBar").css("width", parseInt(downloadArr[1]) + "%").attr("aria-valuenow", parseInt(downloadArr[1]));
+            $("#updateContent2").text(downloadArr[2] + " / " + downloadArr[3]);
         }
         else {
             $("#updateContent").text(updateMessage);

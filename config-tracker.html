@@ -84,5 +84,6 @@
         config.set("tracker-opacity", parseFloat($("#tracker-opacity").val()));
         config.set("tracker-ignore-mouse-events", $('#tracker-disabled').is(':checked'));
         config.set("tracker-disabled", $('#tracker-disabled').is(':checked'));
+        require("electron").ipcRenderer.send('saveUpdate');
     })
 </script>

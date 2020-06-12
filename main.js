@@ -40,6 +40,8 @@ const data = new Store({
 
 const { autoUpdater } = require("electron-updater");
 
+var firstRun = true;
+
 autoUpdater.on('checking-for-update', () => {
   sendStatusToWindow('Checking for update...', false);
 });
@@ -54,7 +56,7 @@ autoUpdater.on('error', err => {
 });
 autoUpdater.on('download-progress', progressObj => {
   sendStatusToWindow(
-    `Download speed: ${progressObj.bytesPerSecond}\nDownloaded ${progressObj.percent}%\n(${progressObj.transferred} / ${progressObj.total})`, true
+    `Download speed: ${parseInt(progressObj.bytesPerSecond / 1000)} kB/s|${progressObj.percent}|${parseInt(progressObj.transferred / 1000)} kB|${parseInt(progressObj.total / 1000)} kB`, true
   );
 });
 autoUpdater.on('update-downloaded', info => {
@@ -242,6 +244,7 @@ function createWindow () {
   graveyardWindow.accessibleTitle = "graveyard";
 
   graveyardWindow.loadFile('graveyard.html');
+  graveyardWindow.webContents.openDevTools();
 
   graveyardWindow.webContents.on('did-finish-load', () => {
     graveyardWindow.setVisibleOnAllWorkspaces(true);
@@ -418,6 +421,29 @@ function createWindow () {
     autoUpdater.checkForUpdates();
   });
 
+  ipcMain.on("saveUpdate", (event) => {
+    trackerWindow.setPosition(config.get("tracker-x"), config.get("tracker-y"));
+    trackerWindow.setSize(config.get("tracker-width"), config.get("tracker-height"));
+    trackerWindow.setIgnoreMouseEvents(config.get("tracker-ignore-mouse-events"));
+    if (config.get("tracker-disabled")) {
+      trackerWindow.hide();
+    }
+
+    graveyardWindow.setPosition(config.get("graveyard-x"), config.get("graveyard-y"))
+    graveyardWindow.setSize(config.get("graveyard-width"), config.get("graveyard-height"));
+    graveyardWindow.setIgnoreMouseEvents(config.get("graveyard-ignore-mouse-events"));
+    if (config.get("graveyard-disabled")) {
+      graveyardWindow.hide();
+    }
+
+    oppDeckWindow.setPosition(config.get("opponent-deck-x"), config.get("opponent-deck-y"))
+    oppDeckWindow.setSize(config.get("opponent-deck-width"), config.get("opponent-deck-height"));
+    oppDeckWindow.setIgnoreMouseEvents(config.get("opponent-deck-ignore-mouse-events"));
+    if (config.get("opponent-deck-disabled")) {
+      oppDeckWindow.hide();
+    }
+  });
+
   registerHotkeys();
 
   autoUpdater.checkForUpdates();
@@ -440,25 +466,40 @@ function registerHotkeys() {
   globalShortcut.register(config.get("hotkey"), () => {
     if (trackerWindow.isVisible()) {
       trackerWindow.hide();
+    }
+    else {
+      if (!config.get("tracker-disabled")) {
+        trackerWindow.show();
+      }
+    }
+    
+    if (graveyardWindow.isVisible()) {
       graveyardWindow.hide();
+    }
+    else {
+      if (!config.get("graveyard-disabled")) {
+        graveyardWindow.show();
+      }
+    }
+    
+    if (oppDeckWindow.isVisible()) {
       oppDeckWindow.hide();
     }
     else {
-      trackerWindow.show();
-      graveyardWindow.show();
-      oppDeckWindow.show();
+      if (!config.get("opponent-deck-disabled")) {
+        oppDeckWindow.show();
+      }
     }
   })
 }
-//var firstRun = true;
+
 const sendStatusToWindow = (text, important) => {
   log.info(text);
   if (mainWindow) {
-    mainWindow.webContents.send('message', text, important, app.getVersion());
-    //firstRun = false;
-  }
-  else {
-    log.log("Skipped Status to Window")
+    mainWindow.webContents.send('message', text, important, app.getVersion(), firstRun);
+    if (!text.startsWith("Checking for update")) {
+      firstRun = false;
+    }
   }
 };
 

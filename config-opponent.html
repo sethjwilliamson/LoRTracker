@@ -92,5 +92,6 @@
         config.set("opponent-deck-opacity", parseFloat($("#opponent-deck-opacity").val()));
         config.set("opponent-deck-ignore-mouse-events", $('#opponent-deck-disabled').is(':checked'));
         config.set("opponent-deck-disabled", $('#opponent-deck-disabled').is(':checked'));
+        require("electron").ipcRenderer.send('saveUpdate');
     })
 </script>

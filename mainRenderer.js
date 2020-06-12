@@ -29,14 +29,13 @@ $(".font-loader").each(function() {
     this.remove();
 })
 
-ipcRenderer.on('message', function (event, text, important, version2) {
+ipcRenderer.on('message', function (event, text, important, version2, firstRun) {
     updateMessage = text;
     version = version2;
-    if (important) {
+    if (important && firstRun) {
         $("#myModal").modal();
         $('#configContent').load("config-update.html");
     }
-    //alert('Message from updater: ' +  text);
 });
 
 ipcRenderer.on('modal', function (event) {
