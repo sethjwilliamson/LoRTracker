@@ -27,7 +27,8 @@ const config = new Store({
     "graveyard-disabled": false,
     "card-opacity": 0.75,
     "record-ai-games": false,
-    "hotkey": "Control+Shift+D"
+    "hotkey": "Control+Shift+D",
+    "dark-mode": true
   }
 });
 const data = new Store({
@@ -142,7 +143,7 @@ function createWindow () {
       nodeIntegration:true
     }
   })
-  //mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
   mainWindow.loadFile("main.html");
   
   mainWindow.on('close', function (event) {

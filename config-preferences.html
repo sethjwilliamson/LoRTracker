@@ -18,6 +18,15 @@
                     </td>
                 </tr>
                 <tr>
+                    <th scope="row" style="padding-left: 60px;">
+                        <input type="checkbox" class="form-check-input" id="dark-mode">
+                        <label class="form-check-label" for="dark-mode">Dark Mode</label>
+                    </th>
+                    <td>
+    
+                    </td>
+                </tr>
+                <tr>
                     <th scope="row"><h5 class="no-margin">Hotkey</h4></th>
                     <td></td>
                 </tr>
@@ -36,15 +45,30 @@
 
 <script>
     $('#record-ai-games').prop('checked', config.get("record-ai-games"));
+    $('#dark-mode').prop('checked', config.get("dark-mode"));
     $("#hotkey").val(config.get("hotkey"));
 
     $('#save').click(function() {
         config.set("record-ai-games", $('#record-ai-games').is(':checked'));
+        config.set("dark-mode", $('#dark-mode').is(':checked'));
         
         config.set("hotkey", $("#hotkey").val());
         
         require("electron").ipcRenderer.send('hotkeySet');
         require("electron").ipcRenderer.send('saveUpdate');
+
+        if (darkmode.isActivated()) {
+            if (config.get("dark-mode")) {
+                darkmode.toggle();
+            }
+        }
+        else {
+            if (!config.get("dark-mode")) {
+                darkmode.toggle();
+            }
+        }
+
+        darkmode.toggle("123", config.get("dark-mode"));
     })
 
     function keyUp(event) {

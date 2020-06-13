@@ -23,7 +23,10 @@ var options = {
   }
   
 const darkmode = new Darkmode(options);
-darkmode.showWidget();
+
+if (config.get("dark-mode")) {
+    darkmode.toggle();
+}
 
 var updateMessage = "";
 var version = "";
