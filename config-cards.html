@@ -14,6 +14,21 @@
                 <input type="text" class="form-control" id="card-opacity">
                 </td>
             </tr>
+            <tr>
+                <th scope="row" style="padding-left: 40px;">Margin</th>
+                <td>
+                <input type="text" class="form-control" id="margin">
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" style="padding-left: 60px;">
+                    <input type="checkbox" class="form-check-input" id="swap-increment">
+                    <label class="form-check-label" for="swap-increment">Swap Increment and Decrement</label>
+                </th>
+                <td>
+
+                </td>
+            </tr>
             
         </table>
         <div class="d-flex">
@@ -24,9 +39,13 @@
 
 <script>
     $("#card-opacity").val(config.get("card-opacity"));
+    $("#margin").val(config.get("margin"));
+    $('#swap-increment').prop('checked', config.get("swap-increment"));
 
     $('#save').click(function() {
         config.set("card-opacity", parseFloat($("#card-opacity").val()));
+        config.set("margin", parseFloat($("#margin").val()));
+        config.set("swap-increment", $('#swap-increment').is(':checked'));
         require("electron").ipcRenderer.send('saveUpdate');
     })
 </script>

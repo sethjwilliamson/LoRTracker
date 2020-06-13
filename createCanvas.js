@@ -11,7 +11,7 @@ var regionColors = {
     "Bilgewater": "#FD9061"
 
 };
-var margin = 3;
+var margin = config.get("margin");
 
 function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
     if (typeof stroke === 'undefined') {
@@ -51,6 +51,7 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
 
 module.exports = {
     render: function (cardArr, div) {
+        margin = config.get("margin")
     
       div.html("");
 
@@ -122,7 +123,7 @@ module.exports = {
 
         cCard.addEventListener('click', function(event) {
             console.log(remote.getCurrentWindow().accessibleTitle);
-            if (event.x < $(document).width() / 720 * 620) {
+            if (event.x < $(document).width() / 720 * 620 ^ config.get("swap-increment")) {
                 if (remote.getCurrentWindow().accessibleTitle === "tracker") {
                     updateCard(element.cardCode, element.type === "Unit", -1)
                 }

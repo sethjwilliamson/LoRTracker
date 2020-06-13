@@ -29,7 +29,9 @@ const config = new Store({
     "record-ai-games": false,
     "hotkey": "Control+Shift+D",
     "dark-mode": true,
-    "exit-on-close": false
+    "exit-on-close": false,
+    "margin": 3,
+    "swap-increment": false
   }
 });
 const data = new Store({
