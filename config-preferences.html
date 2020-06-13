@@ -27,6 +27,15 @@
                     </td>
                 </tr>
                 <tr>
+                    <th scope="row" style="padding-left: 60px;">
+                        <input type="checkbox" class="form-check-input" id="exit-on-close">
+                        <label class="form-check-label" for="exit-on-close">Exit on Close</label>
+                    </th>
+                    <td>
+    
+                    </td>
+                </tr>
+                <tr>
                     <th scope="row"><h5 class="no-margin">Hotkey</h4></th>
                     <td></td>
                 </tr>
@@ -46,11 +55,13 @@
 <script>
     $('#record-ai-games').prop('checked', config.get("record-ai-games"));
     $('#dark-mode').prop('checked', config.get("dark-mode"));
+    $('#exit-on-close').prop('checked', config.get("exit-on-close"));
     $("#hotkey").val(config.get("hotkey"));
 
     $('#save').click(function() {
         config.set("record-ai-games", $('#record-ai-games').is(':checked'));
         config.set("dark-mode", $('#dark-mode').is(':checked'));
+        config.set("exit-on-close", $('#exit-on-close').is(':checked'));
         
         config.set("hotkey", $("#hotkey").val());
         

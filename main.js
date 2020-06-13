@@ -28,7 +28,8 @@ const config = new Store({
     "card-opacity": 0.75,
     "record-ai-games": false,
     "hotkey": "Control+Shift+D",
-    "dark-mode": true
+    "dark-mode": true,
+    "exit-on-close": false
   }
 });
 const data = new Store({
@@ -172,9 +173,15 @@ function createWindow () {
   mainWindow.loadFile("main.html");
   
   mainWindow.on('close', function (event) {
-    if(!app.isQuiting){
-        event.preventDefault();
-        mainWindow.hide();
+    if (config.get("exit-on-close")) {
+      app.isQuiting = true;
+      app.quit();
+    }
+    else {
+      if(!app.isQuiting){
+          event.preventDefault();
+          mainWindow.hide();
+      }
     }
 
     return false;
