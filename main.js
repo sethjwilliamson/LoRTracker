@@ -29,9 +29,10 @@ const config = new Store({
     "record-ai-games": false,
     "hotkey": "Control+Shift+D",
     "dark-mode": true,
-    "exit-on-close": false,
+    "exit-on-close": true,
     "margin": 3,
-    "swap-increment": false
+    "swap-increment": false,
+    "preview-width": 340
   }
 });
 const data = new Store({
@@ -171,7 +172,7 @@ function createWindow () {
       nodeIntegration:true
     }
   })
-  mainWindow.webContents.openDevTools()
+  //mainWindow.webContents.openDevTools()
   mainWindow.loadFile("main.html");
   
   mainWindow.on('close', function (event) {
@@ -238,8 +239,8 @@ function createWindow () {
   });
   
   fullCardWindow = new BrowserWindow({
-    width:340,
-    height:512,
+    width:config.get("preview-width"),
+    height:parseInt(config.get("preview-width") * 512 / 340),
     maximizable:false,
     transparent:true,
     skipTaskbar:true,
@@ -388,6 +389,7 @@ function createWindow () {
     let windowPosition;
     let windowSize;
     let windowY;
+    let fullSize = fullCardWindow.getSize();
 
     switch (window) {
       case "tracker":
@@ -409,18 +411,18 @@ function createWindow () {
         break;
     }
 
-    if (windowPosition[1] - 256 + y < 0) {
+    if (windowPosition[1] - (fullSize[1] / 2) + y < 0) {
       windowY = 0;
     } 
-    else if (windowPosition[1] + 256 + y > screen.getPrimaryDisplay().workAreaSize.height) {
-      windowY = screen.getPrimaryDisplay().workAreaSize.height - 512;
+    else if (windowPosition[1] + (fullSize[1] / 2) + y > screen.getPrimaryDisplay().workAreaSize.height) {
+      windowY = parseInt(screen.getPrimaryDisplay().workAreaSize.height - fullSize[1]);
     } 
     else {
-      windowY = windowPosition[1] - 256 + y;
+      windowY = parseInt(windowPosition[1] - (fullSize[1] / 2) + y);
     }
 
     if (windowPosition[0] > screen.getPrimaryDisplay().workAreaSize.width / 2 || window === "main") { // config
-      fullCardWindow.setPosition(windowPosition[0] - 340, windowY); 
+      fullCardWindow.setPosition(windowPosition[0] - fullSize[0], windowY); 
     }
     else {
       fullCardWindow.setPosition(windowPosition[0] + windowSize[0], windowY); 
@@ -477,6 +479,9 @@ function createWindow () {
     if (config.get("opponent-deck-disabled")) {
       oppDeckWindow.hide();
     }
+
+    fullCardWindow.setSize(config.get("preview-width"), parseInt(config.get("preview-width") * 512 / 340));
+
   });
 
   registerHotkeys();
