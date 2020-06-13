@@ -368,18 +368,18 @@
     z-index: 503;
   }
 
-  .darkmode--activated > div > div > #historyWindow > .win {
+  .darkmode--activated > div > div > div > #historyWindow > .win {
     background-color: #F4C7C3;
   }
 
-  .darkmode--activated > div > div > #historyWindow > .loss {
+  .darkmode--activated > div > div > div > #historyWindow > .loss {
     background-color: #B7E1CD;
   }
 
-  .darkmode--activated > div > div > div > div > div > div > #gamesList > .win {
+  .darkmode--activated > div > div > div > div > div > div > div > #gamesList > .win {
     background-color: #F4C7C3;
   }
 
-  .darkmode--activated > div > div > div > div > div > div > #gamesList > .loss {
+  .darkmode--activated > div > div > div > div > div > div > div > #gamesList > .loss {
     background-color: #B7E1CD;
   }

@@ -6,14 +6,14 @@
     <script>require('popper.js');</script>
     <script>require('bootstrap');</script>
   </head>
-  <body>
+  <body class="full">
     <p class="font-loader" style="font-family: BeaufortforLOL-Bold;">. </p>
     <p class="font-loader" style="font-family: BeaufortforLOL-Regular;">. </p>
     <p class="font-loader" style="font-family: Univers;">. </p>
     <p class="font-loader" style="font-family: Univers-Cond;">. </p>
-    <div class="row border-top no-margin full">
-      <div class="modal left fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
+    <div class="row border-top no-margin full" >
+      <div class="modal left fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="top:30px; bottom:0px; height: calc(100% - 30px);">
+        <div class="modal-dialog" role="document" style=" height: calc(100% - 30px);">
           <div class="modal-content">
             <!--<div class="modal-header">
               <h4 class="modal-title" id="myModalLabel">Config</h4>
@@ -58,7 +58,7 @@
         <ul class="list-group list-group-flush flex-2-child" id="historyWindow" style="overflow-y: auto;">
         </ul>
       </div>
-      <div class="col border-left no-padding">
+      <div class="col border-left no-padding full-height">
         <div class="row flex-grow-1 no-margin full" id="detailsWindow">
           <div class="col flex-column full-height">
           </div>

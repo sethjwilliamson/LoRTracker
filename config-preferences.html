@@ -58,17 +58,17 @@
         require("electron").ipcRenderer.send('saveUpdate');
 
         if (darkmode.isActivated()) {
-            if (config.get("dark-mode")) {
+            if (!config.get("dark-mode")) {
                 darkmode.toggle();
+                titlebar.updateBackground(customTitlebar.Color.fromHex('#F2F2F2'));
             }
         }
         else {
-            if (!config.get("dark-mode")) {
+            if (config.get("dark-mode")) {
                 darkmode.toggle();
+                titlebar.updateBackground(customTitlebar.Color.fromHex("#3C3C3C"));
             }
         }
-
-        darkmode.toggle("123", config.get("dark-mode"));
     })
 
     function keyUp(event) {

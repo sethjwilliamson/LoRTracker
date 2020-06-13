@@ -1,4 +1,4 @@
-const {app, BrowserWindow, remote, Menu, Tray, globalShortcut} = require('electron');
+const {app, BrowserWindow, remote, Menu, Tray, globalShortcut, shell} = require('electron');
 const path = require('path');
 const {ipcMain, screen} = require('electron');
 const Store = require('electron-store');
@@ -106,20 +106,44 @@ function createWindow () {
     } }
   ]);
 
+  //let menu = Menu.buildFromTemplate([
+  //  {
+  //    label: 'Menu',
+  //    submenu: [
+  //        {label:'Config', click() {
+  //          mainWindow.webContents.send('modal');
+  //        }},
+  //        {label:'Exit', click() {
+  //          app.isQuiting = true;
+  //          app.quit();
+  //        }
+  //      }  
+  //    ]
+  //  }
+  //])
+
   let menu = Menu.buildFromTemplate([
     {
-      label: 'Menu',
-      submenu: [
-          {label:'Config', click() {
-            mainWindow.webContents.send('modal');
-          }},
-          {label:'Exit', click() {
-            app.isQuiting = true;
-            app.quit();
-          }
-        }  
-      ]
-    }
+      label:'LoR Tracker', 
+      click() {
+        // Open lor-tracker.com
+        shell.openExternal('https://lor-tracker.com');
+      }
+    },
+    {
+      label:'Options', 
+      icon: nativeImage.createFromPath("node_modules/open-iconic/svg/share-boxed.svg"),
+      click() {
+        mainWindow.webContents.send('modal');
+      }
+    },
+    {
+      label:'Discord', 
+      click() {
+        // Discord invite link
+        shell.openExternal('https://discord.gg/zDPBXUG');
+      }
+    },
   ])
   Menu.setApplicationMenu(menu);
 
@@ -137,6 +161,7 @@ function createWindow () {
     width:1200,
     minWidth: 975,
     minHeight: 600,
+    frame: false,
     icon: "icon.png",
     title: "Legends of Runeterra Deck Tracker",
     webPreferences: {

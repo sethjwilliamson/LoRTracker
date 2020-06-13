@@ -6,19 +6,23 @@ const data = new Store({name:"data"});
 const log = require("electron-log");
 log.catchErrors();
 
+
+const customTitlebar = require('custom-electron-titlebar');
+ 
+const titlebar = new customTitlebar.Titlebar({
+    backgroundColor: customTitlebar.Color.fromHex('#F2F2F2'),//'#3C3C3C'),
+    icon: "icon.png"
+});
+titlebar.updateTitle("Legends of Runeterra Deck Tracker");
+
 const Darkmode = require('darkmode-js');
 
 var options = {
-    bottom: '64px', // default: '32px'
-    right: 'unset', // default: '32px'
-    left: '32px', // default: 'unset'
-    time: '0.5s', // default: '0.3s'
     mixColor: '#E5E5E5', // default: '#fff'
     backgroundColor: '#fff',  // default: '#fff'
     buttonColorDark: '#100f2c',  // default: '#100f2c'
     buttonColorLight: '#fff', // default: '#fff'
     saveInCookies: false, // default: true,
-    label: '', // default: ''
     autoMatchOsTheme: true // default: true
   }
   
@@ -26,7 +30,9 @@ const darkmode = new Darkmode(options);
 
 if (config.get("dark-mode")) {
     darkmode.toggle();
+    titlebar.updateBackground(customTitlebar.Color.fromHex("#3C3C3C"));
 }
+
 
 var updateMessage = "";
 var version = "";
@@ -388,7 +394,7 @@ function loadDeck(deck) {
     }
 
     string += `
-    <div class="col flex-column full-height">
+    <div class="col flex-column full-height flex-column">
         <div class="row justify-content-center d-flex">
             <p class="h1" id="name">${deck.name.slice(0,14)}</p>
             <a href="#" style="position:absolute; right:10px; top:10px"><img src="node_modules/open-iconic/svg/pencil.svg" id="editName" style="width: 20px;"></a>
@@ -410,13 +416,13 @@ function loadDeck(deck) {
             </div>
         </div>
 
-        <div class="row justify-content-center" style="height: calc(100% - 56px - 56px); margin:0">
-            <div class="card" style=" overflow: auto; height: calc(100% - 20px); margin:10px; width: 90%; min-width: 400px;">
+        <div class="row justify-content-center" style="margin:0; height: calc(100% - 56px - 56px - 12px)">
+            <div class="card" style=" overflow: auto; margin:0px; width: 90%; min-width: 400px; height: 100%; border-bottom:none; border-bottom-left-radius:unset; border-bottom-right-radius:unset; border-top-right-radius:6px; border-top-left-radius:6px">
                 <ul class="list-group list-group-flush" id="gamesList">
     `
 
     $("#detailsWindow").html(string);
-    let games = data.get("games").filter(o => o.deckCode === deck.deckCode).sort((a,b) => (a.timePlayed < b.timePlayed) ? 1 : ((b.timePlayed < a.timePlayed) ? -1 : 0)).slice(start, start + load);
+    let games = data.get("games").filter(o => o.deckCode === deck.deckCode).sort((a,b) => (a.timePlayed < b.timePlayed) ? 1 : ((b.timePlayed < a.timePlayed) ? -1 : 0));
 
     for (let game of games) {
         let oppDeck = game.oppCards;
