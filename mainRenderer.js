@@ -336,7 +336,7 @@ function loadDecks() {
 
         if (deck.isExpedition) {
             string += `
-                    <div style="position:absolute; right:0">
+                    <div style="position:absolute; right:0; z-index: 501">
             `
             for (let gRecord of deck.expeditionRecord) {
                 if (gRecord == "win") {
