@@ -90,7 +90,7 @@
         config.set("opponent-deck-x", parseInt($("#opponent-deck-x").val()));
         config.set("opponent-deck-y", parseInt($("#opponent-deck-y").val()));
         config.set("opponent-deck-opacity", parseFloat($("#opponent-deck-opacity").val()));
-        config.set("opponent-deck-ignore-mouse-events", $('#opponent-deck-disabled').is(':checked'));
+        config.set("opponent-deck-ignore-mouse-events", $('#opponent-deck-ignore-mouse-events').is(':checked'));
         config.set("opponent-deck-disabled", $('#opponent-deck-disabled').is(':checked'));
         require("electron").ipcRenderer.send('saveUpdate');
     })

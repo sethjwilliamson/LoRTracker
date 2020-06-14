@@ -46,6 +46,7 @@ const data = new Store({
 const { autoUpdater } = require("electron-updater");
 
 var firstRun = true;
+var ingame = false;
 
 autoUpdater.on('checking-for-update', () => {
   sendStatusToWindow('Checking for update...', false);
@@ -465,6 +466,11 @@ function createWindow () {
     if (config.get("tracker-disabled")) {
       trackerWindow.hide();
     }
+    else {
+      if (ingame) {
+        trackerWindow.show();
+      }
+    }
 
     graveyardWindow.setPosition(config.get("graveyard-x"), config.get("graveyard-y"))
     graveyardWindow.setSize(config.get("graveyard-width"), config.get("graveyard-height"));
@@ -472,12 +478,22 @@ function createWindow () {
     if (config.get("graveyard-disabled")) {
       graveyardWindow.hide();
     }
+    else {
+      if (ingame) {
+        graveyardWindow.show()
+      }
+    }
 
     oppDeckWindow.setPosition(config.get("opponent-deck-x"), config.get("opponent-deck-y"))
     oppDeckWindow.setSize(config.get("opponent-deck-width"), config.get("opponent-deck-height"));
     oppDeckWindow.setIgnoreMouseEvents(config.get("opponent-deck-ignore-mouse-events"));
     if (config.get("opponent-deck-disabled")) {
       oppDeckWindow.hide();
+    }
+    else {
+      if (ingame) {
+        oppDeckWindow.show();
+      }
     }
 
     fullCardWindow.setSize(config.get("preview-width"), parseInt(config.get("preview-width") * 512 / 340));
@@ -607,6 +623,7 @@ function matchFound(r) {
     global.graveyardArr = [];
     global.oppDeckArr = [];
     currentRectangles = [];
+    ingame = true;
 
     
     if(!config.get("tracker-disabled")) {
@@ -823,6 +840,7 @@ function matchOver(r) {
       //logGame(false);
       setTimeout(function() {httpGet("http://127.0.0.1:21337/expeditions-state").then(res => logGame(false, res))}, 3000);
     }
+    ingame = false;
 
     trackerWindow.hide();
     graveyardWindow.hide();

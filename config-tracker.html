@@ -82,7 +82,7 @@
         config.set("tracker-x", parseInt($("#tracker-x").val()));
         config.set("tracker-y", parseInt($("#tracker-y").val()));
         config.set("tracker-opacity", parseFloat($("#tracker-opacity").val()));
-        config.set("tracker-ignore-mouse-events", $('#tracker-disabled').is(':checked'));
+        config.set("tracker-ignore-mouse-events", $('#tracker-ignore-mouse-events').is(':checked'));
         config.set("tracker-disabled", $('#tracker-disabled').is(':checked'));
         require("electron").ipcRenderer.send('saveUpdate');
     })
