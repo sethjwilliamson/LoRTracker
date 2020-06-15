@@ -235,8 +235,6 @@ function createWindow () {
       config.set("tracker-x", position[0]);
       config.set("tracker-y", position[1]);
     });
-
-    httpGet(url).then(res => waitingForGame(res));
   });
   
   fullCardWindow = new BrowserWindow({
@@ -499,10 +497,20 @@ function createWindow () {
     fullCardWindow.setSize(config.get("preview-width"), parseInt(config.get("preview-width") * 512 / 340));
 
   });
+  overlayWindow.webContents.openDevTools()
+  overlayWindow.webContents.send("expedition", "test");
 
   registerHotkeys();
 
   autoUpdater.checkForUpdates();
+
+  //httpGet("http://127.0.0.1:21337/positional-rectangles").then(res => function() {
+  //  httpGet("http://127.0.0.1:21337/expeditions-state").then(res2 => 
+  //    waitingForGame(res, res2)
+  //  );
+  //});
+  
+  setTimeout(function() {preWaitingForGame()}, 1000);
 }
 
 app.whenReady().then(createWindow)
@@ -588,6 +596,7 @@ var opponentName;
 var initialCardArr;
 var initialIsExpedition;
 var currentRectangles = [];
+global.exRectangles = [];
 global.cardArr = [];
 global.graveyardArr = [];
 global.oppDeckArr = [];
@@ -595,28 +604,70 @@ global.deckRegions = [];
 global.cardRegions = [];
 
 
-function waitingForGame(r) {
-  console.log("Waiting");
+function preWaitingForGame() {
+  axios.all([
+      axios.get(url),
+      axios.get("http://127.0.0.1:21337/expeditions-state")])
+    .then(axios.spread((firstResponse, secondResponse) => {  
+      waitingForGame(firstResponse.data, secondResponse.data)
+    }))
+    .catch(error => console.log(error));
+}
 
+function waitingForGame(r, rExpedition) {
   if (!r) {
-    setTimeout(function() {httpGet(url).then(res => waitingForGame(res));}, 500);
+    preWaitingForGame();
   }
   else {
-    if ((r.GameState) === ('InProgress')) {
+    if (r.GameState === 'InProgress') {
       opponentName = r.OpponentName;
       prevDraw = null;
       cardsLeft = 40;
       height = r.Screen.ScreenHeight;
       httpGet("http://127.0.0.1:21337/static-decklist").then(res => matchFound(res));
     }
-    else
-      setTimeout(function() {httpGet(url).then(res => waitingForGame(res));}, 5000);
+    else if (rExpedition.State === "Picking" || rExpedition.State === "Swapping") {
+      expeditionPicking(r, rExpedition)
+    }
+    else {
+      setTimeout(function() {preWaitingForGame()}, 5000);
+    }
+  }
+}
+
+function preExpeditionPicking() {
+  axios.all([
+      axios.get(url),
+      axios.get("http://127.0.0.1:21337/expeditions-state")])
+    .then(axios.spread((firstResponse, secondResponse) => {  
+      expeditionPicking(firstResponse.data, secondResponse.data)
+    }))
+    .catch(error => console.log(error));
+}
+
+function expeditionPicking(r, rExpedition) {
+  if (!r || !(rExpedition.State === "Picking" || rExpedition.State === "Swapping")) {
+    console.log("1")
+    
+    log.log(rExpedition.State)
+    overlayWindow.hide();
+    preWaitingForGame();
+  }
+  else if (JSON.stringify(r.Rectangles) === JSON.stringify(exRectangles)) {
+    console.log("2")
+    setTimeout(function() {preExpeditionPicking()}, 500);
+  }
+  else {
+    overlayWindow.show();
+    exRectangles = r.Rectangles;
+    overlayWindow.webContents.send("expedition", rExpedition.State);
+    preExpeditionPicking();
   }
 }
 
 function matchFound(r) {
   if (!r) {
-    setTimeout(function() {httpGet(url).then(res => waitingForGame(res));}, 500);
+    preWaitingForGame();
   }
   else {
 
@@ -665,7 +716,7 @@ function matchFound(r) {
 
 function waitingForMulligan(r, rExpedition) { //Mulligan  
   if (!r) {
-    setTimeout(function() {httpGet(url).then(res => waitingForGame(res));}, 500);
+    preWaitingForGame();
   }
   else {
     var card = null;
@@ -683,7 +734,6 @@ function waitingForMulligan(r, rExpedition) { //Mulligan
       setTimeout(function() {httpGet(url).then(res => waitingForMulligan(res));}, 1000);
     }
     else { // First Draw
-      //initialIsExpedition = httpGet("http://127.0.0.1:21337/expeditions-state").IsActive;
       httpGet("http://127.0.0.1:21337/expeditions-state").then(res => initialIsExpedition = res.IsActive);
       prevDraw = card;
       
@@ -710,7 +760,7 @@ function waitingForMulligan(r, rExpedition) { //Mulligan
 
 function trackingGame(r) {
   if (!r) {
-    setTimeout(function() {httpGet(url).then(res => waitingForGame(res));}, 500);
+    preWaitingForGame();
   }
   else {
     var tempHandSize = 0;
@@ -829,8 +879,9 @@ function trackingGame(r) {
 }
 
 function matchOver(r) {
-  if (!r)
-    httpGet(url).then(res => waitingForGame(res));
+  if (!r) {
+    preWaitingForGame();
+  }
   else {
     if (r.LocalPlayerWon) {
       //logGame(true);
@@ -846,7 +897,7 @@ function matchOver(r) {
     graveyardWindow.hide();
     oppDeckWindow.hide();
     
-    httpGet(url).then(res => waitingForGame(res));
+    preWaitingForGame();
   }
 }
 
