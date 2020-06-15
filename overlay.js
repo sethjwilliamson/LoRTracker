@@ -1,4 +1,5 @@
 const {ipcRenderer, remote} = require('electron');
+const ratings = require('./ratings.js');
 
 
 var cOverlay = document.getElementById("overlay");
@@ -15,33 +16,34 @@ ctxOverlay.canvas.height = 1080;
 ctxOverlay.textAlign = "center";
 ctxOverlay.fillStyle = "#715726";
 
-ctxOverlay.font = "60px BeaufortforLOL-Bold";
 
 ipcRenderer.on("expedition", function (event, state) {
     console.log("ipc")
     drawExpedition(remote.getGlobal('exRectangles'), state)
-    //ctxOverlay.scale(1920 / cOverlay.width, 1080 / cOverlay.height)
 })
 
 function drawExpedition(exRectangles, state) {
     ctxOverlay.clearRect(0, 0, 10000, 10000);
-    //ctxOverlay.fillRect(0,0, 500, 500);
 
 
     for (let card of exRectangles) {
-        console.log(card.TopLeftX)
+        console.log(ratings)
         if (card.TopLeftX > 1920 * 0.1) {
             if (state === "Picking") {
+                ctxOverlay.font = "40px BeaufortforLOL-Bold";
                 ctxOverlay.drawImage(imgSide, card.TopLeftX - card.Height * .625, 1080 - card.TopLeftY + card.Height * .125, card.Height * .75, card.Height * .75);
+                ctxOverlay.fillText(ratings[card.CardCode][1], card.TopLeftX - card.Height * .25, 1080 - card.TopLeftY + card.Height * .65)
+
             }
             else {
+                ctxOverlay.font = "60px BeaufortforLOL-Bold";
                 if (card.TopLeftX < 1920 * 0.6) {
                     ctxOverlay.drawImage(imgSide, card.TopLeftX - card.Height, 1080 - card.TopLeftY + card.Height * .125, card.Height * .75, card.Height * .75);
-                    ctxOverlay.fillText("S", card.TopLeftX - card.Height * .6, 1080 - card.TopLeftY + card.Height * .6)
+                    ctxOverlay.fillText(ratings[card.CardCode][1], card.TopLeftX - card.Height * .6, 1080 - card.TopLeftY + card.Height * .6)
                 }
                 else {
                     ctxOverlay.drawImage(imgSideRight, card.TopLeftX + card.Width, 1080 - card.TopLeftY + card.Height * .125, card.Height * .75, card.Height * .75);
-                    ctxOverlay.fillText("B", card.TopLeftX + card.Width + card.Height * .4, 1080 - card.TopLeftY + card.Height * .6)
+                    ctxOverlay.fillText(ratings[card.CardCode][1], card.TopLeftX + card.Width + card.Height * .4, 1080 - card.TopLeftY + card.Height * .6)
                 }
             }
         }
