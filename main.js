@@ -648,7 +648,7 @@ function preExpeditionPicking() {
 function expeditionPicking(r, rExpedition) {
   if (!r || !(rExpedition.State === "Picking" || rExpedition.State === "Swapping")) {
     console.log("1")
-    
+    exRectangles = [];
     log.log(rExpedition.State)
     overlayWindow.hide();
     preWaitingForGame();

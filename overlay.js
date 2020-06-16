@@ -1,5 +1,9 @@
 const {ipcRenderer, remote} = require('electron');
-const ratings = require('./ratings.js');
+
+//const {ratings} = import(
+//    /* webpackIgnore: true */ 'https://runetiera.com/ratings.js'
+//);
+
 
 
 var cOverlay = document.getElementById("overlay");
@@ -18,11 +22,13 @@ ctxOverlay.fillStyle = "#715726";
 
 
 ipcRenderer.on("expedition", function (event, state) {
-    console.log("ipc")
     drawExpedition(remote.getGlobal('exRectangles'), state)
 })
 
-function drawExpedition(exRectangles, state) {
+async function drawExpedition(exRectangles, state) {
+    const { ratings } = await import(
+        /* webpackIgnore: true */ 'https://runetiera.com/ratings.js'
+    );
     ctxOverlay.clearRect(0, 0, 10000, 10000);
 
 
