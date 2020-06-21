@@ -43,28 +43,6 @@ const data = new Store({
   }
 });
 
-const Vue = require('vue');
-const { listenForLogin, saveRun, getAllCollections } = require('./runetiera-firebase-network.js');
-
-var vueApp = Vue.component('basic', {
-  data: function () {
-    return {
-      showMessage: true,
-      ratings: {},
-      buckets: [[]],
-      run: {},
-      expedition: {}, // Expedition is uploaded; run is used for local data.
-      user: {},
-    };
-  },
-  async mounted() {
-    listenForLogin(this);
-    console.log("Test123")
-    await this.pingInfo();
-  }
-});
-listenForLogin(vueApp);
-getAllCollections();
 const { autoUpdater } = require("electron-updater");
 
 var firstRun = true;
@@ -627,18 +605,13 @@ global.cardRegions = [];
 
 
 function preWaitingForGame() {
-  try {
-    axios.all([
-        axios.get(url),
-        axios.get("http://127.0.0.1:21337/expeditions-state")])
-      .then(axios.spread((firstResponse, secondResponse) => {  
-        waitingForGame(firstResponse.data, secondResponse.data)
-      }))
-      .catch(error => console.log(error));
-  }
-  catch (e) {
-    console.log("LoR Not Open ?")
-  }
+  axios.all([
+      axios.get(url),
+      axios.get("http://127.0.0.1:21337/expeditions-state")])
+    .then(axios.spread((firstResponse, secondResponse) => {  
+      waitingForGame(firstResponse.data, secondResponse.data)
+    }))
+    .catch(error => console.log(error));
 }
 
 function waitingForGame(r, rExpedition) {
@@ -651,9 +624,6 @@ function waitingForGame(r, rExpedition) {
       prevDraw = null;
       cardsLeft = 40;
       height = r.Screen.ScreenHeight;
-
-      overlayWindow.webContents.send("startOverlay", r.Screen.ScreenWidth, r.Screen.ScreenHeight);
-
       httpGet("http://127.0.0.1:21337/static-decklist").then(res => matchFound(res));
     }
     else if (rExpedition.State === "Picking" || rExpedition.State === "Swapping") {
