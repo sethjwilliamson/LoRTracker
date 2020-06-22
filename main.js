@@ -173,8 +173,8 @@ function createWindow () {
       nodeIntegration:true
     }
   })
-  //mainWindow.webContents.openDevTools()
-  mainWindow.loadFile("main.html");
+  mainWindow.webContents.openDevTools()
+  mainWindow.loadFile("stats.html");
   
   mainWindow.on('close', function (event) {
     if (config.get("exit-on-close")) {
@@ -605,13 +605,18 @@ global.cardRegions = [];
 
 
 function preWaitingForGame() {
-  axios.all([
-      axios.get(url),
-      axios.get("http://127.0.0.1:21337/expeditions-state")])
-    .then(axios.spread((firstResponse, secondResponse) => {  
-      waitingForGame(firstResponse.data, secondResponse.data)
-    }))
-    .catch(error => console.log(error));
+  try {
+    axios.all([
+        axios.get(url),
+        axios.get("http://127.0.0.1:21337/expeditions-state")])
+      .then(axios.spread((firstResponse, secondResponse) => {  
+        waitingForGame(firstResponse.data, secondResponse.data)
+      }))
+      .catch(error => console.log(error));
+  }
+  catch (e) {
+    console.log("LoR Not Open ?")
+  }
 }
 
 function waitingForGame(r, rExpedition) {
@@ -624,6 +629,9 @@ function waitingForGame(r, rExpedition) {
       prevDraw = null;
       cardsLeft = 40;
       height = r.Screen.ScreenHeight;
+
+      overlayWindow.webContents.send("startOverlay", r.Screen.ScreenWidth, r.Screen.ScreenHeight);
+
       httpGet("http://127.0.0.1:21337/static-decklist").then(res => matchFound(res));
     }
     else if (rExpedition.State === "Picking" || rExpedition.State === "Swapping") {
