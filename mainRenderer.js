@@ -397,7 +397,7 @@ function loadDeck(deck) {
     <div class="col flex-column full-height flex-column">
         <div class="row justify-content-center d-flex">
             <p class="h1" id="name">${deck.name.slice(0,14)}</p>
-            <a href="#" style="position:absolute; left:10px; top:10px"><img src="node_modules/open-iconic/svg/x.svg" id="deleteDeck" style="width: 20px;"></a>
+            <a href="#" style="position:absolute; left:10px; top:10px"><img src="node_modules/open-iconic/svg/x.svg" id="deleteDeck" onclick="deleteDeck()" style="width: 20px;"></a>
             <a href="#" style="position:absolute; right:10px; top:10px"><img src="node_modules/open-iconic/svg/pencil.svg" id="editName" style="width: 20px;"></a>
         </div>
         <div class="row justify-content-center">
@@ -805,7 +805,11 @@ function msToTime(duration) {
 }
 
 ipcRenderer.on('update', (event) => {
-    console.log("update")
+    console.log("update");
+    reloadHistory();
+});
+
+function reloadHistory() {
     start = 0;
     if ($("#matches-tab").attr("aria-selected") === "true") {
         setTimeout(loadMatches(), 1000);
@@ -813,7 +817,7 @@ ipcRenderer.on('update', (event) => {
     else {
         setTimeout(loadDecks(), 1000);
     }
-});
+}
 
 function decksPressed() {
     start = 0;
@@ -823,6 +827,33 @@ function decksPressed() {
 function matchesPressed() {
     start = 0;
     loadMatches();
+}
+
+function deleteDeck() {
+    if (confirm("Are you sure you want to delete this deck and all matches associated with it?")) {
+
+        let deckCode = $("#detailsWindow").data("deck").deckCode;
+        
+        let decks = data.get("decks");
+
+        decks.splice(decks.findIndex(o => o.deckCode === $("#detailsWindow").data("deck").deckCode), 1);
+
+        let games = data.get("games");
+
+        for (let i = games.length - 1; i >= 0; --i) {
+            if (games[i].deckCode === deckCode) {
+                games.splice(i, 1);
+            }
+        }
+
+        data.set("decks", decks);
+        data.set("games", games);
+
+        reloadHistory();
+        if (decks.length > 0) {
+            loadDeck(decks[0]);
+        }
+    }
 }
 
 $('#historyWindow').on('scroll', function() {
@@ -836,7 +867,7 @@ $('#historyWindow').on('scroll', function() {
             setTimeout(loadDecks(), 1000);
         }
     }
-})
+});
 
 //$(function() {
 //        
