@@ -397,7 +397,7 @@ function loadDeck(deck) {
     <div class="col flex-column full-height flex-column">
         <div class="row justify-content-center d-flex">
             <p class="h1" id="name">${deck.name.slice(0,14)}</p>
-            <a href="#" style="position:absolute; left:10px; top:10px"><img src="node_modules/open-iconic/svg/x.svg" id="deleteDeck" onclick="deleteDeck()" style="width: 20px;"></a>
+            <a href="#" style="position:absolute; left:10px; top:10px"><img src="node_modules/open-iconic/svg/trash.svg" id="deleteDeck" onclick="deleteDeck()" style="width: 20px;"></a>
             <a href="#" style="position:absolute; right:10px; top:10px"><img src="node_modules/open-iconic/svg/pencil.svg" id="editName" style="width: 20px;"></a>
         </div>
         <div class="row justify-content-center">
@@ -561,12 +561,14 @@ function loadDeck(deck) {
 
     $("#editName").click(function() {
         $("#editName").css("display", "none")
+        $("#deleteDeck").css("display", "none")
         $("#name").replaceWith(`<input type="text" class="form-control textbox" id="nameBox" style="width:90%; margin-bottom:10px"></input>`)
         enableOnKeyPress();
     })
 
     $("#name").dblclick(function() {
         $("#editName").css("display", "none")
+        $("#deleteDeck").css("display", "none")
         $("#name").replaceWith(`<input type="text" class="form-control textbox" id="nameBox" style="width:90%; margin-bottom:10px"></input>`)
         enableOnKeyPress();
     })
@@ -582,6 +584,8 @@ function loadMatch(game) {
     let oppDeck = game.oppCards;
     let oppChamps = oppDeck.filter(o => o.isChamp);
     let oppRegions = game.oppRegions;
+
+    $('#detailsWindow').data("match", game);
 
     string = `
         <div class="col flex-column align-content-center" style="height: 100%;">
@@ -679,7 +683,7 @@ function loadMatch(game) {
             </div>
 
             <div class="row justify-content-center">
-                <a href="#" style="position:absolute; left:10px; top:60px"><img src="node_modules/open-iconic/svg/x.svg" id="deleteMatch" style="width: 20px;"></a>
+                <a href="#" style="position:absolute; left:10px; top:60px"><img src="node_modules/open-iconic/svg/trash.svg" id="deleteMatch" onclick="deleteMatch()" style="width: 20px;"></a>
                 <p class="h2">${new Date(game.timePlayed).toLocaleDateString()}</p>
             </div>
             <div class="row justify-content-center">
@@ -775,6 +779,7 @@ function enableOnKeyPress() {
             
             
             $("#editName").css("display", "block")
+            $("#deleteDeck").css("display", "block")
         }
     });
 }
@@ -852,6 +857,33 @@ function deleteDeck() {
         reloadHistory();
         if (decks.length > 0) {
             loadDeck(decks[0]);
+        }
+    }
+}
+
+function deleteMatch() {
+    if (confirm("Are you sure you want to delete this match?")) {
+        let match = $("#detailsWindow").data("match");
+
+        let games = data.get("games");//.find(o => o.timePlayed == match.timePlayed);
+
+        games.splice(games.findIndex(o => o.timePlayed == match.timePlayed));
+
+        let decks = data.get("decks");
+
+        if (match.isWin) {
+            decks.find(o => o.deckCode === match.deckCode).wins--;
+        }
+        else {
+            decks.find(o => o.deckCode === match.deckCode).losses--;
+        }
+
+        data.set("decks", decks);
+        data.set("games", games);
+        
+        reloadHistory();
+        if (games.length > 0) {
+            loadMatch(games[0]);
         }
     }
 }
