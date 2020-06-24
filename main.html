@@ -47,6 +47,76 @@
       </div>
       <!-- modal -->
       <div class="history-tab flex-2 full-height">
+        <form class="full-width grid" style="margin: 3px">
+          <div class="row form-inline no-margin">
+            <input class="form-control mr-sm-2 flex-grow-1" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+              ^
+            </button>
+          </div>
+          <div class="collapse row no-margin" id="collapseExample" style="margin-top: 3px;">
+            <table class="table" style="margin-bottom: 0;">
+              <tbody>
+                <tr>
+                  <div class="d-flex justify-content-around flex-grow-1" style="z-index: 501;">
+                    <label class="image-checkbox" title="Demacia">
+                      <img src="./icons/icon-demacia.png" class="rounded-circle regionPicture" />
+                      <input type="checkbox" name="regionOptions[]" value="Demacia" />
+                    </label>
+                    <label class="image-checkbox" title="Freljord">
+                      <img src="./icons/icon-freljord.png" class="rounded-circle regionPicture" />
+                      <input type="checkbox" name="regionOptions[]" value="Freljord" />
+                    </label>
+                    <label class="image-checkbox" title="Ionia">
+                      <img src="./icons/icon-ionia.png"  class="rounded-circle regionPicture"/>
+                      <input type="checkbox" name="regionOptions[]" value="Ionia" />
+                    </label>
+                    <label class="image-checkbox" title="Noxus">
+                      <img src="./icons/icon-noxus.png"  class="rounded-circle regionPicture"/>
+                      <input type="checkbox" name="regionOptions[]" value="Noxus" />
+                    </label>
+                    <label class="image-checkbox" title="PiltoverZaun">
+                      <img src="./icons/icon-piltover.png"  class="rounded-circle regionPicture"/>
+                      <input type="checkbox" name="regionOptions[]" value="PiltoverZaun" />
+                    </label>
+                    <label class="image-checkbox" title="ShadowIsles">
+                      <img src="./icons/icon-shadowisles.png"  class="rounded-circle regionPicture"/>
+                      <input type="checkbox" name="regionOptions[]" value="ShadowIsles" />
+                    </label>
+                    <label class="image-checkbox" title="Bilgewater">
+                      <img src="./icons/icon-bilgewater.png" class="rounded-circle regionPicture" />
+                      <input type="checkbox" name="regionOptions[]" value="Bilgewater" checked="checked" />
+                    </label>
+                  </div>
+                </tr>
+                <tr>
+                    <th scope="row" style="padding-left: 40px;">Width</th>
+                    <td>
+                    <input type="text" class="form-control" id="tracker-width">
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><h5 class="no-margin">Position</h4></th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th scope="row" style="padding-left: 40px;">Horizontal (X)</th>
+                    <td>
+                        <input type="text" class="form-control" id="tracker-x">
+    
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row" style="padding-left: 40px;">Vertical (Y)</th>
+                    <td>
+                        <input type="text" class="form-control" id="tracker-y">
+    
+                    </td>
+                </tr>          
+              </tbody>
+            </table>
+          </div>
+        </form>
         <ul class="nav nav-tabs" id="myTab" role="tablist" style="height: 50px">
           <li class="nav-item" style="width:50%">
             <a class="nav-link active full-height text-center" id="matches-tab" data-toggle="tab" href="#" role="tab" aria-controls="matches" aria-selected="true" onclick="matchesPressed()">Matches</a>

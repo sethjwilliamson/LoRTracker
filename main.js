@@ -174,7 +174,8 @@ function createWindow () {
     }
   })
   mainWindow.webContents.openDevTools()
-  mainWindow.loadFile("stats.html");
+  mainWindow.loadFile("main.html");
+  //mainWindow.loadFile("stats.html");
   
   mainWindow.on('close', function (event) {
     if (config.get("exit-on-close")) {
@@ -497,7 +498,7 @@ function createWindow () {
     fullCardWindow.setSize(config.get("preview-width"), parseInt(config.get("preview-width") * 512 / 340));
 
   });
-  overlayWindow.webContents.openDevTools()
+  //overlayWindow.webContents.openDevTools()
   overlayWindow.webContents.send("expedition", "test");
 
   registerHotkeys();

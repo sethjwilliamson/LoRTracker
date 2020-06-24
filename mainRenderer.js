@@ -397,6 +397,7 @@ function loadDeck(deck) {
     <div class="col flex-column full-height flex-column">
         <div class="row justify-content-center d-flex">
             <p class="h1" id="name">${deck.name.slice(0,14)}</p>
+            <a href="#" style="position:absolute; left:10px; top:10px"><img src="node_modules/open-iconic/svg/x.svg" id="deleteDeck" style="width: 20px;"></a>
             <a href="#" style="position:absolute; right:10px; top:10px"><img src="node_modules/open-iconic/svg/pencil.svg" id="editName" style="width: 20px;"></a>
         </div>
         <div class="row justify-content-center">
@@ -678,6 +679,7 @@ function loadMatch(game) {
             </div>
 
             <div class="row justify-content-center">
+                <a href="#" style="position:absolute; left:10px; top:60px"><img src="node_modules/open-iconic/svg/x.svg" id="deleteMatch" style="width: 20px;"></a>
                 <p class="h2">${new Date(game.timePlayed).toLocaleDateString()}</p>
             </div>
             <div class="row justify-content-center">
@@ -845,3 +847,29 @@ $('#historyWindow').on('scroll', function() {
 //    });
 //  
 //  });
+
+$(function ($) {
+    // init the state from the input
+    $(".image-checkbox").each(function () {
+        if ($(this).find('input[type="checkbox"]').first().attr("checked")) {
+            $(this).addClass('image-checkbox-checked');
+        }
+        else {
+            $(this).removeClass('image-checkbox-checked');
+        }
+    });
+
+    // sync the state to the input
+    $(".image-checkbox").on("click", function (e) {
+        if ($(this).hasClass('image-checkbox-checked')) {
+            $(this).removeClass('image-checkbox-checked');
+            $(this).find('input[type="checkbox"]').first().removeAttr("checked");
+        }
+        else {
+            $(this).addClass('image-checkbox-checked');
+            $(this).find('input[type="checkbox"]').first().attr("checked", "checked");
+        }
+
+        e.preventDefault();
+    });
+});
