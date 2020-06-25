@@ -47,10 +47,10 @@
       </div>
       <!-- modal -->
       <div class="history-tab flex-2 full-height">
-        <form class="full-width grid" style="margin: 3px">
+        <form class="grid" style="margin: 3px" style="width: calc(100% - 6px)">
           <div class="row form-inline no-margin">
-            <input class="form-control mr-sm-2 flex-grow-1" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            <input id="searchName" class="form-control mr-sm-2 flex-grow-1" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
               ^
             </button>
           </div>
@@ -85,33 +85,104 @@
                     </label>
                     <label class="image-checkbox" title="Bilgewater">
                       <img src="./icons/icon-bilgewater.png" class="rounded-circle regionPicture" />
-                      <input type="checkbox" name="regionOptions[]" value="Bilgewater" checked="checked" />
+                      <input type="checkbox" name="regionOptions[]" value="Bilgewater" />
                     </label>
                   </div>
                 </tr>
                 <tr>
-                    <th scope="row" style="padding-left: 40px;">Width</th>
+                    <th scope="row" style="padding-left: 40px;">Games</th>
                     <td>
-                    <input type="text" class="form-control" id="tracker-width">
+                      <input type="text" class="form-control" id="minimum-games" placeholder="Minimum">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" id="maximum-games" placeholder="Maximum">
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><h5 class="no-margin">Position</h4></th>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th scope="row" style="padding-left: 40px;">Horizontal (X)</th>
+                    <th scope="row" style="padding-left: 40px;">Winrate</th>
                     <td>
-                        <input type="text" class="form-control" id="tracker-x">
-    
+                      <input type="text" class="form-control" id="minimum-games" placeholder="Minimum">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" id="minimum-games" placeholder="Maximum">
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row" style="padding-left: 40px;">Vertical (Y)</th>
+                    <th scope="row" style="padding-left: 40px;">Match Type</th>
                     <td>
-                        <input type="text" class="form-control" id="tracker-y">
-    
+
                     </td>
+                    <td>
+                      <div class="dropdown d-flex" style="z-index: 499;">
+                        <button class="btn btn-outline-secondary dropdown-toggle flex-grow-1" type="button" 
+                                id="dropdownMenu1" data-toggle="dropdown" 
+                                aria-haspopup="true" aria-expanded="true">
+                                Normal
+                          <i class="glyphicon glyphicon-cog"></i>
+                          <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu checkbox-menu allow-focus" aria-labelledby="dropdownMenu1">
+                        
+                          <li>
+                            <label>
+                              <input type="checkbox"> Normal
+                            </label>
+                          </li>
+                          
+                          <li>
+                            <label>
+                              <input type="checkbox"> Expedition
+                            </label>
+                          </li>
+                          
+                          <li>
+                            <label>
+                              <input type="checkbox"> vs AI
+                            </label>
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
+                </tr>
+                <tr>
+                  <th scope="row" style="padding-left: 40px;">Time</th>
+                  <td class="d-flex">
+                    <button class="btn btn-outline-secondary flex-grow-1" type="button" style="margin-left:1; margin-right: 1;">Search</button>
+                    <button class="btn btn-outline-secondary flex-grow-1" type="button" style="margin-left:1; margin-right: 1;">Search</button>
+                  </td>
+                  <td>
+                    <div class="input-group-prepend">
+                      <button class="btn btn-outline-secondary dropdown-toggle flex-grow-1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">All Time</button>
+                      <div class="dropdown-menu" style="z-index: 499;">
+                        <a class="dropdown-item" onclick="" href="#">Today</a>
+                        <a class="dropdown-item" onclick="" href="#">Past Week</a>
+                        <a class="dropdown-item" onclick="" href="#">Past Month</a>
+                        <a class="dropdown-item" onclick="" href="#">Patch</a>
+                        <a class="dropdown-item" onclick="" href="#">All Time</a>
+                        <div role="separator" class="dropdown-divider"></div>
+                        <a class="dropdown-item" onclick="" href="#">Custom</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>      
+                <tr>
+                  <th scope="row" style="padding-left: 40px;">Sort</th>
+                  <td>
+                    <div class="input-group-prepend">
+                      <button class="btn btn-outline-secondary dropdown-toggle flex-grow-1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Newest First</button>
+                      <div class="dropdown-menu" style="z-index: 499;">
+                        <a class="dropdown-item" onclick="" href="#">Newest First</a>
+                        <a class="dropdown-item" onclick="" href="#">Oldest First</a>
+                        <a class="dropdown-item" onclick="" href="#">Highest Winrate</a>
+                        <a class="dropdown-item" onclick="" href="#">Lowest Winrate</a>
+                        <a class="dropdown-item" onclick="" href="#">Most Games</a>
+                        <a class="dropdown-item" onclick="" href="#">Least Games</a>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="d-flex">
+                    <button class="btn btn-outline-primary flex-grow-1" type="button">Search</button>
+                  </td>
                 </tr>          
               </tbody>
             </table>

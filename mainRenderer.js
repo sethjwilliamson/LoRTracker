@@ -6,6 +6,7 @@ const data = new Store({name:"data"});
 const log = require("electron-log");
 log.catchErrors();
 
+var regionOptions = [];
 
 const customTitlebar = require('custom-electron-titlebar');
  
@@ -74,7 +75,12 @@ loadMatches();
 loadMatch(games[0])
 
 function loadMatches() {
-    games = data.get("games").sort((a,b) => (a.timePlayed < b.timePlayed) ? 1 : ((b.timePlayed < a.timePlayed) ? -1 : 0));
+    games = data.get("games").filter(o => 
+        (regionOptions.length == 0 || isIntersection(regionOptions, (decks.find(deckO => deckO.deckCode === o.deckCode)).regions)) && 
+        (o.opponentName.includes($("#searchName").val()))// &&
+        //()
+        )
+        .sort((a,b) => (a.timePlayed < b.timePlayed) ? 1 : ((b.timePlayed < a.timePlayed) ? -1 : 0));
 
     
     if (games.length == 0) {
@@ -901,6 +907,17 @@ $('#historyWindow').on('scroll', function() {
     }
 });
 
+function isIntersection(arr1, arr2) {
+    for (let element1 of arr1) {
+        for (let element2 of arr2) {
+            if (element1 === element2) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 //$(function() {
 //        
 //    $('.list-group-item').on('click', function() {
@@ -910,6 +927,7 @@ $('#historyWindow').on('scroll', function() {
 //    });
 //  
 //  });
+
 
 $(function ($) {
     // init the state from the input
@@ -927,12 +945,24 @@ $(function ($) {
         if ($(this).hasClass('image-checkbox-checked')) {
             $(this).removeClass('image-checkbox-checked');
             $(this).find('input[type="checkbox"]').first().removeAttr("checked");
+
+            regionOptions.splice(regionOptions.indexOf($(this).attr("title")), 1);
         }
         else {
             $(this).addClass('image-checkbox-checked');
             $(this).find('input[type="checkbox"]').first().attr("checked", "checked");
+
+            regionOptions.push($(this).attr("title"));
         }
 
         e.preventDefault();
     });
 });
+
+$(".checkbox-menu").on("change", "input[type='checkbox']", function() {
+    $(this).closest("li").toggleClass("active", this.checked);
+ });
+ 
+ $(document).on('click', '.allow-focus', function (e) {
+   e.stopPropagation();
+ });
