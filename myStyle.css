@@ -394,11 +394,13 @@
       -webkit-box-sizing: border-box;
       outline: 0;
       z-index: 501;
+      border: 1px solid transparent;
+      border-radius: 3px;
   }
 
   .image-checkbox:hover {
+    border: 1px solid grey;
     
-    background-color: rgba(242,109,0,0.25);
   }
 
   .image-checkbox input[type="checkbox"]

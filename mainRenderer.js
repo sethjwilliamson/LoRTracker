@@ -43,9 +43,6 @@ var version = "";
 var start = 0;
 var load = 10;
 
-var games = data.get("games").sort((a,b) => (a.timePlayed < b.timePlayed) ? 1 : ((b.timePlayed < a.timePlayed) ? -1 : 0));
-var decks = data.get("decks").sort((a,b) => (a.mostRecentPlay < b.mostRecentPlay) ? 1 : ((b.mostRecentPlay < a.mostRecentPlay) ? -1 : 0));
-
 var regionIcons = {
     "Demacia": "icons/icon-demacia.png",
     "Noxus": "icons/icon-noxus.png",
@@ -77,12 +74,7 @@ loadMatches();
 loadMatch(games[0])
 
 function loadMatches() {
-    games = data.get("games").filter(o => 
-        (regionOptions.length == 0 || isIntersection(regionOptions, (decks.find(deckO => deckO.deckCode === o.deckCode)).regions)) && 
-        (o.opponentName.includes($("#searchName").val()))// &&
-        //()
-        )
-        .sort((a,b) => (a.timePlayed < b.timePlayed) ? 1 : ((b.timePlayed < a.timePlayed) ? -1 : 0));
+    games = data.get("games").filter(filterGames).sort(sortGames);
 
     
     if (games.length == 0) {
@@ -108,9 +100,10 @@ function loadMatches() {
 
     for (let game of games) {
         string = "";
-        let deck = decks.find(o => o.deckCode === game.deckCode);
+        let deck = data.get("decks").find(o => o.deckCode === game.deckCode);
         let yourChamps;
         let yourRegions;
+
         if (deck) {
             yourChamps = deck.cards.filter(o => o.isChamp);
             yourRegions = deck.regions;
@@ -269,8 +262,7 @@ function loadMatches() {
 }
 
 function loadDecks() {
-    decks = data.get("decks").sort((a,b) => (a.mostRecentPlay < b.mostRecentPlay) ? 1 : ((b.mostRecentPlay < a.mostRecentPlay) ? -1 : 0));
-
+    decks = data.get("decks").filter(filterDecks).sort(sortDecks);
     
     if (decks.length == 0) {
         $("#historyWindow").html("<li class='h4 text-center'>Decks will be listed here.</li>")
@@ -584,7 +576,7 @@ function loadDeck(deck) {
 
 
 function loadMatch(game) {
-    let deck = decks.find(o => o.deckCode === game.deckCode);
+    let deck = data.get("decks").find(o => o.deckCode === game.deckCode);
     let yourChamps = deck.cards.filter(o => o.isChamp);
     let yourRegions = deck.regions;
 
@@ -987,9 +979,7 @@ $(".checkbox-menu").on("change", "input[type='checkbox']", function() {
         $("#typeData").html("All")
         $("#typeData").data("data", checkboxArr)
     }
-    //alert($("#typeData").data("data"))
 });
-$("#typeData").data("data", ["Expedition", "Normal", "vs AI"])
 
 $(document).on('click', '.allow-focus', function (e) {
     e.stopPropagation();
@@ -1018,11 +1008,8 @@ $(function(){
         timepicker:true,
         theme: config.get("dark-mode") ? "dark" : "default"
     });
+    $("#typeData").data("data", ["Expedition", "Normal", "vs AI"]);
 });
-
-function search() {
-    //alert($('#dropdownMenu1').val());
-}
 
 $(".numeric").keyup(function () { 
     this.value = this.value.replace(/[^0-9\.]/g,'');
@@ -1038,18 +1025,251 @@ $("#timeSelector > .dropdown-item").on ("click", function(e) {
     if ($(this).html() === "Patch") {
         $("#date_timepicker_start").addClass("d-none")
         $("#date_timepicker_end").addClass("d-none")
-        $("#patchDiv").removeClass("d-none")
+        $("#patch-div").removeClass("d-none")
     }
     else if ($(this).html() === "Custom") {
         $("#date_timepicker_start").removeClass("d-none")
         $("#date_timepicker_end").removeClass("d-none")
-        $("#patchDiv").addClass("d-none")
+        $("#patch-div").addClass("d-none")
 
     }
     else {
         $("#date_timepicker_start").addClass("d-none")
         $("#date_timepicker_end").addClass("d-none")
-        $("#patchDiv").addClass("d-none")
+        $("#patch-div").addClass("d-none")
 
     }
 })
+
+function filterGames(o) {
+    let associatedDeck = data.get("decks").find(deckO => deckO.deckCode === o.deckCode);
+    let minGames = 0, minWinrate = 0, timeStart = 0;
+    let maxGames = Number.MAX_SAFE_INTEGER, maxWinrate = Number.MAX_SAFE_INTEGER, timeEnd = Number.MAX_SAFE_INTEGER;
+
+    if ($("#minimum-games").val()) {
+        minGames = $("#minimum-games").val();
+    }
+
+    if ($("#maximum-games").val()) {
+        maxGames = $("#maximum-games").val();
+    }
+
+    if ($("#minimum-winrate").val()) {
+        minWinrate = $("#minimum-winrate").val();
+    }
+
+    if ($("#maximum-winrate").val()) {
+        maxWinrate = $("#maximum-winrate").val();
+    }
+
+    let matchTypeArr = ["Expedition", "Normal", "vs AI"]
+
+    if($("#typeData").data("data")) {
+        matchTypeArr = $("#typeData").data("data");
+    }
+
+    let matchType = "Normal";
+
+    if (o.isComputer) {
+        matchType = "vs AI";
+    }
+    else if (o.isExpedition) {
+        matchType = "Expedition";
+    }
+
+    switch ($("#time-div").find("button").html()) {
+        case "All Time":
+            break;
+        case "Past Day":
+            timeStart = Date.now() / 1000 - 86400000
+            break;
+        case "Past Week":
+            timeStart = Date.now() / 1000 - 604800000
+            break;
+        case "Past Month":
+            timeStart = Date.now() / 1000 - 2592000000
+            break;
+        case "Patch":
+            switch($("#patch-div").find("button").html()) {
+                case "1.4":
+                    timeStart = 1593014400
+                    break;
+                case "1.3":
+                    timeStart = 1591804800
+                    timeEnd = 1593014400
+                    break;
+                case "1.2":
+                    timeStart = 1590595200
+                    timeEnd = 1591804800
+
+                    break;
+                case "1.1":
+                    timeStart = 1589297400
+                    timeEnd = 1590595200
+                    break;
+                case "1.0":
+                    timeEnd = 1589297400
+                    break;
+            }
+            break;
+        case "Custom":
+            if ($("#date_timepicker_start").val()) {
+                timeStart = Math.round(new Date($("#date_timepicker_start").val()).getTime())// / 1000)
+            }
+            
+            if ($("#date_timepicker_end").val()) {
+                timeEnd = Math.round(new Date($("#date_timepicker_end").val()).getTime())// / 1000)
+            }
+            break;
+    }
+
+    return (o.opponentName.includes($("#searchName").val())) &&
+        (regionOptions.length == 0 || isIntersection(regionOptions, associatedDeck.regions)) && 
+        (associatedDeck.wins + associatedDeck.losses >= minGames) && (associatedDeck.wins + associatedDeck.losses <= maxGames) &&
+        (associatedDeck.wins / (associatedDeck.wins + associatedDeck.losses) * 100 >= minWinrate) && (associatedDeck.wins / (associatedDeck.wins + associatedDeck.losses) * 100 <= maxWinrate) &&
+        (matchTypeArr.includes(matchType)) &&
+        (o.timePlayed >= timeStart) && (o.timePlayed <= timeEnd);
+}
+
+function filterDecks(o) {
+    let minGames = 0, minWinrate = 0, timeStart = 0;
+    let maxGames = Number.MAX_SAFE_INTEGER, maxWinrate = Number.MAX_SAFE_INTEGER, timeEnd = Number.MAX_SAFE_INTEGER;
+
+    if ($("#minimum-games").val()) {
+        minGames = $("#minimum-games").val();
+    }
+
+    if ($("#maximum-games").val()) {
+        maxGames = $("#maximum-games").val();
+    }
+
+    if ($("#minimum-winrate").val()) {
+        minWinrate = $("#minimum-winrate").val();
+    }
+
+    if ($("#maximum-winrate").val()) {
+        maxWinrate = $("#maximum-winrate").val();
+    }
+
+    let matchTypeArr = ["Expedition", "Normal", "vs AI"]
+
+    if($("#typeData").data("data")) {
+        matchTypeArr = $("#typeData").data("data");
+    }
+
+    switch ($("#time-div").find("button").html()) {
+        case "All Time":
+            break;
+        case "Past Day":
+            timeStart = Date.now() - 86400000
+            break;
+        case "Past Week":
+            timeStart = Date.now() - 604800000
+            break;
+        case "Past Month":
+            timeStart = Date.now() - 2592000000
+            break;
+        case "Patch":
+            switch($("#patch-div").find("button").html()) {
+                case "1.4":
+                    timeStart = 1593014400
+                    break;
+                case "1.3":
+                    timeStart = 1591804800
+                    timeEnd = 1593014400
+                    break;
+                case "1.2":
+                    timeStart = 1590595200
+                    timeEnd = 1591804800
+
+                    break;
+                case "1.1":
+                    timeStart = 1589297400
+                    timeEnd = 1590595200
+                    break;
+                case "1.0":
+                    timeEnd = 1589297400
+                    break;
+            }
+            break;
+        case "Custom":
+            if ($("#date_timepicker_start").val()) {
+                timeStart = Math.round(new Date($("#date_timepicker_start").val()).getTime())// / 1000)
+            }
+            
+            if ($("#date_timepicker_end").val()) {
+                timeEnd = Math.round(new Date($("#date_timepicker_end").val()).getTime())// / 1000)
+            }
+            break;
+    }    
+
+    let name = "";
+
+    if (o.name) {
+        name = o.name;
+    }
+    else {
+        name = o.deckCode;
+    }
+
+    return (name.includes($("#searchName").val())) &&
+        (regionOptions.length == 0 || isIntersection(regionOptions, o.regions)) && 
+        (o.wins + o.losses >= minGames) && (o.wins + o.losses <= maxGames) &&
+        (o.wins / (o.wins + o.losses) * 100 >= minWinrate) && (o.wins / (o.wins + o.losses) * 100 <= maxWinrate) &&
+        (matchTypeArr.length == 3 || ((o.isExpedition && matchTypeArr.includes("Expedition") || (!o.isExpedition && !matchTypeArr.includes("Expedition"))))) &&
+        (o.mostRecentPlay >= timeStart) && (o.mostRecentPlay <= timeEnd);
+}
+
+function sortGames(a, b) {
+    console.log($("#sort-div").find("button").html())
+    let associatedDeckA = data.get("decks").find(deckO => deckO.deckCode === a.deckCode);
+    let associatedDeckB = data.get("decks").find(deckO => deckO.deckCode === b.deckCode);
+
+    switch($("#sort-div").find("button").html()) {
+        case "Most Recent":
+            return (a.timePlayed < b.timePlayed) ? 1 : ((b.timePlayed < a.timePlayed) ? -1 : 0);
+        case "Least Recent":
+            return (a.timePlayed > b.timePlayed) ? 1 : ((b.timePlayed > a.timePlayed) ? -1 : 0);
+        case "Highest Winrate":
+            return (associatedDeckA.wins / (associatedDeckA.wins + associatedDeckA.losses) < associatedDeckB.wins / (associatedDeckB.wins + associatedDeckB.losses)) ? 1 : 
+            ((associatedDeckB.wins / (associatedDeckB.wins + associatedDeckB.losses) < associatedDeckA.wins / (associatedDeckA.wins + associatedDeckA.losses)) ? -1 : 0);
+        case "Lowest Winrate":
+            return (associatedDeckA.wins / (associatedDeckA.wins + associatedDeckA.losses) > associatedDeckB.wins / (associatedDeckB.wins + associatedDeckB.losses)) ? 1 : 
+            ((associatedDeckB.wins / (associatedDeckB.wins + associatedDeckB.losses) > associatedDeckA.wins / (associatedDeckA.wins + associatedDeckA.losses)) ? -1 : 0);
+        case "Most Games":
+            return (associatedDeckA.wins + associatedDeckA.losses < associatedDeckB.wins + associatedDeckB.losses) ? 1 :
+             ((associatedDeckB.wins + associatedDeckB.losses < associatedDeckA.wins + associatedDeckA.losses) ? -1 : 0);
+        case "Least Games":
+            return (associatedDeckA.wins + associatedDeckA.losses > associatedDeckB.wins + associatedDeckB.losses) ? 1 :
+             ((associatedDeckB.wins + associatedDeckB.losses > associatedDeckA.wins + associatedDeckA.losses) ? -1 : 0);
+    }
+}
+
+function sortDecks(a, b) {
+    console.log($("#sort-div").find("button").html())
+
+    switch($("#sort-div").find("button").html()) {
+        case "Most Recent":
+            return (a.mostRecentPlay < b.mostRecentPlay) ? 1 : ((b.mostRecentPlay < a.mostRecentPlay) ? -1 : 0);
+        case "Least Recent":
+            return (a.mostRecentPlay > b.mostRecentPlay) ? 1 : ((b.mostRecentPlay > a.mostRecentPlay) ? -1 : 0);
+        case "Highest Winrate":
+            return (a.wins / (a.wins + a.losses) < b.wins / (b.wins + b.losses)) ? 1 : 
+            ((b.wins / (b.wins + b.losses) < a.wins / (a.wins + a.losses)) ? -1 : 0);
+        case "Lowest Winrate":
+            return (a.wins / (a.wins + a.losses) > b.wins / (b.wins + b.losses)) ? 1 : 
+            ((b.wins / (b.wins + b.losses) > a.wins / (a.wins + a.losses)) ? -1 : 0);
+        case "Most Games":
+            return (a.wins + a.losses < b.wins + b.losses) ? 1 :
+             ((b.wins + b.losses < a.wins + a.losses) ? -1 : 0);
+        case "Least Games":
+            return (a.wins + a.losses > b.wins + b.losses) ? 1 :
+             ((b.wins + b.losses > a.wins + a.losses) ? -1 : 0);
+    }
+}
+
+function search() {
+    //alert($('#dropdownMenu1').val());
+    reloadHistory();
+    $("#collapseExample").collapse('hide');
+}

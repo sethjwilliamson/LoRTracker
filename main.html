@@ -103,10 +103,10 @@
                 <tr>
                     <th scope="row" style="padding-left: 40px;">Winrate</th>
                     <td>
-                      <input type="text" class="form-control numeric" id="minimum-games" placeholder="Minimum">
+                      <input type="text" class="form-control numeric" id="minimum-winrate" placeholder="Minimum">
                     </td>
                     <td>
-                      <input type="text" class="form-control numeric" id="minimum-games" placeholder="Maximum">
+                      <input type="text" class="form-control numeric" id="maximum-winrate" placeholder="Maximum">
                     </td>
                 </tr>
                 <tr>
@@ -117,13 +117,13 @@
                     <td>
                       <div class="dropdown d-flex" style="z-index: 499;">
                         <button class="btn btn-outline-secondary dropdown-toggle flex-grow-1" type="button" 
-                                id="dropdownMenu1" data-toggle="dropdown" 
+                                id="dropdown-match-type" data-toggle="dropdown" 
                                 aria-haspopup="true" aria-expanded="true" style="max-width: 163px;">
                                 <data id="typeData">All</data>
                           <i class="glyphicon glyphicon-cog"></i>
                           <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu checkbox-menu allow-focus" aria-labelledby="dropdownMenu1">
+                        <ul class="dropdown-menu checkbox-menu allow-focus" aria-labelledby="dropdown-match-type">
                         
                           <li>
                             <label>
@@ -149,10 +149,10 @@
                 <tr>
                   <th scope="row" style="padding-left: 40px;">Time</th>
                   <td class="d-flex" style="width: 186px;">
-                    <textarea type="text" class="form-control d-none" id="date_timepicker_start" style="width: 50%; height: 38px; font-size: 12px; resize: none; text-align: center; padding: 0;" rows="2"> </textarea>
-                    <textarea type="text" class="form-control d-none" id="date_timepicker_end" style="width: 50%; height: 38px; font-size: 12px; resize: none; text-align: center; padding: 0;" rows="2"> </textarea>
+                    <textarea type="text" class="form-control d-none" id="date_timepicker_start" placeholder="Start Time" style="width: 50%; height: 38px; font-size: 12px; resize: none; text-align: center; padding: 0;" rows="2"> </textarea>
+                    <textarea type="text" class="form-control d-none" id="date_timepicker_end" placeholder="End Time" style="width: 50%; height: 38px; font-size: 12px; resize: none; text-align: center; padding: 0;" rows="2"> </textarea>
                     
-                    <div class="input-group-prepend flex-grow-1 d-none" id="patchDiv">
+                    <div class="input-group-prepend flex-grow-1 d-none" id="patch-div">
                       <button class="btn btn-outline-secondary dropdown-toggle flex-grow-1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">1.4</button>
                       <div class="dropdown-menu" style="z-index: 499;">
                         <a class="dropdown-item" href="#">1.4</a>
@@ -164,7 +164,7 @@
                     </div>
                   </td>
                   <td>
-                    <div class="input-group-prepend">
+                    <div class="input-group-prepend" id="time-div">
                       <button class="btn btn-outline-secondary dropdown-toggle flex-grow-1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">All Time</button>
                       <div class="dropdown-menu" style="z-index: 499;" id="timeSelector">
                         <a class="dropdown-item" href="#">All Time</a>
@@ -181,11 +181,11 @@
                 <tr>
                   <th scope="row" style="padding-left: 40px;">Sort</th>
                   <td>
-                    <div class="input-group-prepend">
-                      <button class="btn btn-outline-secondary dropdown-toggle flex-grow-1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Newest First</button>
+                    <div class="input-group-prepend" id="sort-div">
+                      <button class="btn btn-outline-secondary dropdown-toggle flex-grow-1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Most Recent</button>
                       <div class="dropdown-menu" style="z-index: 499;">
-                        <a class="dropdown-item" onclick="" href="#">Newest First</a>
-                        <a class="dropdown-item" onclick="" href="#">Oldest First</a>
+                        <a class="dropdown-item" onclick="" href="#">Most Recent</a>
+                        <a class="dropdown-item" onclick="" href="#">Least Recent</a>
                         <a class="dropdown-item" onclick="" href="#">Highest Winrate</a>
                         <a class="dropdown-item" onclick="" href="#">Lowest Winrate</a>
                         <a class="dropdown-item" onclick="" href="#">Most Games</a>
