@@ -1273,3 +1273,13 @@ function search() {
     reloadHistory();
     $("#collapseExample").collapse('hide');
 }
+
+$('#collapseExample').on('show.bs.collapse', function () {
+    $("#button-caret").addClass("over");
+    $("#button-caret").removeClass("out");
+})
+
+$('#collapseExample').on('hide.bs.collapse', function () {
+    $("#button-caret").addClass("out");
+    $("#button-caret").removeClass("over");
+})
