@@ -4,6 +4,8 @@ const Store = require('electron-store');
 const config = new Store();
 const data = new Store({name:"data"});
 const log = require("electron-log");
+
+
 log.catchErrors();
 
 var regionOptions = [];
@@ -961,8 +963,93 @@ $(function ($) {
 
 $(".checkbox-menu").on("change", "input[type='checkbox']", function() {
     $(this).closest("li").toggleClass("active", this.checked);
- });
- 
- $(document).on('click', '.allow-focus', function (e) {
-   e.stopPropagation();
- });
+
+    let checkboxArr = [];
+
+    $(this).parent().parent().parent().find("li").each(function() {
+        if ($(this).hasClass("active")) {
+            checkboxArr.push($(this).find("data").html())
+        }
+    });
+    if (checkboxArr.length == 0) {
+        $("#typeData").html("All")
+        $("#typeData").data("data", ["Expedition", "Normal", "vs AI"])
+    }
+    else if (checkboxArr.length == 1) {
+        $("#typeData").html(checkboxArr[0]);
+        $("#typeData").data("data", checkboxArr)
+    }
+    else if (checkboxArr.length == 2) {
+        $("#typeData").html(checkboxArr[0] + " & " + checkboxArr[1]);
+        $("#typeData").data("data", checkboxArr)
+    }
+    else {
+        $("#typeData").html("All")
+        $("#typeData").data("data", checkboxArr)
+    }
+    //alert($("#typeData").data("data"))
+});
+$("#typeData").data("data", ["Expedition", "Normal", "vs AI"])
+
+$(document).on('click', '.allow-focus', function (e) {
+    e.stopPropagation();
+});
+
+$(function(){
+    $('#date_timepicker_start').datetimepicker({
+        //format:'Y/m/d',
+        onShow:function( ct ){
+            this.setOptions({
+                maxDate:$('#date_timepicker_end').val()?$('#date_timepicker_end').val():false,
+                maxDate:0
+            })
+        },
+        timepicker:true,
+        theme: config.get("dark-mode") ? "dark" : "default"
+    });
+    $('#date_timepicker_end').datetimepicker({
+        //format:'Y/m/d',
+        onShow:function( ct ){
+            this.setOptions({
+                minDate:$('#date_timepicker_start').val()?$('#date_timepicker_start').val():false,
+                maxDate:0,
+            })
+        },
+        timepicker:true,
+        theme: config.get("dark-mode") ? "dark" : "default"
+    });
+});
+
+function search() {
+    //alert($('#dropdownMenu1').val());
+}
+
+$(".numeric").keyup(function () { 
+    this.value = this.value.replace(/[^0-9\.]/g,'');
+});
+
+$(".dropdown-item").on("click", function(e) {
+    //alert($(this).parent().parent().find(".dropdown-toggle").html())
+    $(this).parent().parent().find(".dropdown-toggle").html($(this).html())
+
+})
+
+$("#timeSelector > .dropdown-item").on ("click", function(e) {
+    if ($(this).html() === "Patch") {
+        $("#date_timepicker_start").addClass("d-none")
+        $("#date_timepicker_end").addClass("d-none")
+        $("#patchDiv").removeClass("d-none")
+    }
+    else if ($(this).html() === "Custom") {
+        $("#date_timepicker_start").removeClass("d-none")
+        $("#date_timepicker_end").removeClass("d-none")
+        $("#patchDiv").addClass("d-none")
+
+    }
+    else {
+        $("#date_timepicker_start").addClass("d-none")
+        $("#date_timepicker_end").addClass("d-none")
+        $("#patchDiv").addClass("d-none")
+
+    }
+})
