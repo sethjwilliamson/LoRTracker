@@ -35,7 +35,7 @@ function minimize() {
   updateTracker();
 }
 
-document.getElementById("top").style.opacity = config.get("card-opacity");
+document.getElementById("top-container").style.opacity = config.get("opponent-deck-opacity");
 document.getElementById("cardContents").style.opacity = config.get("card-opacity");
 
 var cTop = document.getElementById("top");

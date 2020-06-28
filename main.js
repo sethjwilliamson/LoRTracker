@@ -226,15 +226,15 @@ function createWindow () {
 
     trackerWindow.on('resize', () => {
       let size = trackerWindow.getSize();
-      config.set("tracker-width", size[0]);
-      config.set("tracker-height", size[1]);
+      config.set("tracker-width", parseInt(size[0]));
+      config.set("tracker-height", parseInt(size[1]));
       trackerWindow.webContents.send('resize', size[0], size[1]);
     });
 
     trackerWindow.on('move', () => {
       let position = trackerWindow.getPosition();
-      config.set("tracker-x", position[0]);
-      config.set("tracker-y", position[1]);
+      config.set("tracker-x", parseInt(position[0]));
+      config.set("tracker-y", parseInt(position[1]));
     });
   });
   
@@ -297,15 +297,15 @@ function createWindow () {
 
     graveyardWindow.on('will-resize', () => {
       let size = graveyardWindow.getSize();
-      config.set("graveyard-width", size[0]);
-      config.set("graveyard-height", size[1]);
+      config.set("graveyard-width", parseInt(size[0]));
+      config.set("graveyard-height", parseInt(size[1]));
       graveyardWindow.webContents.send('resize', size[0], size[1]);
     });
 
     graveyardWindow.on('move', () => {
       let position = graveyardWindow.getPosition();
-      config.set("graveyard-x", position[0]);
-      config.set("graveyard-y", position[1]);
+      config.set("graveyard-x", parseInt(position[0]));
+      config.set("graveyard-y", parseInt(position[1]));
     });
   });
 
@@ -345,15 +345,15 @@ function createWindow () {
 
     oppDeckWindow.on('will-resize', () => {
       let size = oppDeckWindow.getSize();
-      config.set("opponent-deck-width", size[0]);
-      config.set("opponent-deck-height", size[1]);
+      config.set("opponent-deck-width", parseInt(size[0]));
+      config.set("opponent-deck-height", parseInt(size[1]));
       oppDeckWindow.webContents.send('resize', size[0], size[1]);
     });
 
     oppDeckWindow.on('move', () => {
       let position = oppDeckWindow.getPosition();
-      config.set("opponent-deck-x", position[0]);
-      config.set("opponent-deck-y", position[1]);
+      config.set("opponent-deck-x", parseInt(position[0]));
+      config.set("opponent-deck-y", parseInt(position[1]));
     });
   });
 
@@ -497,6 +497,19 @@ function createWindow () {
 
     fullCardWindow.setSize(config.get("preview-width"), parseInt(config.get("preview-width") * 512 / 340));
 
+    graveyardWindow.loadFile("./graveyard.html");
+    trackerWindow.loadFile("./tracker.html");
+    oppDeckWindow.loadFile("./oppDeck.html");
+
+    
+
+    graveyardWindow.webContents.send('update', "test");
+      
+    oppDeckWindow.webContents.send('update', "test");
+
+    trackerWindow.webContents.send('handUpdate', handSize);
+    trackerWindow.webContents.send('start', config.get("tracker-width"), config.get("tracker-height"), cardsLeft, spellsLeft, unitsLeft);
+
   });
   //overlayWindow.webContents.openDevTools()
   overlayWindow.webContents.send("expedition", "test");
@@ -593,7 +606,7 @@ var height;
 var handSize;
 var deckCode;
 var gameStartTime;
-var opponentName;
+var opponentName = "";
 var initialCardArr;
 var initialIsExpedition;
 var currentRectangles = [];
@@ -992,7 +1005,7 @@ function logGame (isMatchWin, expeditionR) {
     expeditionRecord = expeditionR.Record;
     reversedArr = Array.from(decksArr).reverse();
 
-    if (expeditionR.games == 1 || !decksArr.find( o => o.isExpedition) || JSON.stringify(deckRegions) !== JSON.stringify(reversedArr.find( o => o.isExpedition).regions)) {
+    if (expeditionR.games == 1 || !decksArr.find( o => o.isExpedition) || !arraysEqual(deckRegions, reversedAdd.find(o => o.isExpedition))){//JSON.stringify(deckRegions) !== JSON.stringify(reversedArr.find( o => o.isExpedition).regions)) {
       deckCode = "ex_" + Date.now();
     }
     else {
@@ -1037,7 +1050,7 @@ function logGame (isMatchWin, expeditionR) {
       'wins': 0,
       'losses': 0,
       'mostRecentPlay': Date.now(),
-      'regions': deckRegions,
+      'regions': deckRegions.sort(),
       'cards': initialCardArr,
       'isExpedition': isExpedition,
       'expeditionRecord': expeditionRecord
@@ -1072,7 +1085,7 @@ function logGame (isMatchWin, expeditionR) {
     "opponentName": opponentName,
     "gameLength": Date.now() - gameStartTime,
     "oppCards": oppDeckArr,
-    "oppRegions": oppRegions,
+    "oppRegions": oppRegions.sort(),
     "isComputer": isComputer
   }
 
@@ -1085,4 +1098,22 @@ function logGame (isMatchWin, expeditionR) {
 
   
   mainWindow.webContents.send('update');
+}
+
+function arraysEqual(a, b) {
+  if (a === b) return true;
+  if (a == null || b == null) return false;
+  if (a.length !== b.length) return false;
+
+  a.sort();
+  b.sort();
+  // If you don't care about the order of the elements inside
+  // the array, you should sort both arrays here.
+  // Please note that calling sort on an array will modify that array.
+  // you might want to clone your array first.
+
+  for (var i = 0; i < a.length; ++i) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
 }

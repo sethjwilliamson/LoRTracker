@@ -99,6 +99,6 @@ function arraysEqual(a, b) {
       if (a[i] !== b[i]) return false;
     }
     return true;
-  }
+}
 
 $("body").append(table)
