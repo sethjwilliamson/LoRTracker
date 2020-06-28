@@ -10,6 +10,9 @@ log.catchErrors();
 
 var regionOptions = [];
 
+var fullDecks = data.get("decks");
+var fullGames = data.get("games");
+
 const customTitlebar = require('custom-electron-titlebar');
  
 const titlebar = new customTitlebar.Titlebar({
@@ -74,7 +77,9 @@ loadMatches();
 loadMatch(games[0])
 
 function loadMatches() {
-    games = data.get("games").filter(filterGames).sort(sortGames);
+    fullGames = data.get("games");
+    fullDecks = data.get("decks");
+    games = fullGames.filter(filterGames).sort(sortGames);
 
     
     if (games.length == 0) {
@@ -100,7 +105,7 @@ function loadMatches() {
 
     for (let game of games) {
         string = "";
-        let deck = data.get("decks").find(o => o.deckCode === game.deckCode);
+        let deck = fullDecks.find(o => o.deckCode === game.deckCode);
         let yourChamps;
         let yourRegions;
 
@@ -109,6 +114,7 @@ function loadMatches() {
             yourRegions = deck.regions;
         }
         else {
+            ///
             decks = data.get("decks").sort((a,b) => (a.mostRecentPlay < b.mostRecentPlay) ? 1 : ((b.mostRecentPlay < a.mostRecentPlay) ? -1 : 0));
             setTimeout(loadMatches(), 1000);
             return;
@@ -262,7 +268,9 @@ function loadMatches() {
 }
 
 function loadDecks() {
-    decks = data.get("decks").filter(filterDecks).sort(sortDecks);
+    fullGames = data.get("games");
+    fullDecks = data.get("decks");
+    decks = fullDecks.filter(filterDecks).sort(sortDecks);
     
     if (decks.length == 0) {
         $("#historyWindow").html("<li class='h4 text-center'>Decks will be listed here.</li>")
@@ -385,6 +393,8 @@ function loadDecks() {
 }
 
 function loadDeck(deck) {
+    fullGames = data.get("games");
+    fullDecks = data.get("decks");
     let string = '';
 
     $('#detailsWindow').data("deck", deck)
@@ -423,7 +433,7 @@ function loadDeck(deck) {
     `
 
     $("#detailsWindow").html(string);
-    let games = data.get("games").filter(o => o.deckCode === deck.deckCode).sort((a,b) => (a.timePlayed < b.timePlayed) ? 1 : ((b.timePlayed < a.timePlayed) ? -1 : 0));
+    let games = fullGames.filter(o => o.deckCode === deck.deckCode).sort((a,b) => (a.timePlayed < b.timePlayed) ? 1 : ((b.timePlayed < a.timePlayed) ? -1 : 0));
 
     for (let game of games) {
         let oppDeck = game.oppCards;
@@ -576,7 +586,9 @@ function loadDeck(deck) {
 
 
 function loadMatch(game) {
-    let deck = data.get("decks").find(o => o.deckCode === game.deckCode);
+    fullGames = data.get("games");
+    fullDecks = data.get("decks");
+    let deck = fullDecks.find(o => o.deckCode === game.deckCode);
     let yourChamps = deck.cards.filter(o => o.isChamp);
     let yourRegions = deck.regions;
 
@@ -1042,7 +1054,7 @@ $("#timeSelector > .dropdown-item").on ("click", function(e) {
 })
 
 function filterGames(o) {
-    let associatedDeck = data.get("decks").find(deckO => deckO.deckCode === o.deckCode);
+    let associatedDeck = fullDecks.find(deckO => deckO.deckCode === o.deckCode);
     let minGames = 0, minWinrate = 0, timeStart = 0;
     let maxGames = Number.MAX_SAFE_INTEGER, maxWinrate = Number.MAX_SAFE_INTEGER, timeEnd = Number.MAX_SAFE_INTEGER;
 
@@ -1222,8 +1234,8 @@ function filterDecks(o) {
 
 function sortGames(a, b) {
     console.log($("#sort-div").find("button").html())
-    let associatedDeckA = data.get("decks").find(deckO => deckO.deckCode === a.deckCode);
-    let associatedDeckB = data.get("decks").find(deckO => deckO.deckCode === b.deckCode);
+    let associatedDeckA = fullDecks.find(deckO => deckO.deckCode === a.deckCode);
+    let associatedDeckB = fullDecks.find(deckO => deckO.deckCode === b.deckCode);
 
     switch($("#sort-div").find("button").html()) {
         case "Most Recent":
