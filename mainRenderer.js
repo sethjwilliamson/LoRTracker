@@ -115,7 +115,7 @@ function loadMatches() {
         }
         else {
             ///
-            decks = data.get("decks").sort((a,b) => (a.mostRecentPlay < b.mostRecentPlay) ? 1 : ((b.mostRecentPlay < a.mostRecentPlay) ? -1 : 0));
+            //decks = data.get("decks").sort((a,b) => (a.mostRecentPlay < b.mostRecentPlay) ? 1 : ((b.mostRecentPlay < a.mostRecentPlay) ? -1 : 0));
             setTimeout(loadMatches(), 1000);
             return;
         }
@@ -339,7 +339,7 @@ function loadDecks() {
                 </div>
 
                 <div class="col align-self-right flex-grow-1" style="max-width: 250px;">
-                    <p class="text-right h4 no-margin" style="white-space: nowrap;">${deck.name.slice(0,14)}</p>
+                    <p class="text-right h4 no-margin scale" style="white-space: nowrap;">${deck.name}</p>
         `
 
         if (deck.isExpedition) {
@@ -405,8 +405,8 @@ function loadDeck(deck) {
 
     string += `
     <div class="col flex-column full-height flex-column">
-        <div class="row justify-content-center d-flex">
-            <p class="h1" id="name">${deck.name.slice(0,14)}</p>
+        <div class="row justify-content-center d-flex" style="height:46px">
+            <p class="h2" id="name" style="width:80%; text-overflow:ellipsis; text-align:center; position: absolute; overflow: hidden">${deck.name}</p>
             <a href="#" style="position:absolute; left:10px; top:10px"><img src="node_modules/open-iconic/svg/trash.svg" id="deleteDeck" onclick="deleteDeck()" style="width: 20px;"></a>
             <a href="#" style="position:absolute; right:10px; top:10px"><img src="node_modules/open-iconic/svg/pencil.svg" id="editName" style="width: 20px;"></a>
         </div>
@@ -778,7 +778,7 @@ function enableOnKeyPress() {
             deck.name = $("#nameBox").val();
             data.set("decks", data.get("decks").filter( o => o.deckCode !== deck.deckCode ).concat(deck));
             //$("#name").html(deck.name)
-            $("#nameBox").replaceWith(`<p class="h1" id="name">${deck.name.slice(0,14)}</p>`)
+            $("#nameBox").replaceWith(`<p class="h2" id="name" style="width:80%; text-overflow:ellipsis; text-align:center; position: absolute; overflow: hidden">${deck.name}</p>`)
 
             if ($("#decks-tab").attr("aria-selected") === "true") {
                 loadDecks();
