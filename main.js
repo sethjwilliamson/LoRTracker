@@ -174,6 +174,8 @@ function createWindow () {
     }
   })
   mainWindow.webContents.openDevTools()
+  mainWindow.accessibleTitle = "main";
+
   mainWindow.loadFile("main.html");
   //mainWindow.loadFile("stats.html");
   
@@ -209,7 +211,7 @@ function createWindow () {
   })
   trackerWindow.accessibleTitle = "tracker";
   trackerWindow.loadFile('tracker.html');
-  //trackerWindow.webContents.openDevTools();
+  trackerWindow.webContents.openDevTools();
   
   trackerWindow.webContents.on('did-finish-load', () => {
     trackerWindow.setVisibleOnAllWorkspaces(true);
@@ -497,19 +499,18 @@ function createWindow () {
 
     fullCardWindow.setSize(config.get("preview-width"), parseInt(config.get("preview-width") * 512 / 340));
 
-    graveyardWindow.loadFile("./graveyard.html");
     trackerWindow.loadFile("./tracker.html");
+    graveyardWindow.loadFile("./graveyard.html");
     oppDeckWindow.loadFile("./oppDeck.html");
 
-    
+    if (ingame) {
 
-    graveyardWindow.webContents.send('update', "test");
-      
-    oppDeckWindow.webContents.send('update', "test");
+      graveyardWindow.webContents.send('update', "test");
+      oppDeckWindow.webContents.send('update', "test");
 
-    trackerWindow.webContents.send('handUpdate', handSize);
-    trackerWindow.webContents.send('start', config.get("tracker-width"), config.get("tracker-height"), cardsLeft, spellsLeft, unitsLeft);
-
+      trackerWindow.webContents.send('handUpdate', handSize);
+      trackerWindow.webContents.send('start', config.get("tracker-width"), config.get("tracker-height"), cardsLeft, spellsLeft, unitsLeft);
+    }
   });
   //overlayWindow.webContents.openDevTools()
   overlayWindow.webContents.send("expedition", "test");
@@ -524,7 +525,7 @@ function createWindow () {
   //  );
   //});
   
-  setTimeout(function() {preWaitingForGame()}, 1000);
+  setTimeout(function() {preWaitingForGame()}, 2000);
 }
 
 app.whenReady().then(createWindow)
@@ -601,14 +602,16 @@ async function httpGet(theUrl)
 var url = "http://127.0.0.1:21337/positional-rectangles";
 var setJson = require('./cards/set1-en_us.json');
 var prevDraw;
-var cardsLeft;
+var cardsLeft = 0;
+var spellsLeft = 0;
+var unitsLeft = 0;
 var height;
 var handSize;
 var deckCode;
 var gameStartTime;
 var opponentName = "";
-var initialCardArr;
-var initialIsExpedition;
+var initialCardArr = [];
+var isExpedition;
 var currentRectangles = [];
 global.exRectangles = [];
 global.cardArr = [];
@@ -619,6 +622,7 @@ global.cardRegions = [];
 
 
 function preWaitingForGame() {
+  log.debug("preWaitingForGame");
   try {
     axios.all([
         axios.get(url),
@@ -634,6 +638,7 @@ function preWaitingForGame() {
 }
 
 function waitingForGame(r, rExpedition) {
+  log.debug("waitingForGame");
   if (!r) {
     preWaitingForGame();
   }
@@ -643,6 +648,7 @@ function waitingForGame(r, rExpedition) {
       prevDraw = null;
       cardsLeft = 40;
       height = r.Screen.ScreenHeight;
+      isExpedition = false;
 
       overlayWindow.webContents.send("startOverlay", r.Screen.ScreenWidth, r.Screen.ScreenHeight);
 
@@ -658,16 +664,23 @@ function waitingForGame(r, rExpedition) {
 }
 
 function preExpeditionPicking() {
-  axios.all([
-      axios.get(url),
-      axios.get("http://127.0.0.1:21337/expeditions-state")])
-    .then(axios.spread((firstResponse, secondResponse) => {  
-      expeditionPicking(firstResponse.data, secondResponse.data)
-    }))
-    .catch(error => console.log(error));
+  log.debug("preExpeditionPicking");
+  try {
+    axios.all([
+        axios.get(url),
+        axios.get("http://127.0.0.1:21337/expeditions-state")])
+      .then(axios.spread((firstResponse, secondResponse) => {  
+        expeditionPicking(firstResponse.data, secondResponse.data)
+      }))
+      .catch(error => console.log(error));
+  }
+  catch {
+    log.debug("LoR Not Open ?")
+  }
 }
 
 function expeditionPicking(r, rExpedition) {
+  log.debug("expeditionPicking");
   if (!r || !(rExpedition.State === "Picking" || rExpedition.State === "Swapping")) {
     console.log("1")
     exRectangles = [];
@@ -687,7 +700,8 @@ function expeditionPicking(r, rExpedition) {
   }
 }
 
-function matchFound(r) {
+async function matchFound(r) {
+  log.debug("matchFound");
   if (!r) {
     preWaitingForGame();
   }
@@ -716,7 +730,9 @@ function matchFound(r) {
     deckCode = r.DeckCode;
 
     if(Object.keys(r.CardsInDeck).length > 0) {
-      startTracker(size[0], size[1], r.CardsInDeck);
+      await startTracker(size[0], size[1], r.CardsInDeck);
+
+      console.log(r)
 
       graveyardWindow.webContents.send('update', "test");
       
@@ -737,8 +753,12 @@ function matchFound(r) {
 }
 
 function waitingForMulligan(r, rExpedition) { //Mulligan  
+  log.debug("watingForMulligan");
   if (!r) {
     preWaitingForGame();
+  }
+  else if (r.GameState !== ("InProgress")) {
+    httpGet("http://127.0.0.1:21337/game-result").then(res => matchOver(res));
   }
   else {
     var card = null;
@@ -756,6 +776,7 @@ function waitingForMulligan(r, rExpedition) { //Mulligan
       setTimeout(function() {httpGet(url).then(res => waitingForMulligan(res));}, 1000);
     }
     else { // First Draw
+      log.debug("First Draw");
       httpGet("http://127.0.0.1:21337/expeditions-state").then(res => initialIsExpedition = res.IsActive);
       prevDraw = card;
       
@@ -781,6 +802,7 @@ function waitingForMulligan(r, rExpedition) { //Mulligan
 }
 
 function trackingGame(r) {
+  log.debug("trackingGame");
   if (!r) {
     preWaitingForGame();
   }
@@ -901,6 +923,7 @@ function trackingGame(r) {
 }
 
 function matchOver(r) {
+  log.debug("matchOver");
   if (!r) {
     preWaitingForGame();
   }
@@ -938,7 +961,8 @@ ipcMain.on("arrUpdate", (event, window, cardCode, change) => {
   }
 })
 
-function startTracker(width, height, obj) {
+async function startTracker(width, height, obj) {
+  log.debug("startTracker");
   let keys = Object.keys(obj);
   cardsLeft = 0;
   spellsLeft = 0;
@@ -979,7 +1003,10 @@ function startTracker(width, height, obj) {
       "isChamp": (card.supertype === "Champion")
     });
   }
-
+  console.log(cardsLeft);
+  if (cardsLeft != 40) {
+    isExpedition = true;
+  }
 
   initialCardArr = JSON.parse(JSON.stringify(Array.from(cardArr)));
 
@@ -989,23 +1016,22 @@ function startTracker(width, height, obj) {
 
 
 function logGame (isMatchWin, expeditionR) {
+  log.debug("logGame");
   let decksArr = data.get('decks');
   let gamesArr = data.get('games');
   let oppRegions = [];
   let isComputer = opponentName.startsWith('decks_') || opponentName.startsWith('deckname_');
-  let isExpedition = false;
   let expeditionRecord = null;
 
   if (isComputer && !config.get("record-ai-games")) {
     return;
   }
 
-  if (expeditionR.State === "Picking" || expeditionR.State === "Swapping" || expeditionR.State === "Other" || expeditionR.IsActive !== initialIsExpedition) {
-    isExpedition = true;
+  if (isExpedition) {
     expeditionRecord = expeditionR.Record;
     reversedArr = Array.from(decksArr).reverse();
 
-    if (expeditionR.games == 1 || !decksArr.find( o => o.isExpedition) || !arraysEqual(deckRegions, reversedAdd.find(o => o.isExpedition))){//JSON.stringify(deckRegions) !== JSON.stringify(reversedArr.find( o => o.isExpedition).regions)) {
+    if (expeditionR.games == 1 || !decksArr.find( o => o.isExpedition) || !arraysEqual(deckRegions, reversedArr.find(o => o.isExpedition).regions)){//JSON.stringify(deckRegions) !== JSON.stringify(reversedArr.find( o => o.isExpedition).regions)) {
       deckCode = "ex_" + Date.now();
     }
     else {
@@ -1023,7 +1049,8 @@ function logGame (isMatchWin, expeditionR) {
   if (currDeck) {
     if (isExpedition) {
       currDeck.wins = expeditionR.Wins;
-      currDeck.losses = expeditionR.Losses
+      currDeck.losses = expeditionR.Losses;
+      currDeck.cards = initialCardArr;
     }
     else {
       if (isMatchWin) {
@@ -1036,10 +1063,6 @@ function logGame (isMatchWin, expeditionR) {
     currDeck.mostRecentPlay = Date.now();
 
     currDeck.expeditionRecord = expeditionRecord;
-
-    if (isExpedition) {
-      currDeck.cards = initialCardArr;
-    }
 
     data.set("decks", decksArr.filter( o => o.deckCode !== deckCode ).concat(currDeck));
   }
@@ -1101,6 +1124,8 @@ function logGame (isMatchWin, expeditionR) {
 }
 
 function arraysEqual(a, b) {
+  console.log(a)
+  console.log(b)
   if (a === b) return true;
   if (a == null || b == null) return false;
   if (a.length !== b.length) return false;

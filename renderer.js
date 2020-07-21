@@ -399,6 +399,9 @@ function updateTracker() {
     ctxBot.fillText(cardsLeft, 203, 21, 30);
     ctxBot.fillText(handSize, 203, 48, 30); 
 
+    ///////////////
+    ////////////////
+
     
     setTimeout(ipcRenderer.send('size', $("body").height(), "tracker"), 100); 
 }
