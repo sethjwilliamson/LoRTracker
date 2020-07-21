@@ -596,6 +596,7 @@ async function httpGet(theUrl)
  }
  catch (err) {
      console.error(err);
+     return false;
  }
 }
 
@@ -623,18 +624,22 @@ global.cardRegions = [];
 
 function preWaitingForGame() {
   log.debug("preWaitingForGame");
-  try {
+  //try {
     axios.all([
         axios.get(url),
         axios.get("http://127.0.0.1:21337/expeditions-state")])
       .then(axios.spread((firstResponse, secondResponse) => {  
         waitingForGame(firstResponse.data, secondResponse.data)
       }))
-      .catch(error => console.log(error));
-  }
-  catch (e) {
-    console.log("LoR Not Open ?")
-  }
+      .catch( function (error) {
+        console.log(error);
+        setTimeout(function() {preWaitingForGame()}, 10000);
+      });
+  //}
+  //catch (e) {
+  //  console.log("LoR Not Open ?")
+  //  setTimeout(function() {preWaitingForGame()}, 10000);
+  //}
 }
 
 function waitingForGame(r, rExpedition) {
@@ -665,18 +670,21 @@ function waitingForGame(r, rExpedition) {
 
 function preExpeditionPicking() {
   log.debug("preExpeditionPicking");
-  try {
+  //try {
     axios.all([
         axios.get(url),
         axios.get("http://127.0.0.1:21337/expeditions-state")])
       .then(axios.spread((firstResponse, secondResponse) => {  
         expeditionPicking(firstResponse.data, secondResponse.data)
       }))
-      .catch(error => console.log(error));
-  }
-  catch {
-    log.debug("LoR Not Open ?")
-  }
+      .catch( function (error) {
+        console.log(error);
+        setTimeout(function() {preWaitingForGame()}, 10000);
+      });
+  //}
+  //catch {
+  //  log.debug("LoR Not Open ?");
+  //}
 }
 
 function expeditionPicking(r, rExpedition) {
@@ -696,7 +704,7 @@ function expeditionPicking(r, rExpedition) {
     overlayWindow.show();
     exRectangles = r.Rectangles;
     overlayWindow.webContents.send("expedition", rExpedition.State);
-    preExpeditionPicking();
+    preWaitingForGame();
   }
 }
 
