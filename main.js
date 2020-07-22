@@ -6,7 +6,7 @@ const config = new Store({
   "defaults" : {
     "tracker-width": 173,
     "tracker-height": 550,
-    "tracker-x": 1735,
+    "tracker-x": 200,
     "tracker-y": 70,
     "tracker-opacity": 0.75,
     "tracker-ignore-mouse-events": false,
@@ -624,22 +624,17 @@ global.cardRegions = [];
 
 function preWaitingForGame() {
   log.debug("preWaitingForGame");
-  //try {
-    axios.all([
-        axios.get(url),
-        axios.get("http://127.0.0.1:21337/expeditions-state")])
-      .then(axios.spread((firstResponse, secondResponse) => {  
-        waitingForGame(firstResponse.data, secondResponse.data)
-      }))
-      .catch( function (error) {
-        console.log(error);
-        setTimeout(function() {preWaitingForGame()}, 10000);
-      });
-  //}
-  //catch (e) {
-  //  console.log("LoR Not Open ?")
-  //  setTimeout(function() {preWaitingForGame()}, 10000);
-  //}
+  
+  axios.all([
+      axios.get(url),
+      axios.get("http://127.0.0.1:21337/expeditions-state")])
+    .then(axios.spread((firstResponse, secondResponse) => {  
+      waitingForGame(firstResponse.data, secondResponse.data)
+    }))
+    .catch( function (error) {
+      console.log(error);
+      setTimeout(function() {preWaitingForGame()}, 10000);
+    });
 }
 
 function waitingForGame(r, rExpedition) {
@@ -670,21 +665,17 @@ function waitingForGame(r, rExpedition) {
 
 function preExpeditionPicking() {
   log.debug("preExpeditionPicking");
-  //try {
-    axios.all([
-        axios.get(url),
-        axios.get("http://127.0.0.1:21337/expeditions-state")])
-      .then(axios.spread((firstResponse, secondResponse) => {  
-        expeditionPicking(firstResponse.data, secondResponse.data)
-      }))
-      .catch( function (error) {
-        console.log(error);
-        setTimeout(function() {preWaitingForGame()}, 10000);
-      });
-  //}
-  //catch {
-  //  log.debug("LoR Not Open ?");
-  //}
+
+  axios.all([
+      axios.get(url),
+      axios.get("http://127.0.0.1:21337/expeditions-state")])
+    .then(axios.spread((firstResponse, secondResponse) => {  
+      expeditionPicking(firstResponse.data, secondResponse.data)
+    }))
+    .catch( function (error) {
+      console.log(error);
+      setTimeout(function() {preWaitingForGame()}, 10000);
+    });
 }
 
 function expeditionPicking(r, rExpedition) {
