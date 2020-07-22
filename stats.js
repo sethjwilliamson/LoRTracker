@@ -42,7 +42,7 @@ for (var i = 0; i < regions.length + 2; i++) {
                 // Add up all 
             }
             else {
-                rowData = $('<td></td>').addClass("text-center").text(regionWinrate[j - 1].toFixed(0) + "%")
+                rowData = $('<td></td>').addClass("text-center").text(regionWinrate[j - 1]).css("white-space", "pre-line");
             }
         }
         else if (j == regions.length + 1) {
@@ -50,8 +50,32 @@ for (var i = 0; i < regions.length + 2; i++) {
                 rowData = $('<td></td>');
             }
             else {
-                rowData = $('<td></td>').addClass("text-center").text((regionWins / (regionWins + regionLosses) * 100).toFixed(0) +"%");
-                regionWinrate.push(regionWins / (regionWins + regionLosses) * 100);
+                let text = ""
+                ///
+                let showWinrate = false;
+                let showWinLoss = true;
+                let showTotalGames = true;
+                ///
+
+                if (showWinrate) {
+                    if (text.length !== 0) 
+                        text += "\n";
+                    text += (regionWins / (regionWins + regionLosses) * 100).toFixed(0) + "%"
+                }
+
+                if (showTotalGames) {
+                    if (text.length !== 0) 
+                        text += "\n";
+                    text += regionWins + regionLosses
+                }
+
+                if (showWinLoss) {
+                    if (text.length !== 0) 
+                        text += "\n";
+                    text += regionWins + " - " + regionLosses
+                }
+                rowData = $('<td></td>').addClass("text-center").text(text).css("white-space", "pre-line");
+                regionWinrate.push(text);
             }
         }
         else {
@@ -71,12 +95,41 @@ for (var i = 0; i < regions.length + 2; i++) {
             }            
             regionWins += wins;
             regionLosses += losses;
+
+            let text = "";
+
+            ///
+            let showWinrate = false;
+            let showWinLoss = true;
+            let showTotalGames = true;
+            ///
+
             if (wins + losses == 0) {
-                rowData = $('<td></td>').addClass("text-center").text("-");
+                text = "-"
+                //rowData = $('<td></td>').addClass("text-center").text("-");
             }
             else {
-                rowData = $('<td></td>').addClass("text-center").text((wins / (wins + losses) * 100).toFixed(0) +"%");
+                if (showWinrate) {
+                    if (text.length !== 0) 
+                        text += "\n";
+                    text += (wins / (wins + losses) * 100).toFixed(0) + "%"
+                }
+
+                if (showTotalGames) {
+                    if (text.length !== 0) 
+                        text += "\n";
+                    text += wins + losses
+                }
+
+                if (showWinLoss) {
+                    if (text.length !== 0) 
+                        text += "\n";
+                    text += wins + " - " + losses
+                }
             }
+                
+            rowData = $('<td></td>').addClass("text-center").text(text).css("white-space", "pre-line");
+            
         }
         row.append(rowData);
     }
