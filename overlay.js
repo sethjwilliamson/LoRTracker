@@ -16,8 +16,6 @@ imgSideRight.src = "./images/side-grade-flipped.png";
 //ctxOverlay.scaleWidth(1)
 ctxOverlay.canvas.width = width;
 ctxOverlay.canvas.height = height;
-ctxOverlay.textAlign = "center";
-ctxOverlay.fillStyle = "#715726";
 
 ipcRenderer.on("startOverlay", function(event, width2, height2) {
     width = width2;
@@ -39,6 +37,10 @@ async function drawExpedition(exRectangles, state) {
         /* webpackIgnore: true */ 'https://runetiera.com/ratings.js'
     );
     ctxOverlay.clearRect(0, 0, 10000, 10000);
+
+    
+    ctxOverlay.textAlign = "center";
+    ctxOverlay.fillStyle = "#715726";
 
     
     ctxOverlay.font = "40px BeaufortforLOL-Bold";
