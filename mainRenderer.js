@@ -1143,7 +1143,11 @@ function filterGames(o) {
             break;
     }
 
-    return (o.opponentName.includes($("#searchName").val()) || associatedDeck.name.includes($("#searchName").val()) || associatedDeck.deckCode.includes($("#searchName").val())) &&
+    if (!associatedDeck.name) {
+        associatedDeck.name = associatedDeck.deckCode
+    }
+
+    return (o.opponentName.toLowerCase().includes($("#searchName").val().toLowerCase()) || associatedDeck.name.toLowerCase().includes($("#searchName").val().toLowerCase())) &&
         (regionOptions.length == 0 || isIntersection(regionOptions, associatedDeck.regions)) && 
         (associatedDeck.wins + associatedDeck.losses >= minGames) && (associatedDeck.wins + associatedDeck.losses <= maxGames) &&
         (associatedDeck.wins / (associatedDeck.wins + associatedDeck.losses) * 100 >= minWinrate) && (associatedDeck.wins / (associatedDeck.wins + associatedDeck.losses) * 100 <= maxWinrate) &&
@@ -1301,6 +1305,12 @@ function search() {
     reloadHistory();
     $("#collapseExample").collapse('hide');
 }
+
+$("#searchName").on('keyup', function(e) {
+    if(e.keyCode == 13) {
+        search();
+    }
+});
 
 $('#collapseExample').on('show.bs.collapse', function () {
     $("#button-caret").addClass("over");
