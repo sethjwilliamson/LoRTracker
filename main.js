@@ -31,7 +31,6 @@ const config = new Store({
     "dark-mode": true,
     "exit-on-close": true,
     "margin": 3,
-    "swap-increment": false,
     "preview-width": 340
   }
 });

@@ -30,15 +30,6 @@
                     <input type="text" class="form-control" id="margin">
                     </td>
                 </tr>
-                <tr>
-                    <th scope="row" style="padding-left: 60px;">
-                        <input type="checkbox" class="form-check-input" id="swap-increment">
-                        <label class="form-check-label" for="swap-increment">Swap Increment and Decrement</label>
-                    </th>
-                    <td>
-
-                    </td>
-                </tr>
             </tbody>
             
         </table>
@@ -52,13 +43,11 @@
     $("#card-opacity").val(config.get("card-opacity"));
     $("#margin").val(config.get("margin"));
     $("#preview-width").val(config.get("preview-width"));
-    $('#swap-increment').prop('checked', config.get("swap-increment"));
 
     $('#save').click(function() {
         config.set("card-opacity", parseFloat($("#card-opacity").val()));
         config.set("margin", parseInt($("#margin").val()));
         config.set("preview-width", parseInt($("#preview-width").val()));
-        config.set("swap-increment", $('#swap-increment').is(':checked'));
         require("electron").ipcRenderer.send('saveUpdate');
         // Reload details window
     })
