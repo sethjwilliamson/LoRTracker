@@ -1093,34 +1093,42 @@ function filterGames(o) {
         case "All Time":
             break;
         case "Past Day":
-            timeStart = Date.now() / 1000 - 86400000
+            timeStart = Date.now() - 86400000
             break;
         case "Past Week":
-            timeStart = Date.now() / 1000 - 604800000
+            timeStart = Date.now() - 604800000
             break;
         case "Past Month":
-            timeStart = Date.now() / 1000 - 2592000000
+            timeStart = Date.now() - 2592000000
             break;
         case "Patch":
             switch($("#patch-div").find("button").html()) {
+                case "1.6":
+                    timeStart = 1595433600000
+                    break;
+                case "1.5":
+                    timeStart = 1594224000000
+                    timeEnd = 1595433600000
+                    break;
                 case "1.4":
-                    timeStart = 1593014400
+                    timeStart = 1593014400000
+                    timeEnd = 1594224000000
                     break;
                 case "1.3":
-                    timeStart = 1591804800
-                    timeEnd = 1593014400
+                    timeStart = 1591804800000
+                    timeEnd = 1593014400000
                     break;
                 case "1.2":
-                    timeStart = 1590595200
-                    timeEnd = 1591804800
+                    timeStart = 1590595200000
+                    timeEnd = 1591804800000
 
                     break;
                 case "1.1":
-                    timeStart = 1589297400
-                    timeEnd = 1590595200
+                    timeStart = 1589297400000
+                    timeEnd = 1590595200000
                     break;
                 case "1.0":
-                    timeEnd = 1589297400
+                    timeEnd = 1589297400000
                     break;
             }
             break;
@@ -1135,7 +1143,7 @@ function filterGames(o) {
             break;
     }
 
-    return (o.opponentName.includes($("#searchName").val())) &&
+    return (o.opponentName.includes($("#searchName").val()) || associatedDeck.name.includes($("#searchName").val()) || associatedDeck.deckCode.includes($("#searchName").val())) &&
         (regionOptions.length == 0 || isIntersection(regionOptions, associatedDeck.regions)) && 
         (associatedDeck.wins + associatedDeck.losses >= minGames) && (associatedDeck.wins + associatedDeck.losses <= maxGames) &&
         (associatedDeck.wins / (associatedDeck.wins + associatedDeck.losses) * 100 >= minWinrate) && (associatedDeck.wins / (associatedDeck.wins + associatedDeck.losses) * 100 <= maxWinrate) &&
@@ -1183,24 +1191,32 @@ function filterDecks(o) {
             break;
         case "Patch":
             switch($("#patch-div").find("button").html()) {
+                case "1.6":
+                    timeStart = 1595433600000
+                    break;
+                case "1.5":
+                    timeStart = 1594224000000
+                    timeEnd = 1595433600000
+                    break;
                 case "1.4":
-                    timeStart = 1593014400
+                    timeStart = 1593014400000
+                    timeEnd = 1594224000000
                     break;
                 case "1.3":
-                    timeStart = 1591804800
-                    timeEnd = 1593014400
+                    timeStart = 1591804800000
+                    timeEnd = 1593014400000
                     break;
                 case "1.2":
-                    timeStart = 1590595200
-                    timeEnd = 1591804800
+                    timeStart = 1590595200000
+                    timeEnd = 1591804800000
 
                     break;
                 case "1.1":
-                    timeStart = 1589297400
-                    timeEnd = 1590595200
+                    timeStart = 1589297400000
+                    timeEnd = 1590595200000
                     break;
                 case "1.0":
-                    timeEnd = 1589297400
+                    timeEnd = 1589297400000
                     break;
             }
             break;
