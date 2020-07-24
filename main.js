@@ -172,7 +172,7 @@ function createWindow () {
       nodeIntegration:true
     }
   })
-  mainWindow.webContents.openDevTools()
+  //mainWindow.webContents.openDevTools()
   mainWindow.accessibleTitle = "main";
 
   mainWindow.loadFile("main.html");
@@ -210,7 +210,7 @@ function createWindow () {
   })
   trackerWindow.accessibleTitle = "tracker";
   trackerWindow.loadFile('tracker.html');
-  trackerWindow.webContents.openDevTools();
+  //trackerWindow.webContents.openDevTools();
   
   trackerWindow.webContents.on('did-finish-load', () => {
     trackerWindow.setVisibleOnAllWorkspaces(true);
@@ -594,7 +594,6 @@ async function httpGet(theUrl)
      return res.data
  }
  catch (err) {
-     console.error(err);
      return false;
  }
 }
@@ -631,7 +630,6 @@ function preWaitingForGame() {
       waitingForGame(firstResponse.data, secondResponse.data)
     }))
     .catch( function (error) {
-      console.log(error);
       if (ingame) {
         
         ingame = false;
@@ -680,7 +678,6 @@ function preExpeditionPicking() {
       expeditionPicking(firstResponse.data, secondResponse.data)
     }))
     .catch( function (error) {
-      console.log(error);
       setTimeout(function() {preWaitingForGame()}, 10000);
     });
 }
@@ -688,14 +685,12 @@ function preExpeditionPicking() {
 function expeditionPicking(r, rExpedition) {
   log.debug("expeditionPicking");
   if (!r || !(rExpedition.State === "Picking" || rExpedition.State === "Swapping")) {
-    console.log("1")
     exRectangles = [];
     log.log(rExpedition.State)
     overlayWindow.hide();
     preWaitingForGame();
   }
   else if (JSON.stringify(r.Rectangles) === JSON.stringify(exRectangles)) {
-    console.log("2")
     setTimeout(function() {preExpeditionPicking()}, 500);
   }
   else {
@@ -738,8 +733,6 @@ async function matchFound(r) {
     if(Object.keys(r.CardsInDeck).length > 0) {
       await startTracker(size[0], size[1], r.CardsInDeck);
 
-      console.log(r)
-
       graveyardWindow.webContents.send('update', "test");
       
       oppDeckWindow.webContents.send('update', "test");
@@ -747,12 +740,10 @@ async function matchFound(r) {
       handSize = 4;
       trackerWindow.webContents.send('handUpdate', handSize);
     
-      console.log("Waiting for Mulligan");
       httpGet(url).then(res => waitingForMulligan(res));
     }
     else {
       log.log("Searching for deck again")
-      console.log("Searching for deck again")
       setTimeout(function() {httpGet("http://127.0.0.1:21337/static-decklist").then(res => matchFound(res))}, 500);
     }
   }
@@ -799,8 +790,6 @@ function waitingForMulligan(r, rExpedition) { //Mulligan
             trackerWindow.webContents.send('update', element.CardCode, false);
         }
       };
-
-      console.log("Tracking Game");
 
       httpGet(url).then(res => trackingGame(res));
     }
@@ -934,14 +923,16 @@ function matchOver(r) {
     preWaitingForGame();
   }
   else {
-    if (r.LocalPlayerWon) {
-      //logGame(true);
-      setTimeout(function() {httpGet("http://127.0.0.1:21337/expeditions-state").then(res => logGame(true, res))}, 3000);
+    if (isExpedition) {
+      // Expedition response takes longer to get all information like win / loss record
+      // The Expedition Request does not update until the rewards screen is complete
+      // May need to have a state waiting for the expedition response to change
+      setTimeout(function() {httpGet("http://127.0.0.1:21337/expeditions-state").then(res => logGame(r.LocalPlayerWon, res))}, 15000);
     }
     else {
-      //logGame(false);
-      setTimeout(function() {httpGet("http://127.0.0.1:21337/expeditions-state").then(res => logGame(false, res))}, 3000);
+      setTimeout(function() {httpGet("http://127.0.0.1:21337/expeditions-state").then(res => logGame(r.LocalPlayerWon, res))}, 3000);
     }
+
     ingame = false;
 
     trackerWindow.hide();
@@ -1009,7 +1000,7 @@ async function startTracker(width, height, obj) {
       "isChamp": (card.supertype === "Champion")
     });
   }
-  console.log(cardsLeft);
+  
   if (cardsLeft != 40) {
     isExpedition = true;
   }
@@ -1124,14 +1115,11 @@ function logGame (isMatchWin, expeditionR) {
   else {
     data.set("games", [gameObj]);
   }
-
   
   mainWindow.webContents.send('update');
 }
 
 function arraysEqual(a, b) {
-  console.log(a)
-  console.log(b)
   if (a === b) return true;
   if (a == null || b == null) return false;
   if (a.length !== b.length) return false;
