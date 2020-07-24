@@ -66,7 +66,7 @@ module.exports = {
 
         cCard.style.marginBottom = margin + "px";
         cCard.addEventListener('mouseenter', function() {
-            if (remote.getCurrentWindow().accessibleTitle !== "main") {
+            if (remote.getCurrentWindow().accessibleTitle === "tracker") {
                 $("#plusMinus").css({
                     "top": Math.round(this.getBoundingClientRect()['y']) + "px",
                     "display": "block"
@@ -77,7 +77,7 @@ module.exports = {
             previewCard(element.cardCode, this)
         });
         cCard.addEventListener('mouseleave', function() {
-            if (remote.getCurrentWindow().accessibleTitle !== "main") {
+            if (remote.getCurrentWindow().accessibleTitle === "tracker") {
                 $("#plusMinus").css({
                     "display": "none"
                 })
@@ -143,12 +143,8 @@ module.exports = {
         }
 
         cCard.addEventListener('click', function(event) {
-            console.log(remote.getCurrentWindow().accessibleTitle);
             if (event.x < $(document).width() / 720 * 620 && event.x > $(document).width() / 720 * 520) {
-                console.log(event.y)
-                console.log($("#plusMinus").offset().top + $("#plusMinus").height() / 2)
                 if (event.y > $("#plusMinus").offset().top + $("#plusMinus").height() / 2) {
-                    console.log("-")
                     if (remote.getCurrentWindow().accessibleTitle === "tracker") {
                         updateCard(element.cardCode, element.type === "Unit", -1)
                     }
@@ -157,7 +153,6 @@ module.exports = {
                     }
                 }
                 else {
-                    console.log("+")
                     if (remote.getCurrentWindow().accessibleTitle === "tracker") {
                         updateCard(element.cardCode, element.type === "Unit", +1)
                     }
