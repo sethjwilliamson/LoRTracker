@@ -633,6 +633,14 @@ function preWaitingForGame() {
     }))
     .catch( function (error) {
       console.log(error);
+      if (ingame) {
+        
+        ingame = false;
+
+        trackerWindow.hide();
+        graveyardWindow.hide();
+        oppDeckWindow.hide();
+      }
       setTimeout(function() {preWaitingForGame()}, 10000);
     });
 }
