@@ -13,6 +13,44 @@ var regionOptions = [];
 var fullDecks = data.get("decks");
 var fullGames = data.get("games");
 
+const patchTimes = [
+    {
+        "patch": "1.0",
+        "timeStart": 0,
+        "timeEnd": 1589297400000
+    },
+    {
+        "patch": "1.1",
+        "timeStart": 1589297400000,
+        "timeEnd": 1590595200000
+    },
+    {
+        "patch": "1.2",
+        "timeStart": 1590595200000,
+        "timeEnd": 1591804800000
+    },
+    {
+        "patch": "1.3",
+        "timeStart": 1591804800000,
+        "timeEnd": 1593014400000
+    },
+    {
+        "patch": "1.4",
+        "timeStart": 1593014400000,
+        "timeEnd": 1594224000000
+    },
+    {
+        "patch": "1.5",
+        "timeStart": 1594224000000,
+        "timeEnd": 1595433600000
+    },
+    {
+        "patch": "1.6",
+        "timeStart": 1595433600000,
+        "timeEnd": Number.MAX_SAFE_INTEGER
+    }
+]
+
 const customTitlebar = require('custom-electron-titlebar');
  
 const titlebar = new customTitlebar.Titlebar({
@@ -1102,35 +1140,9 @@ function filterGames(o) {
             timeStart = Date.now() - 2592000000
             break;
         case "Patch":
-            switch($("#patch-div").find("button").html()) {
-                case "1.6":
-                    timeStart = 1595433600000
-                    break;
-                case "1.5":
-                    timeStart = 1594224000000
-                    timeEnd = 1595433600000
-                    break;
-                case "1.4":
-                    timeStart = 1593014400000
-                    timeEnd = 1594224000000
-                    break;
-                case "1.3":
-                    timeStart = 1591804800000
-                    timeEnd = 1593014400000
-                    break;
-                case "1.2":
-                    timeStart = 1590595200000
-                    timeEnd = 1591804800000
-
-                    break;
-                case "1.1":
-                    timeStart = 1589297400000
-                    timeEnd = 1590595200000
-                    break;
-                case "1.0":
-                    timeEnd = 1589297400000
-                    break;
-            }
+            let patch = patchTimes.find(patchTime => patchTime.patch === $("#patch-div").find("button").html())
+            timeStart = patch.timeStart
+            timeEnd = patch.timeEnd
             break;
         case "Custom":
             if ($("#date_timepicker_start").val()) {
@@ -1194,43 +1206,17 @@ function filterDecks(o) {
             timeStart = Date.now() - 2592000000
             break;
         case "Patch":
-            switch($("#patch-div").find("button").html()) {
-                case "1.6":
-                    timeStart = 1595433600000
-                    break;
-                case "1.5":
-                    timeStart = 1594224000000
-                    timeEnd = 1595433600000
-                    break;
-                case "1.4":
-                    timeStart = 1593014400000
-                    timeEnd = 1594224000000
-                    break;
-                case "1.3":
-                    timeStart = 1591804800000
-                    timeEnd = 1593014400000
-                    break;
-                case "1.2":
-                    timeStart = 1590595200000
-                    timeEnd = 1591804800000
-
-                    break;
-                case "1.1":
-                    timeStart = 1589297400000
-                    timeEnd = 1590595200000
-                    break;
-                case "1.0":
-                    timeEnd = 1589297400000
-                    break;
-            }
+            let patch = patchTimes.find(patchTime => patchTime.patch === $("#patch-div").find("button").html())
+            timeStart = patch.timeStart
+            timeEnd = patch.timeEnd
             break;
         case "Custom":
             if ($("#date_timepicker_start").val()) {
-                timeStart = Math.round(new Date($("#date_timepicker_start").val()).getTime())// / 1000)
+                timeStart = Math.round(new Date($("#date_timepicker_start").val()).getTime())
             }
             
             if ($("#date_timepicker_end").val()) {
-                timeEnd = Math.round(new Date($("#date_timepicker_end").val()).getTime())// / 1000)
+                timeEnd = Math.round(new Date($("#date_timepicker_end").val()).getTime())
             }
             break;
     }    
@@ -1301,7 +1287,6 @@ function sortDecks(a, b) {
 }
 
 function search() {
-    //alert($('#dropdownMenu1').val());
     reloadHistory();
     $("#collapseExample").collapse('hide');
 }
