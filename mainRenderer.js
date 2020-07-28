@@ -44,7 +44,7 @@ var updateMessage = "";
 var version = "";
 
 var start = 0;
-var load = 10;
+var load = 30;
 
 var regionIcons = {
     "Demacia": "icons/icon-demacia.png",
@@ -902,7 +902,7 @@ function deleteMatch() {
 
 $('#historyWindow').on('scroll', function() {
     if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
-        start += 10;
+        start += load;
 
         if ($("#matches-tab").attr("aria-selected") === "true") {
             setTimeout(loadMatches(), 1000);
