@@ -1123,7 +1123,7 @@ function filterGames(o) {
     if (o.isComputer) {
         matchType = "vs AI";
     }
-    else if (o.isExpedition) {
+    else if (associatedDeck.isExpedition) {
         matchType = "Expedition";
     }
 
