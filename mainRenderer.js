@@ -82,7 +82,7 @@ var updateMessage = "";
 var version = "";
 
 var start = 0;
-var load = 30;
+var load = 20;
 
 var regionIcons = {
     "Demacia": "icons/icon-demacia.png",
