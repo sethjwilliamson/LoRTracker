@@ -67,22 +67,13 @@ var margin = 3;
 function updateOppDeck() {
     cardArr = remote.getGlobal('oppDeckArr');
 
-    for (let element of cardArr) {
-        imgCard = new Image;
-        imgCard.src = "./cropped/" + element.cardCode + "-full.webp";
-        element.image = imgCard;
-        imgCard.onload = function() {
-            updateTracker();
-        }
-    }
     updateTracker();
 }
     
 function updateTracker() {
     cardArr.sort((a,b) => (a.mana > b.mana) ? 1 : ((b.mana > a.mana) ? -1 : 0)); 
-
     
-    createCanvas.render(cardArr, $("#cardContents"));
+    createCanvas.render($("#cardContents"), cardArr);
 }
 
 function previewCard (cardCode, element) {

@@ -3,6 +3,7 @@ const createCanvas = require('./createCanvas.js');
 const Store = require('electron-store');
 const config = new Store();
 const log = require("electron-log");
+const { render } = require('./createCanvas.js');
 log.catchErrors();
 log.log("Tracker Started.")
 
@@ -283,17 +284,7 @@ function updateTracker() {
 
     cardArr.sort((a,b) => (a.mana > b.mana) ? 1 : ((b.mana > a.mana) ? -1 : 0)); 
 
-    for (let element of cardArr) {
-        imgCard = new Image;
-        imgCard.src = "./cropped/" + element.cardCode + "-full.webp";
-        element.image = imgCard;
-    }
-
-    imgCard.onload = function() {
-        createCanvas.render(cardArr, $("#cardContents"));
-    }
-    
-    createCanvas.render(cardArr, $("#cardContents"));
+    createCanvas.render($("#cardContents"), cardArr);
   
     cBot = document.getElementById("botStats");
     ctxBot = cBot.getContext("2d");
@@ -398,12 +389,10 @@ function updateTracker() {
 
     ctxBot.fillText(cardsLeft, 203, 21, 30);
     ctxBot.fillText(handSize, 203, 48, 30); 
-
-    ///////////////
-    ////////////////
-
     
-    setTimeout(ipcRenderer.send('size', $("body").height(), "tracker"), 100); 
+    //setTimeout(
+    // Not sure if the timeout is necessary
+    ipcRenderer.send('size', $("body").height(), "tracker")//, 100); 
 }
 
 function previewCard (cardCode, element) {

@@ -50,12 +50,33 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
 
 
 module.exports = {
-    render: function (cardArr, div) {
-        margin = config.get("margin")
+    render: function (div, cardArr) {
+        div.html("");
+        let margin = config.get("margin")
     
-      div.html("");
+        for (let [index, element] of cardArr.entries()) {
+            console.log(element);
+            if (element.image) {
+                div.append(this.renderSingle(element, index, margin));
+            }
+            else {
+                imgCard = new Image;
+                imgCard.src = "./cropped/" + element.cardCode + "-full.webp";
+                element.image = imgCard;
 
-      for (let [index, element] of cardArr.entries()) {
+                if (remote.getCurrentWindow().accessibleTitle !== "tracker") {
+                    element.image.onload = function() {
+                        div.append(this.renderSingle(element, index, margin));
+                    }
+                }
+            }
+        }
+
+        if (remote.getCurrentWindow().accessibleTitle === "tracker") {
+            div.append(this.createplusMinus)
+        }
+    },
+    renderSingle: function (element, index, margin) {
         cCard = document.createElement("canvas"); 
         cCard.style.width = "100%";
         cCard.height = 40;
@@ -162,43 +183,40 @@ module.exports = {
                 }
             }
         })
- 
-        div.append($(cCard));
-      }
-      
-    cCard = document.createElement("canvas"); 
-    cCard.style.width = "100%";
-    cCard.height = 40;
-    cCard.style.position = "absolute";
-    cCard.style.pointerEvents = "none"
-    cCard.style.display = "none"
-    cCard.id = "plusMinus"
-    console.log(cCard)
+        return cCard;
+    },
+    createplusMinus: function() {
+        cCard = document.createElement("canvas"); 
+        cCard.style.width = "100%";
+        cCard.height = 40;
+        cCard.style.position = "absolute";
+        cCard.style.pointerEvents = "none"
+        cCard.style.display = "none"
+        cCard.id = "plusMinus"
+        console.log(cCard)
 
-    ctxCard = cCard.getContext("2d"); 
-    ctxCard.scale(cCard.width / 720, cCard.height / 100);
+        ctxCard = cCard.getContext("2d"); 
+        ctxCard.scale(cCard.width / 720, cCard.height / 100);
 
-    
-    ctxCard.fillStyle = '#404040';
-    //roundRect(ctxCard, 620, 0, 100, 100, 15, true,false);
-    //ctxCard.fillRect(620, 0, 50, 100);
-    
-    roundRect(ctxCard, 520, 0, 100, 100, 15, true,false);
-    ctxCard.fillRect(570, 0, 50, 100);
+        
+        ctxCard.fillStyle = '#404040';
+        
+        roundRect(ctxCard, 520, 0, 100, 100, 15, true,false);
+        ctxCard.fillRect(570, 0, 50, 100);
 
-    ctxCard.fillStyle = '#191919';
-    ctxCard.fillRect(520, 50, 100, 2);
-    ctxCard.fillRect(620, 0, 2, 100);
+        ctxCard.fillStyle = '#191919';
+        ctxCard.fillRect(520, 50, 100, 2);
+        ctxCard.fillRect(620, 0, 2, 100);
 
-    
-    ctxCard.font = "60px BeaufortforLOL-Bold";
-    ctxCard.fillStyle = "white";
-    ctxCard.textAlign = "center";
-    ctxCard.fillText("+", 570, 42);
-    
-    ctxCard.font = "80px BeaufortforLOL-Bold";
-    ctxCard.fillText("-", 570, 95);
+        
+        ctxCard.font = "60px BeaufortforLOL-Bold";
+        ctxCard.fillStyle = "white";
+        ctxCard.textAlign = "center";
+        ctxCard.fillText("+", 570, 42);
+        
+        ctxCard.font = "80px BeaufortforLOL-Bold";
+        ctxCard.fillText("-", 570, 95);
 
-    div.append($(cCard))
+        return cCard;
     }
-  };
+};

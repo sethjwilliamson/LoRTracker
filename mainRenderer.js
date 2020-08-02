@@ -837,8 +837,7 @@ function enableOnKeyPress() {
 function updateCards (cards, div) {
     cards.sort((a,b) => (a.mana > b.mana) ? 1 : ((b.mana > a.mana) ? -1 : 0)); 
     
-    createCanvas.render(cards, div);
-    setTimeout(createCanvas.render(cards, div), 1000)
+    createCanvas.render(div, cards);
 }
 
 function previewCard (cardCode, element) {
