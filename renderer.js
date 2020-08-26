@@ -129,7 +129,8 @@ var regionIcons = {
     "PiltoverZaun": "icons/icon-piltover.png",
     "Ionia": "icons/icon-ionia.png",
     "ShadowIsles": "icons/icon-shadowisles.png",
-    "Bilgewater": "icons/icon-bilgewater.png"
+    "Bilgewater": "icons/icon-bilgewater.png",
+    "Targon": "icons/icon-targon.png"
 };
 var imgMain = new Image;
 var imgBot = new Image;

@@ -599,7 +599,7 @@ async function httpGet(theUrl)
 }
 
 var url = "http://127.0.0.1:21337/positional-rectangles";
-var setJson = require('./cards/set1-en_us.json');
+var setJson = require('./cards/setJson.json');
 var prevDraw;
 var cardsLeft = 0;
 var spellsLeft = 0;

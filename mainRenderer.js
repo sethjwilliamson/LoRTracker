@@ -47,6 +47,16 @@ const patchTimes = [
     {
         "patch": "1.6",
         "timeStart": 1595433600000,
+        "timeEnd": 1596643200000
+    },
+    {
+        "patch": "1.7",
+        "timeStart": 1596643200000,
+        "timeEnd": 1598457600000
+    },
+    {
+        "patch": "1.8",
+        "timeStart": 1598457600000,
         "timeEnd": Number.MAX_SAFE_INTEGER
     }
 ]
@@ -91,7 +101,8 @@ var regionIcons = {
     "PiltoverZaun": "icons/icon-piltover.png",
     "Ionia": "icons/icon-ionia.png",
     "ShadowIsles": "icons/icon-shadowisles.png",
-    "Bilgewater": "icons/icon-bilgewater.png"
+    "Bilgewater": "icons/icon-bilgewater.png",
+    "Targon": "icons/icon-targon.png"
 };
 
 $(".font-loader").each(function() {

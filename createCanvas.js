@@ -8,8 +8,8 @@ var regionColors = {
     "PiltoverZaun": "#B05925",
     "Ionia": "#C45987",
     "ShadowIsles": "#2A725D",
-    "Bilgewater": "#FD9061"
-
+    "Bilgewater": "#FD9061",
+    "Targon": "#4D38B0"
 };
 var margin = config.get("margin");
 
