@@ -77,6 +77,11 @@ const patchTimes = [
     {
         "patch": "1.13",
         "timeStart": 1603900800000,
+        "timeEnd": 1605110400000
+    },
+    {
+        "patch": "1.14",
+        "timeStart": 1605110400000,
         "timeEnd": Number.MAX_SAFE_INTEGER
     }
 ]

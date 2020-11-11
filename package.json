@@ -1,6 +1,6 @@
 {
   "name": "lor-tracker",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "description": "A deck tracker for Legends of Runeterra",
   "main": "main.js",
   "scripts": {
@@ -14,15 +14,15 @@
   "author": "lor-tracker.com",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^8.5.2",
+    "electron": "^8.5.3",
     "electron-builder": "^22.9.1"
   },
   "dependencies": {
     "axios": "^0.19.2",
     "bootstrap": "^4.5.3",
-    "custom-electron-titlebar": "^3.2.4",
+    "custom-electron-titlebar": "^3.2.5",
     "darkmode-js": "^1.5.7",
-    "electron-log": "^4.2.4",
+    "electron-log": "^4.3.0",
     "electron-store": "^5.2.0",
     "electron-updater": "^4.3.5",
     "jquery": "^3.5.1",
