@@ -9,8 +9,11 @@ Please create an issue on the repository if you run into any bugs.
 This project uses [electron](https://www.electronjs.org/) which takes advantage of [nodejs / npm](https://www.npmjs.com/). 
 
 > git clone https://github.com/sethjwilliamson/LoRTracker/
+
 > cd LORTracker
+
 > npm install
+
 > npm start
 
 This will clone the repository, install all of the node modules needed, then start the app.
