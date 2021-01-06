@@ -18,7 +18,7 @@
     "electron-builder": "^22.9.1"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bootstrap": "^4.5.3",
     "custom-electron-titlebar": "^3.2.5",
     "darkmode-js": "^1.5.7",
