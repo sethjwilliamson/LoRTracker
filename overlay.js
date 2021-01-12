@@ -27,14 +27,14 @@ ipcRenderer.on("startOverlay", function(event, width2, height2) {
     ctxOverlay.canvas.width = width2;
     ctxOverlay.canvas.height = height2;
 })
-
+/*
 ipcRenderer.on("expedition", function (event, state, width, height) {
     drawExpedition(remote.getGlobal('exRectangles'), state);
 });
 
 async function drawExpedition(exRectangles, state) {
     const { ratings } = await import(
-        /* webpackIgnore: true */ 'https://runetiera.com/ratings.js'
+        'https://runetiera.com/ratings.js'
     );
     ctxOverlay.clearRect(0, 0, 10000, 10000);
 
@@ -70,3 +70,4 @@ async function drawExpedition(exRectangles, state) {
         }
     }
 }
+*/

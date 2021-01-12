@@ -512,7 +512,7 @@ function createWindow () {
     }
   });
   //overlayWindow.webContents.openDevTools()
-  overlayWindow.webContents.send("expedition", "test");
+  // overlayWindow.webContents.send("expedition", "test");
 
   registerHotkeys();
 
@@ -624,10 +624,9 @@ function preWaitingForGame() {
   log.debug("preWaitingForGame");
   
   axios.all([
-      axios.get(url),
-      axios.get("http://127.0.0.1:21337/expeditions-state")])
-    .then(axios.spread((firstResponse, secondResponse) => {  
-      waitingForGame(firstResponse.data, secondResponse.data)
+      axios.get(url)])
+    .then(axios.spread((firstResponse) => {  
+      waitingForGame(firstResponse.data)
     }))
     .catch( function (error) {
       if (ingame) {
@@ -642,7 +641,7 @@ function preWaitingForGame() {
     });
 }
 
-function waitingForGame(r, rExpedition) {
+function waitingForGame(r) {
   log.debug("waitingForGame");
   if (!r) {
     preWaitingForGame();
@@ -658,9 +657,6 @@ function waitingForGame(r, rExpedition) {
       overlayWindow.webContents.send("startOverlay", r.Screen.ScreenWidth, r.Screen.ScreenHeight);
 
       httpGet("http://127.0.0.1:21337/static-decklist").then(res => matchFound(res));
-    }
-    else if (rExpedition.State === "Picking" || rExpedition.State === "Swapping") {
-      expeditionPicking(r, rExpedition)
     }
     else {
       setTimeout(function() {preWaitingForGame()}, 5000);
