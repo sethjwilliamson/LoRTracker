@@ -9,7 +9,8 @@ var regionColors = {
     "Ionia": "#C45987",
     "ShadowIsles": "#2A725D",
     "Bilgewater": "#FD9061",
-    "Targon": "#4D38B0"
+    "Targon": "#4D38B0",
+    "Shurima": "#C4AE3D"
 };
 var margin = config.get("margin");
 
