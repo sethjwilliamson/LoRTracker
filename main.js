@@ -827,7 +827,7 @@ function trackingGame(r) {
           if ( !currentRectangles.find(o => o.CardID === element.CardID) && !element.LocalPlayer) {
             let card = setJson.find(o => o.cardCode === element.CardCode);
 
-            if (card.type === "Unit" || card.type === "Spell") {
+            if (card.type === "Unit" || card.type === "Spell" || card.type === "Landmark") {
               if (oppDeckArr.find(o => o.cardCode === element.CardCode && o.localPlayer === element.LocalPlayer)) {
                 let existingCard = oppDeckArr.find(o => o.cardCode === element.CardCode);
                 if (!existingCard.IDs.includes(element.CardID)) {
@@ -859,7 +859,7 @@ function trackingGame(r) {
             try {
               let card = setJson.find(o => o.cardCode === element.CardCode);
 
-              if (card.type === "Unit" || card.type === "Spell") {
+              if (card.type === "Unit" || card.type === "Spell" || card.type === "Landmark") {
                 if (graveyardArr.find(o => o.cardCode === element.CardCode && o.localPlayer === element.LocalPlayer)) {
                   let existingCard = graveyardArr.find(o => o.cardCode === element.CardCode);
                   if (!existingCard.IDs.includes(element.CardID)) {
