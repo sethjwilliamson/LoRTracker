@@ -10,7 +10,8 @@ var regionColors = {
     "ShadowIsles": "#2A725D",
     "Bilgewater": "#FD9061",
     "Targon": "#4D38B0",
-    "Shurima": "#C4AE3D"
+    "Shurima": "#C4AE3D",
+    "BandleCity": "#7A9800"
 };
 var margin = config.get("margin");
 

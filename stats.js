@@ -12,7 +12,8 @@ var regionIcons = {
     "ShadowIsles": "icons/icon-shadowisles.png",
     "Bilgewater": "icons/icon-bilgewater.png",
     "Targon": "icons/icon-targon.png",
-    "Shurima": "icons/icon-shurima.png"
+    "Shurima": "icons/icon-shurima.png",
+    "BandleCity": "icons/icon-bandlecity.png"
 };
 
 var table = $('<table></table>').addClass("pure-table");
