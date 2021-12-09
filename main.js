@@ -842,7 +842,7 @@ function trackingGame(r) {
                   "quantity": 1,
                   "imageUrl": null,
                   "name": card.name,
-                  "region": card.regionRef,
+                  "region": card.regionRefs[0],
                   "localPlayer": element.LocalPlayer,
                   "type": card.type,
                   "isChamp": (card.supertype === "Champion"),
@@ -874,7 +874,7 @@ function trackingGame(r) {
                     "quantity": 1,
                     "imageUrl": null,
                     "name": card.name,
-                    "region": card.regionRef,
+                    "region": card.regionRefs[0],
                     "localPlayer": element.LocalPlayer,
                     "type": card.type,
                     "IDs": [element.CardID]
@@ -976,12 +976,12 @@ async function startTracker(width, height, obj) {
             spellsLeft++;
 
 
-        if (!deckRegions.includes(card.regionRef)) {
-            deckRegions.push(card.regionRef);
-            cardRegions.push( {"region" : card.regionRef, "quantity" : 1})
+        if (!deckRegions.includes(card.regionRefs[0])) {
+            deckRegions.push(card.regionRefs[0]);
+            cardRegions.push( {"region" : card.regionRefs[0], "quantity" : 1})
         }
         else {
-            cardRegions.find(o => o.region === card.regionRef).quantity++;
+            cardRegions.find(o => o.region === card.regionRefs[0]).quantity++;
         }
     }
 
@@ -991,7 +991,7 @@ async function startTracker(width, height, obj) {
       "quantity": obj[element],
       "imageUrl": null,
       "name": card.name,
-      "region": card.regionRef,
+      "region": card.regionRefs[0],
       "type": card.type,
       "isChamp": (card.supertype === "Champion")
     });

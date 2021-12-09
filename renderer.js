@@ -235,7 +235,7 @@ async function editCard(cardCode, isUnit, change) {
         card = cardArr.find(o => o.cardCode == cardCode);
         card.quantity += change;
         
-        cardRegions.find(o => o.region == card.region).quantity += change;
+        cardRegions.find(o => o.region == card.regions[0]).quantity += change;
 
         if (isUnit)
             unitsLeft += change;

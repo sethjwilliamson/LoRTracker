@@ -110,6 +110,10 @@ module.exports = {
         ctxCard = cCard.getContext("2d"); 
         ctxCard.scale(cCard.width / 720, cCard.height / 100);
 
+        console.log("regionColors")
+        console.log(regionColors)
+        console.log(element)
+
         
         let grd = ctxCard.createLinearGradient(0,0,500,0);
         let grd2 = ctxCard.createLinearGradient(0,0,450,0);
